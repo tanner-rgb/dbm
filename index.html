@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DBM Field App</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  :root {
+    --green: #6DD44E;
+    --green-dark: #52b038;
+    --gray: #999;
+    --dark: #2E2E2E;
+    --bg: #F2F2F2;
+    --white: #fff;
+    --red: #E53E3E;
+    --amber: #D97706;
+    --blue: #2563EB;
+    --card: #fff;
+    --border: #e0e0e0;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); min-height: 100vh; }
+  #root { min-height: 100vh; }
+
+  /* Layout */
+  .screen { min-height: 100vh; display: flex; flex-direction: column; }
+  .header { background: var(--dark); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .header-logo { width: 36px; height: 36px; }
+  .header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.5px; }
+  .header-sub { font-size: 11px; color: var(--gray); margin-top: 1px; }
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .lang-btn { background: rgba(255,255,255,0.12); border: none; color: white; padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .lang-btn.active { background: var(--green); color: white; }
+
+  .content { flex: 1; padding: 16px; max-width: 480px; margin: 0 auto; width: 100%; }
+
+  /* Cards */
+  .card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+  .card-title { font-size: 13px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+
+  /* Form elements */
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 12px; font-weight: 600; color: var(--gray); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .field select, .field input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 15px; background: white; color: var(--dark); appearance: none; -webkit-appearance: none; outline: none; transition: border-color 0.15s; }
+  .field select:focus, .field input:focus { border-color: var(--green); }
+  .select-wrap { position: relative; }
+  .select-wrap::after { content: '▾'; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--gray); pointer-events: none; font-size: 13px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .field-row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  /* Buttons */
+  .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.15s; letter-spacing: 0.3px; }
+  .btn-green { background: var(--green); color: white; }
+  .btn-green:hover { background: var(--green-dark); }
+  .btn-green:active { transform: scale(0.98); }
+  .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--dark); }
+  .btn-sm { padding: 8px 14px; font-size: 13px; width: auto; border-radius: 8px; }
+  .btn-red { background: var(--red); color: white; }
+  .btn-blue { background: var(--blue); color: white; }
+  .btn-gray { background: #eee; color: var(--dark); }
+
+  /* Pay toggle */
+  .pay-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+  .pay-toggle button { padding: 11px; border: none; background: white; font-size: 14px; font-weight: 600; color: var(--gray); cursor: pointer; transition: all 0.15s; }
+  .pay-toggle button.active { background: var(--green); color: white; }
+
+  /* Category toggle */
+  .cat-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+  .cat-toggle button { padding: 10px; border: none; background: white; font-size: 13px; font-weight: 600; color: var(--gray); cursor: pointer; transition: all 0.15s; }
+  .cat-toggle button.active { background: var(--dark); color: white; }
+
+  /* Pay summary bar */
+  .pay-bar { background: var(--dark); color: white; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; position: sticky; bottom: 0; z-index: 50; }
+  .pay-bar-label { font-size: 12px; color: var(--gray); }
+  .pay-bar-amount { font-size: 22px; font-weight: 800; color: var(--green); }
+
+  /* Scope row */
+  .scope-row { background: #f8f8f8; border-radius: 9px; padding: 12px; margin-bottom: 10px; border: 1px solid var(--border); }
+  .scope-row-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .scope-label { font-size: 12px; font-weight: 700; color: var(--gray); text-transform: uppercase; }
+  .scope-pay { font-size: 15px; font-weight: 700; color: var(--green); }
+  .add-btn { display: flex; align-items: center; gap: 6px; background: none; border: 1.5px dashed var(--border); border-radius: 9px; padding: 10px 14px; width: 100%; cursor: pointer; color: var(--gray); font-size: 14px; font-weight: 600; transition: all 0.15s; margin-bottom: 10px; }
+  .add-btn:hover { border-color: var(--green); color: var(--green); }
+  .remove-btn { background: none; border: none; color: #ccc; font-size: 18px; cursor: pointer; padding: 0 4px; line-height: 1; }
+  .remove-btn:hover { color: var(--red); }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--dark); color: white; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; z-index: 999; box-shadow: 0 4px 20px rgba(0,0,0,0.3); animation: slideUp 0.2s ease; white-space: nowrap; }
+  .toast.error { background: var(--red); }
+  .toast.success { background: var(--green); }
+  @keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+  /* Status badges */
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .badge-pending { background: #FEF3C7; color: #92400E; }
+  .badge-sent { background: #DBEAFE; color: #1E40AF; }
+  .badge-approved { background: #D1FAE5; color: #065F46; }
+  .badge-disputed { background: #FEE2E2; color: #991B1B; }
+  .badge-paid { background: #F0FDF4; color: #166534; border: 1px solid #86EFAC; }
+
+  /* Submission cards */
+  .sub-card { background: white; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 10px; overflow: hidden; box-shadow: var(--shadow); }
+  .sub-card-stripe { height: 4px; }
+  .sub-card-body { padding: 14px; }
+  .sub-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+  .sub-card-project { font-size: 15px; font-weight: 700; }
+  .sub-card-amount { font-size: 18px; font-weight: 800; color: var(--green); }
+  .sub-card-meta { font-size: 12px; color: var(--gray); margin-bottom: 10px; }
+  .sub-card-actions { display: flex; gap: 8px; }
+
+  /* Suite launcher */
+  .suite-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .suite-card { background: white; border-radius: 14px; padding: 20px 16px; box-shadow: var(--shadow); border: 1px solid var(--border); cursor: pointer; transition: all 0.15s; text-align: center; position: relative; }
+  .suite-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+  .suite-card:active { transform: scale(0.97); }
+  .suite-card.disabled { opacity: 0.5; cursor: default; }
+  .suite-icon { font-size: 28px; margin-bottom: 8px; }
+  .suite-name { font-size: 13px; font-weight: 700; color: var(--dark); }
+  .suite-sub { font-size: 11px; color: var(--gray); margin-top: 3px; }
+  .suite-badge { position: absolute; top: 10px; right: 10px; background: var(--red); color: white; border-radius: 10px; font-size: 10px; font-weight: 800; padding: 2px 6px; }
+  .coming-soon { font-size: 10px; color: var(--gray); font-style: italic; margin-top: 4px; }
+
+  /* DBM logo SVG */
+  .logo-svg { width: 36px; height: 36px; }
+
+  /* Section divider */
+  .section-divider { height: 1px; background: var(--border); margin: 14px 0; }
+
+  /* Info row */
+  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
+  .info-label { font-size: 13px; color: var(--gray); }
+  .info-value { font-size: 13px; font-weight: 600; color: var(--dark); }
+
+  /* Dispute note */
+  .dispute-note { background: #FEF3C7; border: 1px solid #FCD34D; border-radius: 9px; padding: 10px 12px; font-size: 13px; color: #92400E; margin-bottom: 12px; }
+  .dispute-note strong { display: block; margin-bottom: 3px; }
+
+  /* Loading */
+  .loading { text-align: center; padding: 40px; color: var(--gray); font-size: 14px; }
+  .spinner { width: 24px; height: 24px; border: 3px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 60px 20px; color: var(--gray); }
+  .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty p { font-size: 15px; }
+
+  /* Stub viewer */
+  .stub-line { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+  .stub-line:last-child { border-bottom: none; }
+  .stub-total { display: flex; justify-content: space-between; padding: 12px 0 4px; font-size: 16px; font-weight: 800; }
+
+  /* Back button */
+  .back-btn { background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 0; line-height: 1; margin-right: 4px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useCallback, useRef } = React;
+
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+const API_BASE = "https://script.google.com/macros/s/AKfycbwOwATCsmUJx9quvzb_TgT1-Ze6rFHGOesywksSNZBs4U8Dp_ClljrTnM0qYgNue6R71w/exec";
+
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const PROJECTS = [
+  "1025 N Morgan Ave","1819 Guilford","20976 Alba Ct","507 NE 1st St",
+  "6309 Oak Tree","Cherokee Youth Shelter (Talequah)","Epperly Heights",
+  "Loves House","Purcell ICF","Spokes Superquads","Wings",
+  "503 NE 1st St","505 NE 1st St","13700 Shoreline","14000 Shoreline",
+  "180 Medical","22555 N Meridian","2538 Pembrook","4504 Ashton",
+  "6800 Cove Creek","BOAZ","First Fidelity - Edmond","Heritage Hall",
+];
+
+const CREWS = [
+  "Alan Gonzalez","Alfonso Marrufo (Poncho)","Alonso Soto","Antonio Gaytan",
+  "Arturo","Chuy Arias","Edwin Aguilera Ramirez (Canelo)","Federico Rios",
+  "Felipe Flores (Texano)","German Torres","GJ Masonry (Jose Salazar)",
+  "GM Masonry Construction (Gerardo)","Gonzalo Najera Lopez","Jesus Morales",
+  "Jose Estrada","Murillo Masonry (Pechiyos)","Rosendo Flores","Ubaldo Flores (Belly)",
+];
+
+const COMMERCIAL_SCOPES = ["Brick","Stone - MJ/DS","Thin Brick/Stone","4\" CMU - Veneer","4\" CMU - Structural","6\" CMU","8\" CMU","10\" CMU","12\" CMU","Cast Stone"];
+const RESIDENTIAL_SCOPES = ["Brick","Stone - MJ","Stone - DS","Thin Brick/Stone","4\" CMU","6\" CMU","8\" CMU","10\" CMU","12\" CMU","Cast Stone","Footing","Stucco","Pavers","Flag Stone"];
+
+const UNIT_RATES = {
+  "Commercial Brick":0.80,"Commercial Stone - MJ/DS":10,"Commercial Thin Brick/Stone":10,
+  "Commercial 4\" CMU - Veneer":5,"Commercial 4\" CMU - Structural":7,
+  "Commercial 6\" CMU":10,"Commercial 8\" CMU":10,"Commercial 10\" CMU":10,
+  "Commercial 12\" CMU":12,"Commercial Cast Stone":10,
+  "Residential Brick":0.35,"Residential Stone - MJ":6,"Residential Stone - DS":7,
+  "Residential Thin Brick/Stone":8,"Residential 4\" CMU":4,"Residential 6\" CMU":4,
+  "Residential 8\" CMU":5,"Residential 10\" CMU":5,"Residential 12\" CMU":6,
+  "Residential Cast Stone":6,"Residential Footing":20,"Residential Stucco":8,
+  "Residential Pavers":10,"Residential Flag Stone":7,
+};
+
+const MULTIPLIER_RATES = {"None":1,"Highwork":1.5,"Professional Scaffold":1.1};
+
+const SF_SCOPES = new Set(["Stone - MJ/DS","Stone - MJ","Stone - DS","Thin Brick/Stone","Footing","Stucco","Pavers","Flag Stone"]);
+const LF_SCOPES = new Set(["Cast Stone"]);
+
+const DETAIL_TREE = {
+  "Arch":[{type:"Arch (Less 9ft)",rate:200},{type:"Arch (9ft-15ft)",rate:500},{type:"Arch (16ft Greater)",rate:800}],
+  "Brick Column":[{type:"Brick Column (Base/Small)",rate:75},{type:"Brick Column (4x4)",rate:100},{type:"Brick Column (Two Story)",rate:200},{type:"Railcuts",rate:200}],
+  "Column Caps":[{type:"Xtra Small",rate:2},{type:"1ft x 1ft",rate:5},{type:"2ft x 2ft",rate:25},{type:"Medium",rate:50},{type:"Large",rate:100}],
+  "Fireplace":[{type:"Brick Hearth",rate:200},{type:"Brick Insert Fireplace (Up to Mantle)",rate:400},{type:"Brick Insert Fireplace (Single Story - Ceiling)",rate:600},{type:"Brick Insert Fireplace (Two Story - Ceiling)",rate:800},{type:"Brick Insert Fireplace (Large Base - Two Story - Ceiling)",rate:1000},{type:"Masonry (Brick/Stone) Fireplace w/ Chimney",rate:2500},{type:"Firebox",rate:500},{type:"Firebox w/ Flu Tiles",rate:1500},{type:"Isokern Firebox w/ Metal Pipe",rate:900},{type:"Isokern Firebox w/ Flu Tiles",rate:1500},{type:"Stone Mantle",rate:150},{type:"Slab on Hearth",rate:150}],
+  "Fire Feature":[{type:"Fire Pit",rate:350},{type:"Fire Feature",rate:150}],
+  "Mailbox":[{type:"Mailbox (Brick or Rock)",rate:400},{type:"Mailbox (New Home Build)",rate:250},{type:"Mailbox (1 Planter)",rate:300},{type:"Mailbox (2 Planters)",rate:350},{type:"Mailbox w/ Demo",rate:1000}],
+  "Tooth-In":[{type:"Tooth-In Window",rate:100},{type:"Tooth-In Door",rate:200}],
+  "Infill":[{type:"Infill Window/Door",rate:200}],
+  "Door Install":[{type:"HM Doors Install & Grout",rate:400}],
+  "Brick Design Detail":[{type:"Herringbone/Diamond (Less 25SF)",rate:300},{type:"Herringbone/Diamond (~25SF)",rate:500},{type:"Herringbone/Diamond (Entire Wall)",rate:800},{type:"Knockout w/o Gable",rate:500},{type:"Knockout w/ Gable",rate:800},{type:"Brick Corbel",rate:10},{type:"Wings (Gables)",rate:100},{type:"Rowlock",rate:2}],
+  "Cast Stone Detail":[{type:"Header/Sill",rate:8},{type:"Radius",rate:10}],
+  "Outdoor Kitchen":[{type:"Openings (1)",rate:400},{type:"Openings (3)",rate:600},{type:"Openings (4)",rate:800},{type:"Openings (5+)",rate:1200}],
+  "Residential Highwork":[{type:"Some Highwork",rate:400},{type:"Average Highwork",rate:800},{type:"Heavy Highwork",rate:1000},{type:"Extra Highwork",rate:200}],
+  "Demo":[{type:"Small",rate:150},{type:"Medium (mailbox size)",rate:500},{type:"Large",rate:1000},{type:"Extra Large",rate:null}],
+  "Gas":[{type:"Gas",rate:75}],
+};
+
+const DETAIL_CATS = Object.keys(DETAIL_TREE);
+
+const CLEAN_OPTIONS = [
+  "None",
+  "Acid Wash ($150)","Acid Wash ($300)","Acid Wash ($500)","Acid Wash ($1000 Lg Comm.)",
+  "Clean ($150)","Clean ($300)","Clean ($500)","Clean ($1000 Lg Comm.)",
+];
+
+const CLEAN_RATES_MAP = {
+  "Acid Wash ($150)":150,"Acid Wash ($300)":300,"Acid Wash ($500)":500,"Acid Wash ($1000 Lg Comm.)":1000,
+  "Clean ($150)":150,"Clean ($300)":300,"Clean ($500)":500,"Clean ($1000 Lg Comm.)":1000,
+};
+
+// Spanish translations
+const T = {
+  en: {
+    appName:"DBM Field Report", suite:"DBM Operations Suite",
+    fieldReport:"Field Report", mySubmissions:"My Submissions", ownerDash:"Owner Dashboard",
+    payroll:"Payroll", estimating:"Estimating", comingSoon:"Coming Soon",
+    project:"Project", crew:"Crew", category:"Category", commercial:"Commercial", residential:"Residential",
+    payType:"Pay Type", unit:"Unit Pay", hourly:"Hourly Pay",
+    scopeA:"Scope A", scopeB:"Scope B", cubes:"Cubes", qty:"Qty",
+    multiplier:"Multiplier", details:"Details", detailCat:"Detail Category",
+    detailType:"Detail Type", count:"Count", cleanType:"Clean Type",
+    hoursWorked:"Hours Worked", numLead:"# Lead", numMason:"# Mason", numLabor:"# Labor",
+    submit:"Submit Report", submitting:"Submitting...",
+    estPay:"Estimated Pay", totalPay:"Total Pay",
+    addScopeB:"+ Add Scope B", addDetail:"+ Add Detail",
+    weekEnding:"Week Ending",
+    status:"Status", week:"Week", amount:"Amount",
+    noSubmissions:"No submissions yet",
+    edit:"Edit", viewStub:"View Stub",
+    back:"Back", close:"Close",
+    payBreakdown:"Pay Breakdown",
+    scopePay:"Scope Pay", detailPay:"Detail Pay", cleanPay:"Clean Pay", hourlyPay:"Hourly Pay",
+    required:"Required field",
+    successMsg:"Report submitted successfully!",
+    errorMsg:"Submission failed. Check your connection.",
+    bpc:"Brick/Cube",
+    none:"None",
+  },
+  es: {
+    appName:"Reporte de Campo DBM", suite:"Suite de Operaciones DBM",
+    fieldReport:"Reporte de Campo", mySubmissions:"Mis Envíos", ownerDash:"Panel del Dueño",
+    payroll:"Nómina", estimating:"Estimaciones", comingSoon:"Próximamente",
+    project:"Proyecto", crew:"Cuadrilla", category:"Categoría", commercial:"Comercial", residential:"Residencial",
+    payType:"Tipo de Pago", unit:"Pago por Unidad", hourly:"Pago por Hora",
+    scopeA:"Alcance A", scopeB:"Alcance B", cubes:"Cubos", qty:"Cant.",
+    multiplier:"Multiplicador", details:"Detalles", detailCat:"Categoría de Detalle",
+    detailType:"Tipo de Detalle", count:"Cantidad", cleanType:"Tipo de Limpieza",
+    hoursWorked:"Horas Trabajadas", numLead:"# Líder", numMason:"# Albañil", numLabor:"# Obrero",
+    submit:"Enviar Reporte", submitting:"Enviando...",
+    estPay:"Pago Estimado", totalPay:"Pago Total",
+    addScopeB:"+ Agregar Alcance B", addDetail:"+ Agregar Detalle",
+    weekEnding:"Fin de Semana",
+    status:"Estado", week:"Semana", amount:"Monto",
+    noSubmissions:"Sin envíos aún",
+    edit:"Editar", viewStub:"Ver Recibo",
+    back:"Atrás", close:"Cerrar",
+    payBreakdown:"Desglose de Pago",
+    scopePay:"Pago por Alcance", detailPay:"Pago por Detalle", cleanPay:"Pago por Limpieza", hourlyPay:"Pago por Hora",
+    required:"Campo requerido",
+    successMsg:"¡Reporte enviado con éxito!",
+    errorMsg:"Error al enviar. Verifica tu conexión.",
+    bpc:"Ladrillo/Cubo",
+    none:"Ninguno",
+  }
+};
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function getUnit(scope) {
+  if (!scope) return null;
+  if (scope === "Brick") return "Cubes";
+  if (SF_SCOPES.has(scope)) return "SF";
+  if (LF_SCOPES.has(scope)) return "LF";
+  return "EA";
+}
+
+function calcScopePay(scope, qty, mult, category, bpc) {
+  if (!scope || !qty) return 0;
+  const key = `${category} ${scope}`;
+  const rate = UNIT_RATES[key] || 0;
+  const unit = getUnit(scope);
+  const numQty = parseFloat(qty) || 0;
+  const payQty = unit === "Cubes" ? numQty * (parseFloat(bpc) || 500) : numQty;
+  const base = payQty * rate;
+  const mFactor = MULTIPLIER_RATES[mult] || 1;
+  return base * mFactor;
+}
+
+function calcDetailPay(cat, type, qty) {
+  if (!cat || !type) return 0;
+  const items = DETAIL_TREE[cat] || [];
+  const item = items.find(i => i.type === type);
+  const rate = item?.rate || 0;
+  return rate * (parseInt(qty) || 1);
+}
+
+function calcCleanPay(cleanType) {
+  return CLEAN_RATES_MAP[cleanType] || 0;
+}
+
+function fmt(n) {
+  return "$" + (n || 0).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function statusColor(s) {
+  const map = {pending:"#D97706",sent:"#2563EB",opened:"#7C3AED",approved:"#059669",disputed:"#DC2626",paid:"#16A34A"};
+  return map[s] || "#999";
+}
+
+function statusBadgeClass(s) {
+  const map = {pending:"badge-pending",sent:"badge-sent",approved:"badge-approved",disputed:"badge-disputed",paid:"badge-paid"};
+  return "badge " + (map[s] || "badge-pending");
+}
+
+// ── API ───────────────────────────────────────────────────────────────────────
+async function apiSubmit(record) {
+  const res = await fetch(API_BASE, {
+    method:"POST", redirect:"follow",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({action:"submit", record}),
+  });
+  const data = await res.json();
+  if (!data.success) throw new Error(data.error || "Unknown error");
+  return data;
+}
+
+async function apiGetSubmissions(crew) {
+  const qs = new URLSearchParams({action:"submissions", crew}).toString();
+  const res = await fetch(API_BASE + "?" + qs, {redirect:"follow"});
+  const data = await res.json();
+  if (!data.success) throw new Error(data.error || "Unknown error");
+  return data.submissions || [];
+}
+
+// ── SVG LOGO ──────────────────────────────────────────────────────────────────
+function DBMLogo() {
+  return (
+    <svg className="logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="8" fill="#2E2E2E"/>
+      <rect x="6" y="6" width="12" height="8" rx="1" fill="#6DD44E"/>
+      <rect x="22" y="6" width="12" height="8" rx="1" fill="#6DD44E"/>
+      <rect x="6" y="18" width="28" height="8" rx="1" fill="#999"/>
+      <rect x="6" y="30" width="8" height="4" rx="1" fill="#6DD44E"/>
+      <rect x="16" y="30" width="8" height="4" rx="1" fill="#6DD44E"/>
+      <rect x="26" y="30" width="8" height="4" rx="1" fill="#6DD44E"/>
+    </svg>
+  );
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function Toast({msg, type, onDone}) {
+  useEffect(() => {
+    const t = setTimeout(onDone, 2800);
+    return () => clearTimeout(t);
+  }, []);
+  return <div className={`toast ${type}`}>{msg}</div>;
+}
+
+// ── SUITE LAUNCHER ────────────────────────────────────────────────────────────
+function SuiteLauncher({onNav, submissions, lang}) {
+  const t = T[lang];
+  const disputed = submissions.filter(s => s.status === "disputed").length;
+  const apps = [
+    {id:"field", icon:"📋", name:t.fieldReport, sub:"Submit work reports", color:"#6DD44E", live:true},
+    {id:"subs",  icon:"📨", name:t.mySubmissions, sub:"Track your pay", color:"#2563EB", live:true, badge:disputed||0},
+    {id:"owner", icon:"👔", name:t.ownerDash, sub:"Review & approve", color:"#7C3AED", live:true},
+    {id:"payroll",     icon:"💰", name:t.payroll,     sub:t.comingSoon, color:"#999", live:false},
+    {id:"estimating",  icon:"📐", name:t.estimating,  sub:t.comingSoon, color:"#999", live:false},
+    {id:"materials",   icon:"🧱", name:"Materials",   sub:t.comingSoon, color:"#999", live:false},
+  ];
+  return (
+    <div className="screen">
+      <div className="header">
+        <DBMLogo />
+        <div>
+          <div className="header h1" style={{fontSize:17,fontWeight:700,letterSpacing:0.5}}>{t.suite}</div>
+          <div className="header-sub">Design Build Masonry</div>
+        </div>
+        <div className="header-right">
+          <button className={`lang-btn${lang==="en"?" active":""}`} onClick={() => onNav("lang","en")}>EN</button>
+          <button className={`lang-btn${lang==="es"?" active":""}`} onClick={() => onNav("lang","es")}>ES</button>
+        </div>
+      </div>
+      <div className="content" style={{paddingTop:24}}>
+        <div className="suite-grid">
+          {apps.map(app => (
+            <div
+              key={app.id}
+              className={`suite-card${app.live?"":" disabled"}`}
+              onClick={() => app.live && onNav("screen", app.id)}
+              style={app.live ? {borderTop:`3px solid ${app.color}`} : {}}
+            >
+              {app.badge > 0 && <span className="suite-badge">{app.badge}</span>}
+              <div className="suite-icon">{app.icon}</div>
+              <div className="suite-name">{app.name}</div>
+              <div className="suite-sub">{app.sub}</div>
+              {!app.live && <div className="coming-soon">{t.comingSoon}</div>}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── FIELD REPORT FORM ─────────────────────────────────────────────────────────
+function FieldReportScreen({onNav, onSubmitDone, lang}) {
+  const t = T[lang];
+  const today = new Date().toISOString().split("T")[0];
+
+  const [weekEnding, setWeekEnding] = useState(today);
+  const [project, setProject] = useState("");
+  const [crew, setCrew] = useState("");
+  const [category, setCategory] = useState("Commercial");
+  const [payType, setPayType] = useState("Unit");
+
+  // Scope A
+  const [scopeA, setScopeA] = useState("");
+  const [cubesA, setCubesA] = useState("");
+  const [bpcA, setBpcA] = useState("500");
+  const [multA, setMultA] = useState("None");
+
+  // Scope B
+  const [showScopeB, setShowScopeB] = useState(false);
+  const [scopeB, setScopeB] = useState("");
+  const [cubesB, setCubesB] = useState("");
+  const [bpcB, setBpcB] = useState("500");
+  const [multB, setMultB] = useState("None");
+
+  // Details
+  const [details, setDetails] = useState([]);
+
+  // Clean
+  const [cleanType, setCleanType] = useState("None");
+
+  // Hourly
+  const [hours, setHours] = useState("");
+  const [numLead, setNumLead] = useState("0");
+  const [numMason, setNumMason] = useState("0");
+  const [numLabor, setNumLabor] = useState("0");
+
+  const [submitting, setSubmitting] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const scopes = category === "Commercial" ? COMMERCIAL_SCOPES : RESIDENTIAL_SCOPES;
+
+  // Calc total
+  const payA = calcScopePay(scopeA, cubesA, multA, category, bpcA);
+  const payB = showScopeB ? calcScopePay(scopeB, cubesB, multB, category, bpcB) : 0;
+  const detailTotal = details.reduce((s, d) => s + calcDetailPay(d.cat, d.type, d.qty), 0);
+  const cleanPay = calcCleanPay(cleanType);
+  const grandTotal = payA + payB + detailTotal + cleanPay;
+
+  function addDetail() {
+    setDetails(d => [...d, {id: Date.now(), cat:"", type:"", qty:"1"}]);
+  }
+  function removeDetail(id) {
+    setDetails(d => d.filter(x => x.id !== id));
+  }
+  function updateDetail(id, field, val) {
+    setDetails(d => d.map(x => {
+      if (x.id !== id) return x;
+      if (field === "cat") return {...x, cat:val, type:""};
+      return {...x, [field]:val};
+    }));
+  }
+
+  function getUnitLabel(scope) {
+    const u = getUnit(scope);
+    if (u === "Cubes") return t.cubes;
+    return u || t.qty;
+  }
+
+  async function handleSubmit() {
+    if (!project || !crew || !weekEnding) {
+      setToast({msg:"Please fill in Project, Crew, and Week Ending", type:"error"});
+      return;
+    }
+    if (payType === "Unit" && !scopeA) {
+      setToast({msg:"Please select at least Scope A", type:"error"});
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const record = {
+        weekEnding, project, crew, category, payType,
+        scopeA, cubesA: parseFloat(cubesA)||0, bpcA: parseFloat(bpcA)||500, multA,
+        scopeB: showScopeB ? scopeB : "", cubesB: showScopeB ? parseFloat(cubesB)||0 : 0, bpcB: parseFloat(bpcB)||500, multB: showScopeB ? multB : "None",
+        details: details.map(d => ({cat:d.cat, type:d.type, qty:parseInt(d.qty)||1})),
+        cleanType, cleanPay,
+        hours: parseFloat(hours)||0, numLead: parseInt(numLead)||0, numMason: parseInt(numMason)||0, numLabor: parseInt(numLabor)||0,
+        totalPay: grandTotal,
+      };
+      await apiSubmit(record);
+      setToast({msg:t.successMsg, type:"success"});
+      onSubmitDone && onSubmitDone();
+      setTimeout(() => onNav("screen","suite"), 1500);
+    } catch(e) {
+      setToast({msg:t.errorMsg, type:"error"});
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="screen">
+      <div className="header">
+        <button className="back-btn" onClick={() => onNav("screen","suite")}>←</button>
+        <DBMLogo />
+        <div>
+          <div style={{fontSize:17,fontWeight:700,color:"white"}}>{t.fieldReport}</div>
+          <div className="header-sub">DBM Operations</div>
+        </div>
+        <div className="header-right">
+          <button className={`lang-btn${lang==="en"?" active":""}`} onClick={() => onNav("lang","en")}>EN</button>
+          <button className={`lang-btn${lang==="es"?" active":""}`} onClick={() => onNav("lang","es")}>ES</button>
+        </div>
+      </div>
+
+      <div className="content" style={{paddingBottom:100}}>
+
+        {/* Job Info */}
+        <div className="card">
+          <div className="card-title">Job Info</div>
+          <div className="field">
+            <label>{t.weekEnding}</label>
+            <input type="date" value={weekEnding} onChange={e => setWeekEnding(e.target.value)} />
+          </div>
+          <div className="field">
+            <label>{t.project}</label>
+            <div className="select-wrap">
+              <select value={project} onChange={e => setProject(e.target.value)}>
+                <option value="">— Select —</option>
+                {PROJECTS.map(p => <option key={p} value={p}>{p}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="field">
+            <label>{t.crew}</label>
+            <div className="select-wrap">
+              <select value={crew} onChange={e => setCrew(e.target.value)}>
+                <option value="">— Select —</option>
+                {CREWS.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="field">
+            <label>{t.category}</label>
+            <div className="cat-toggle">
+              <button className={category==="Commercial"?"active":""} onClick={() => { setCategory("Commercial"); setScopeA(""); setScopeB(""); }}>🏗 {t.commercial}</button>
+              <button className={category==="Residential"?"active":""} onClick={() => { setCategory("Residential"); setScopeA(""); setScopeB(""); }}>🏠 {t.residential}</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Pay Type */}
+        <div className="card">
+          <div className="card-title">{t.payType}</div>
+          <div className="pay-toggle">
+            <button className={payType==="Unit"?"active":""} onClick={() => setPayType("Unit")}>📐 {t.unit}</button>
+            <button className={payType==="Hourly"?"active":""} onClick={() => setPayType("Hourly")}>⏱ {t.hourly}</button>
+          </div>
+
+          {payType === "Unit" && (
+            <>
+              {/* Scope A */}
+              <div className="scope-row">
+                <div className="scope-row-header">
+                  <span className="scope-label">{t.scopeA}</span>
+                  <span className="scope-pay">{fmt(payA)}</span>
+                </div>
+                <div className="field" style={{marginBottom:8}}>
+                  <div className="select-wrap">
+                    <select value={scopeA} onChange={e => setScopeA(e.target.value)}>
+                      <option value="">— Scope —</option>
+                      {scopes.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </div>
+                </div>
+                {scopeA && (
+                  <div className="field-row">
+                    <div className="field" style={{marginBottom:0}}>
+                      <label>{getUnitLabel(scopeA)}</label>
+                      <input type="number" inputMode="decimal" placeholder="0" value={cubesA} onChange={e => setCubesA(e.target.value)} />
+                    </div>
+                    {getUnit(scopeA) === "Cubes" && (
+                      <div className="field" style={{marginBottom:0}}>
+                        <label>{t.bpc}</label>
+                        <input type="number" inputMode="decimal" placeholder="500" value={bpcA} onChange={e => setBpcA(e.target.value)} />
+                      </div>
+                    )}
+                  </div>
+                )}
+                {scopeA && (
+                  <div className="field" style={{marginTop:8,marginBottom:0}}>
+                    <label>{t.multiplier}</label>
+                    <div className="select-wrap">
+                      <select value={multA} onChange={e => setMultA(e.target.value)}>
+                        {Object.keys(MULTIPLIER_RATES).map(m => <option key={m} value={m}>{m}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Scope B */}
+              {!showScopeB ? (
+                <button className="add-btn" onClick={() => setShowScopeB(true)}>+ {t.addScopeB}</button>
+              ) : (
+                <div className="scope-row">
+                  <div className="scope-row-header">
+                    <span className="scope-label">{t.scopeB}</span>
+                    <div style={{display:"flex",alignItems:"center",gap:8}}>
+                      <span className="scope-pay">{fmt(payB)}</span>
+                      <button className="remove-btn" onClick={() => { setShowScopeB(false); setScopeB(""); setCubesB(""); }}>✕</button>
+                    </div>
+                  </div>
+                  <div className="field" style={{marginBottom:8}}>
+                    <div className="select-wrap">
+                      <select value={scopeB} onChange={e => setScopeB(e.target.value)}>
+                        <option value="">— Scope —</option>
+                        {scopes.map(s => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  {scopeB && (
+                    <div className="field-row">
+                      <div className="field" style={{marginBottom:0}}>
+                        <label>{getUnitLabel(scopeB)}</label>
+                        <input type="number" inputMode="decimal" placeholder="0" value={cubesB} onChange={e => setCubesB(e.target.value)} />
+                      </div>
+                      {getUnit(scopeB) === "Cubes" && (
+                        <div className="field" style={{marginBottom:0}}>
+                          <label>{t.bpc}</label>
+                          <input type="number" inputMode="decimal" placeholder="500" value={bpcB} onChange={e => setBpcB(e.target.value)} />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {scopeB && (
+                    <div className="field" style={{marginTop:8,marginBottom:0}}>
+                      <label>{t.multiplier}</label>
+                      <div className="select-wrap">
+                        <select value={multB} onChange={e => setMultB(e.target.value)}>
+                          {Object.keys(MULTIPLIER_RATES).map(m => <option key={m} value={m}>{m}</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Details */}
+              {details.length > 0 && (
+                <div className="card" style={{background:"#f8f8f8",boxShadow:"none",border:"1px solid #e8e8e8",marginBottom:10}}>
+                  <div className="card-title">{t.details}</div>
+                  {details.map(d => (
+                    <div key={d.id} className="scope-row" style={{marginBottom:8}}>
+                      <div className="scope-row-header">
+                        <span className="scope-label">{t.details}</span>
+                        <div style={{display:"flex",alignItems:"center",gap:8}}>
+                          <span className="scope-pay">{fmt(calcDetailPay(d.cat,d.type,d.qty))}</span>
+                          <button className="remove-btn" onClick={() => removeDetail(d.id)}>✕</button>
+                        </div>
+                      </div>
+                      <div className="field" style={{marginBottom:8}}>
+                        <label>{t.detailCat}</label>
+                        <div className="select-wrap">
+                          <select value={d.cat} onChange={e => updateDetail(d.id,"cat",e.target.value)}>
+                            <option value="">— Category —</option>
+                            {DETAIL_CATS.map(c => <option key={c} value={c}>{c}</option>)}
+                          </select>
+                        </div>
+                      </div>
+                      {d.cat && (
+                        <div className="field-row">
+                          <div className="field" style={{marginBottom:0}}>
+                            <label>{t.detailType}</label>
+                            <div className="select-wrap">
+                              <select value={d.type} onChange={e => updateDetail(d.id,"type",e.target.value)}>
+                                <option value="">— Type —</option>
+                                {(DETAIL_TREE[d.cat]||[]).map(i => <option key={i.type} value={i.type}>{i.type}</option>)}
+                              </select>
+                            </div>
+                          </div>
+                          <div className="field" style={{marginBottom:0}}>
+                            <label>{t.count}</label>
+                            <input type="number" inputMode="numeric" placeholder="1" value={d.qty} onChange={e => updateDetail(d.id,"qty",e.target.value)} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+              <button className="add-btn" onClick={addDetail}>+ {t.addDetail}</button>
+
+              {/* Clean */}
+              <div className="field">
+                <label>{t.cleanType}</label>
+                <div className="select-wrap">
+                  <select value={cleanType} onChange={e => setCleanType(e.target.value)}>
+                    {CLEAN_OPTIONS.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+              </div>
+            </>
+          )}
+
+          {payType === "Hourly" && (
+            <>
+              <div className="field">
+                <label>{t.hoursWorked}</label>
+                <input type="number" inputMode="decimal" placeholder="0" value={hours} onChange={e => setHours(e.target.value)} />
+              </div>
+              <div className="field-row3">
+                <div className="field" style={{marginBottom:0}}>
+                  <label>{t.numLead}</label>
+                  <input type="number" inputMode="numeric" placeholder="0" value={numLead} onChange={e => setNumLead(e.target.value)} />
+                </div>
+                <div className="field" style={{marginBottom:0}}>
+                  <label>{t.numMason}</label>
+                  <input type="number" inputMode="numeric" placeholder="0" value={numMason} onChange={e => setNumMason(e.target.value)} />
+                </div>
+                <div className="field" style={{marginBottom:0}}>
+                  <label>{t.numLabor}</label>
+                  <input type="number" inputMode="numeric" placeholder="0" value={numLabor} onChange={e => setNumLabor(e.target.value)} />
+                </div>
+              </div>
+              <div style={{marginTop:12,padding:"10px 14px",background:"#f0fdf4",borderRadius:9,fontSize:13,color:"#065f46"}}>
+                ℹ️ Hourly rates auto-calculate from crew rates in the spreadsheet.
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Submit */}
+        <button className="btn btn-green" onClick={handleSubmit} disabled={submitting}>
+          {submitting ? t.submitting : t.submit}
+        </button>
+      </div>
+
+      {/* Pay bar */}
+      <div className="pay-bar">
+        <div>
+          <div className="pay-bar-label">{t.estPay}</div>
+          <div className="pay-bar-amount">{fmt(grandTotal)}</div>
+        </div>
+        {grandTotal > 0 && (
+          <div style={{fontSize:11,color:"#aaa",textAlign:"right",maxWidth:200}}>
+            {payA > 0 && <div>Scope A: {fmt(payA)}</div>}
+            {payB > 0 && <div>Scope B: {fmt(payB)}</div>}
+            {detailTotal > 0 && <div>Details: {fmt(detailTotal)}</div>}
+            {cleanPay > 0 && <div>Clean: {fmt(cleanPay)}</div>}
+          </div>
+        )}
+      </div>
+
+      {toast && <Toast msg={toast.msg} type={toast.type} onDone={() => setToast(null)} />}
+    </div>
+  );
+}
+
+// ── MY SUBMISSIONS ────────────────────────────────────────────────────────────
+function SubmissionsScreen({onNav, lang, crew}) {
+  const t = T[lang];
+  const [subs, setSubs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [viewStub, setViewStub] = useState(null);
+  const [filterCrew, setFilterCrew] = useState(crew || "");
+
+  async function load() {
+    setLoading(true);
+    try {
+      const data = await apiGetSubmissions(filterCrew);
+      setSubs(data);
+    } catch(e) {
+      setSubs([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => { load(); }, [filterCrew]);
+
+  if (viewStub) {
+    const s = viewStub;
+    return (
+      <div className="screen">
+        <div className="header">
+          <button className="back-btn" onClick={() => setViewStub(null)}>←</button>
+          <div style={{fontSize:17,fontWeight:700,color:"white"}}>{t.payBreakdown}</div>
+        </div>
+        <div className="content">
+          <div className="card">
+            <div className="info-row"><span className="info-label">{t.project}</span><span className="info-value">{s.project}</span></div>
+            <div className="info-row"><span className="info-label">{t.crew}</span><span className="info-value">{s.crew}</span></div>
+            <div className="info-row"><span className="info-label">{t.weekEnding}</span><span className="info-value">{s.weekEnding}</span></div>
+            <div className="info-row"><span className="info-label">{t.status}</span><span className={statusBadgeClass(s.status)}>{s.status?.toUpperCase()}</span></div>
+          </div>
+          {s.ownerNote && (
+            <div className="dispute-note">
+              <strong>⚠️ Owner Note:</strong>{s.ownerNote}
+            </div>
+          )}
+          <div className="card">
+            <div className="card-title">{t.payBreakdown}</div>
+            {s.scopeA && <div className="stub-line"><span>Scope A: {s.scopeA}</span><span>{fmt(s.payA||0)}</span></div>}
+            {s.scopeB && <div className="stub-line"><span>Scope B: {s.scopeB}</span><span>{fmt(s.payB||0)}</span></div>}
+            {(s.details||[]).map((d,i) => (
+              <div key={i} className="stub-line"><span>{d.cat}: {d.type} ×{d.qty}</span><span>{fmt(calcDetailPay(d.cat,d.type,d.qty))}</span></div>
+            ))}
+            {s.cleanType && s.cleanType !== "None" && <div className="stub-line"><span>{s.cleanType}</span><span>{fmt(s.cleanPay||0)}</span></div>}
+            {s.payType === "Hourly" && <div className="stub-line"><span>Hourly ({s.hours}h)</span><span>{fmt(s.hourlyPay||0)}</span></div>}
+            <div className="section-divider"/>
+            <div className="stub-total"><span>{t.totalPay}</span><span style={{color:"var(--green)"}}>{fmt(s.totalPay||0)}</span></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="screen">
+      <div className="header">
+        <button className="back-btn" onClick={() => onNav("screen","suite")}>←</button>
+        <DBMLogo />
+        <div>
+          <div style={{fontSize:17,fontWeight:700,color:"white"}}>{t.mySubmissions}</div>
+          <div className="header-sub">DBM Operations</div>
+        </div>
+      </div>
+      <div className="content">
+        <div className="field" style={{marginBottom:14}}>
+          <label>{t.crew}</label>
+          <div className="select-wrap">
+            <select value={filterCrew} onChange={e => setFilterCrew(e.target.value)}>
+              <option value="">— All Crews —</option>
+              {CREWS.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="loading"><div className="spinner"/><p>Loading...</p></div>
+        ) : subs.length === 0 ? (
+          <div className="empty"><div className="empty-icon">📭</div><p>{t.noSubmissions}</p></div>
+        ) : (
+          subs.map((s,i) => (
+            <div key={i} className="sub-card">
+              <div className="sub-card-stripe" style={{background:statusColor(s.status)}}/>
+              <div className="sub-card-body">
+                <div className="sub-card-top">
+                  <div className="sub-card-project">{s.project}</div>
+                  <div className="sub-card-amount">{fmt(s.totalPay)}</div>
+                </div>
+                <div className="sub-card-meta">{s.crew} • {s.weekEnding} • {s.payType}</div>
+                <div style={{marginBottom:8}}><span className={statusBadgeClass(s.status)}>{s.status?.toUpperCase()}</span></div>
+                {s.status === "disputed" && s.ownerNote && (
+                  <div className="dispute-note" style={{marginBottom:10}}>
+                    <strong>⚠️ Disputed:</strong>{s.ownerNote}
+                  </div>
+                )}
+                <div className="sub-card-actions">
+                  <button className="btn btn-outline btn-sm" onClick={() => setViewStub(s)}>{t.viewStub}</button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── OWNER DASHBOARD (simple) ──────────────────────────────────────────────────
+function OwnerScreen({onNav, lang}) {
+  const t = T[lang];
+  const [subs, setSubs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(null);
+
+  async function load() {
+    setLoading(true);
+    try {
+      const data = await apiGetSubmissions("");
+      setSubs(data);
+    } catch(e) { setSubs([]); }
+    finally { setLoading(false); }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  async function transition(s, newStatus, ownerNote="") {
+    try {
+      const res = await fetch(API_BASE, {
+        method:"POST", redirect:"follow",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({action:"transition", crewDisplay:s.crew, weekEnding:s.weekEnding, newStatus, ownerNote}),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      setToast({msg:`Marked ${newStatus}`, type:"success"});
+      load();
+    } catch(e) {
+      setToast({msg:"Action failed", type:"error"});
+    }
+  }
+
+  const pending = subs.filter(s => s.status === "pending" || s.status === "sent" || s.status === "opened");
+  const disputed = subs.filter(s => s.status === "disputed");
+  const approved = subs.filter(s => s.status === "approved");
+
+  const weekTotal = subs.reduce((a,s) => a + (parseFloat(s.totalPay)||0), 0);
+
+  return (
+    <div className="screen">
+      <div className="header">
+        <button className="back-btn" onClick={() => onNav("screen","suite")}>←</button>
+        <DBMLogo />
+        <div>
+          <div style={{fontSize:17,fontWeight:700,color:"white"}}>{t.ownerDash}</div>
+          <div className="header-sub">Tanner · DBM</div>
+        </div>
+      </div>
+      <div className="content">
+        {/* Stats */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:14}}>
+          {[
+            {label:"Weekly Total", val:fmt(weekTotal), color:"var(--green)"},
+            {label:"Pending Review", val:pending.length, color:"var(--amber)"},
+            {label:"Disputed", val:disputed.length, color:"var(--red)"},
+          ].map(s => (
+            <div key={s.label} className="card" style={{textAlign:"center",padding:"12px 8px",marginBottom:0}}>
+              <div style={{fontSize:18,fontWeight:800,color:s.color}}>{s.val}</div>
+              <div style={{fontSize:10,color:"var(--gray)",marginTop:2,lineHeight:1.2}}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {loading ? (
+          <div className="loading"><div className="spinner"/></div>
+        ) : subs.length === 0 ? (
+          <div className="empty"><div className="empty-icon">📭</div><p>No submissions yet</p></div>
+        ) : (
+          subs.map((s,i) => (
+            <div key={i} className="sub-card">
+              <div className="sub-card-stripe" style={{background:statusColor(s.status)}}/>
+              <div className="sub-card-body">
+                <div className="sub-card-top">
+                  <div className="sub-card-project">{s.crew}</div>
+                  <div className="sub-card-amount">{fmt(s.totalPay)}</div>
+                </div>
+                <div className="sub-card-meta">{s.project} • {s.weekEnding}</div>
+                <div style={{marginBottom:10}}><span className={statusBadgeClass(s.status)}>{s.status?.toUpperCase()}</span></div>
+                {s.status === "pending" && (
+                  <div className="sub-card-actions">
+                    <button className="btn btn-green btn-sm" onClick={() => transition(s,"approved")}>✓ Approve</button>
+                    <button className="btn btn-red btn-sm" onClick={() => {
+                      const note = prompt("Dispute reason:");
+                      if (note !== null) transition(s, "disputed", note);
+                    }}>✗ Dispute</button>
+                  </div>
+                )}
+                {s.status === "approved" && (
+                  <div className="sub-card-actions">
+                    <button className="btn btn-blue btn-sm" onClick={() => transition(s,"paid")}>💰 Mark Paid</button>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+      {toast && <Toast msg={toast.msg} type={toast.type} onDone={() => setToast(null)} />}
+    </div>
+  );
+}
+
+// ── ROOT APP ──────────────────────────────────────────────────────────────────
+function App() {
+  const [screen, setScreen] = useState("suite");
+  const [lang, setLang] = useState("en");
+  const [submissions, setSubmissions] = useState([]);
+
+  function onNav(type, val) {
+    if (type === "screen") setScreen(val);
+    if (type === "lang") setLang(val);
+  }
+
+  const props = {onNav, lang, submissions};
+
+  if (screen === "suite")  return <SuiteLauncher {...props} />;
+  if (screen === "field")  return <FieldReportScreen {...props} onSubmitDone={() => {}} />;
+  if (screen === "subs")   return <SubmissionsScreen {...props} />;
+  if (screen === "owner")  return <OwnerScreen {...props} />;
+  return <SuiteLauncher {...props} />;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
