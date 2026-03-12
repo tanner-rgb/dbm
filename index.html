@@ -135,6 +135,14 @@
   .stub-total { display: flex; justify-content: space-between; padding: 12px 0 4px; font-size: 16px; font-weight: 800; }
 
   .back-btn { background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 0; line-height: 1; margin-right: 4px; }
+
+  /* Photo upload */
+  .photo-upload-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: none; border: 1.5px dashed var(--border); border-radius: 9px; padding: 12px; width: 100%; cursor: pointer; color: var(--gray); font-size: 14px; font-weight: 600; transition: all 0.15s; }
+  .photo-upload-btn:hover { border-color: var(--green); color: var(--green); }
+  .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+  .photo-thumb { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+  .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-thumb-remove { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,0.6); border: none; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; }
 </style>
 </head>
 <body>
@@ -147,14 +155,38 @@ const { useState, useEffect, useCallback, useRef } = React;
 const API_BASE = "https://script.google.com/macros/s/AKfycbwOwATCsmUJx9quvzb_TgT1-Ze6rFHGOesywksSNZBs4U8Dp_ClljrTnM0qYgNue6R71w/exec";
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
-const PROJECTS = [
-  "1025 N Morgan Ave","1819 Guilford","20976 Alba Ct","507 NE 1st St",
-  "6309 Oak Tree","Cherokee Youth Shelter (Talequah)","Epperly Heights",
-  "Loves House","Purcell ICF","Spokes Superquads","Wings",
-  "503 NE 1st St","505 NE 1st St","13700 Shoreline","14000 Shoreline",
-  "180 Medical","22555 N Meridian","2538 Pembrook","4504 Ashton",
-  "6800 Cove Creek","BOAZ","First Fidelity - Edmond","Heritage Hall",
+// Projects include their category so selecting one auto-sets Commercial/Residential
+const PROJECT_LIST = [
+  {name:"1025 N Morgan Ave",                 category:"Residential"},
+  {name:"1819 Guilford",                     category:"Residential"},
+  {name:"20976 Alba Ct",                     category:"Residential"},
+  {name:"507 NE 1st St",                     category:"Commercial"},
+  {name:"6309 Oak Tree",                     category:"Residential"},
+  {name:"Cherokee Youth Shelter (Talequah)", category:"Commercial"},
+  {name:"Epperly Heights",                   category:"Residential"},
+  {name:"Loves House",                       category:"Residential"},
+  {name:"Purcell ICF",                       category:"Commercial"},
+  {name:"Spokes Superquads",                 category:"Commercial"},
+  {name:"Wings",                             category:"Commercial"},
+  {name:"503 NE 1st St",                     category:"Commercial"},
+  {name:"505 NE 1st St",                     category:"Commercial"},
+  {name:"13700 Shoreline",                   category:"Commercial"},
+  {name:"14000 Shoreline",                   category:"Commercial"},
+  {name:"180 Medical",                       category:"Commercial"},
+  {name:"22555 N Meridian",                  category:"Residential"},
+  {name:"2538 Pembrook",                     category:"Residential"},
+  {name:"4504 Ashton",                       category:"Residential"},
+  {name:"6800 Cove Creek",                   category:"Residential"},
+  {name:"BOAZ",                              category:"Commercial"},
+  {name:"First Fidelity - Edmond",           category:"Commercial"},
+  {name:"Heritage Hall",                     category:"Commercial"},
 ];
+// Flat name list kept for places that only need names
+const PROJECTS = PROJECT_LIST.map(p => p.name);
+function getProjectCategory(name) {
+  const p = PROJECT_LIST.find(x => x.name === name);
+  return p ? p.category : null;
+}
 
 const CREWS = [
   "Alan Gonzalez","Alfonso Marrufo (Poncho)","Alonso Soto","Antonio Gaytan",
@@ -303,6 +335,36 @@ function calcCleanPay(cleanType) {
   return CLEAN_RATES_MAP[cleanType] || 0;
 }
 
+// Returns YYYY-MM-DD of the most recent Friday on or before today
+function lastFriday() {
+  const d = new Date();
+  const dow = d.getDay(); // 0=Sun … 5=Fri … 6=Sat
+  const daysBack = dow >= 5 ? dow - 5 : dow + 2; // days since last Friday
+  d.setDate(d.getDate() - daysBack);
+  return d.toISOString().split("T")[0];
+}
+
+// Snap any date string to the nearest Friday (same week, not past)
+function snapToFriday(dateStr) {
+  if (!dateStr) return lastFriday();
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  const dow = dt.getUTCDay();
+  if (dow === 5) return dateStr; // already Friday
+  // Move forward to next Friday
+  dt.setUTCDate(dt.getUTCDate() + ((5 - dow + 7) % 7));
+  return dt.toISOString().split("T")[0];
+}
+
+// Calculate hourly pay from headcount, hours, and per-person rates
+function calcHourlyPay(hours, numLead, numMason, numLabor, leadRate, masonRate, laborRate) {
+  const h = parseFloat(hours) || 0;
+  const leadPay  = h * (parseInt(numLead)  || 0) * (parseFloat(leadRate)  || 0);
+  const masonPay = h * (parseInt(numMason) || 0) * (parseFloat(masonRate) || 0);
+  const laborPay = h * (parseInt(numLabor) || 0) * (parseFloat(laborRate) || 0);
+  return { leadPay, masonPay, laborPay, total: leadPay + masonPay + laborPay };
+}
+
 function fmt(n) {
   return "$" + (n || 0).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
 }
@@ -337,6 +399,14 @@ async function apiGetSubmissions(crew) {
   const data = await res.json();
   if (!data.success) throw new Error(data.error || "Unknown error");
   return data.submissions || [];
+}
+
+async function apiGetCrews() {
+  const qs = new URLSearchParams({action:"crews"}).toString();
+  const res = await fetch(API_BASE + "?" + qs, {redirect:"follow"});
+  const data = await res.json();
+  if (!data.success) throw new Error(data.error || "Unknown error");
+  return data.crews || []; // [{displayName, leadRate, masonRate, laborRate}, …]
 }
 
 async function apiTransition(payload) {
@@ -425,12 +495,22 @@ function SuiteLauncher({onNav, submissions, lang}) {
 // ── FIELD REPORT FORM ─────────────────────────────────────────────────────────
 function FieldReportScreen({onNav, onSubmitDone, lang}) {
   const t = T[lang];
-  const today = new Date().toISOString().split("T")[0];
 
-  const [weekEnding, setWeekEnding] = useState(today);
+  // ── Week Ending — defaults to last Friday, snaps on change ────────────────
+  const [weekEnding, setWeekEnding] = useState(lastFriday);
+  function handleWeekChange(e) { setWeekEnding(snapToFriday(e.target.value)); }
+
+  // ── Project → auto-sets category ──────────────────────────────────────────
   const [project, setProject] = useState("");
-  const [crew, setCrew] = useState("");
   const [category, setCategory] = useState("Commercial");
+  function handleProjectChange(name) {
+    setProject(name);
+    setScopeA(""); setScopeB(""); setShowScopeB(false);
+    const cat = getProjectCategory(name);
+    if (cat) setCategory(cat);
+  }
+
+  const [crew, setCrew] = useState("");
   const [payType, setPayType] = useState("Unit");
 
   const [scopeA, setScopeA] = useState("");
@@ -452,8 +532,34 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
   const [numMason, setNumMason] = useState("0");
   const [numLabor, setNumLabor] = useState("0");
 
+  const [photos, setPhotos] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState(null);
+
+  // ── Crew hourly rates (fetched once on mount) ─────────────────────────────
+  const [crewRates, setCrewRates] = useState([]);
+  useEffect(() => { apiGetCrews().then(setCrewRates).catch(() => {}); }, []);
+  const selectedRates = crewRates.find(r => r.displayName === crew) || {};
+  const leadRate  = selectedRates.leadRate  || 0;
+  const masonRate = selectedRates.masonRate || 0;
+  const laborRate = selectedRates.laborRate || 0;
+  const hourlyCalc = calcHourlyPay(hours, numLead, numMason, numLabor, leadRate, masonRate, laborRate);
+
+  function handlePhotoAdd(e) {
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        setPhotos(p => [...p, { url: ev.target.result, name: file.name }]);
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = "";
+  }
+
+  function removePhoto(idx) {
+    setPhotos(p => p.filter((_, i) => i !== idx));
+  }
 
   const scopes = category === "Commercial" ? COMMERCIAL_SCOPES : RESIDENTIAL_SCOPES;
 
@@ -461,7 +567,9 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
   const payB = showScopeB ? calcScopePay(scopeB, cubesB, multB, category, bpcB) : 0;
   const detailTotal = details.reduce((s, d) => s + calcDetailPay(d.cat, d.type, d.qty), 0);
   const cleanPay = calcCleanPay(cleanType);
-  const grandTotal = payA + payB + detailTotal + cleanPay;
+  const grandTotal = payType === "Unit"
+    ? payA + payB + detailTotal + cleanPay
+    : hourlyCalc.total;
 
   function addDetail() {
     setDetails(d => [...d, {id: Date.now(), cat:"", type:"", qty:"1"}]);
@@ -518,7 +626,9 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
         numLead: parseInt(numLead) || 0,
         numMason: parseInt(numMason) || 0,
         numLabor: parseInt(numLabor) || 0,
+        leadRate, masonRate, laborRate,
         totalPay: grandTotal,
+        photos,
       };
       await apiSubmit(record);
       setToast({msg:t.successMsg, type:"success"});
@@ -550,13 +660,16 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
         <div className="card">
           <div className="card-title">Job Info</div>
           <div className="field">
-            <label>{t.weekEnding}</label>
-            <input type="date" value={weekEnding} onChange={e => setWeekEnding(e.target.value)} />
+            <label>{t.weekEnding} <span style={{fontSize:10,color:"var(--amber)",fontWeight:700,textTransform:"none",letterSpacing:0}}>— Fridays only</span></label>
+            <input type="date" value={weekEnding} onChange={handleWeekChange} />
+            <div style={{fontSize:11,color:"var(--gray)",marginTop:4}}>
+              Date auto-snaps to Friday if another day is selected.
+            </div>
           </div>
           <div className="field">
             <label>{t.project}</label>
             <div className="select-wrap">
-              <select value={project} onChange={e => setProject(e.target.value)}>
+              <select value={project} onChange={e => handleProjectChange(e.target.value)}>
                 <option value="">— Select —</option>
                 {PROJECTS.map(p => <option key={p} value={p}>{p}</option>)}
               </select>
@@ -571,12 +684,16 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
               </select>
             </div>
           </div>
-          <div className="field">
+          <div className="field" style={{marginBottom:0}}>
             <label>{t.category}</label>
-            <div className="cat-toggle">
-              <button className={category==="Commercial"?"active":""} onClick={() => { setCategory("Commercial"); setScopeA(""); setScopeB(""); }}>🏗 {t.commercial}</button>
-              <button className={category==="Residential"?"active":""} onClick={() => { setCategory("Residential"); setScopeA(""); setScopeB(""); }}>🏠 {t.residential}</button>
+            <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",background:"#f8f8f8",borderRadius:9,border:"1.5px solid var(--border)"}}>
+              <span style={{fontSize:18}}>{category === "Commercial" ? "🏗" : "🏠"}</span>
+              <span style={{fontWeight:700,fontSize:15}}>{category === "Commercial" ? t.commercial : t.residential}</span>
+              <span style={{marginLeft:"auto",fontSize:10,color:"var(--gray)",background:"#e8e8e8",padding:"2px 7px",borderRadius:4,fontWeight:600}}>
+                {project ? "AUTO" : "DEFAULT"}
+              </span>
             </div>
+            {project && <div style={{fontSize:11,color:"var(--gray)",marginTop:4}}>Set automatically from project selection.</div>}
           </div>
         </div>
 
@@ -749,10 +866,61 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
                   <input type="number" inputMode="numeric" placeholder="0" value={numLabor} onChange={e => setNumLabor(e.target.value)} />
                 </div>
               </div>
-              <div style={{marginTop:12,padding:"10px 14px",background:"#f0fdf4",borderRadius:9,fontSize:13,color:"#065f46"}}>
-                ℹ️ Hourly rates auto-calculate from crew rates in the spreadsheet.
+              {/* Live hourly breakdown */}
+              <div style={{marginTop:12,background:"#f0fdf4",borderRadius:9,padding:"10px 14px",border:"1px solid #bbf7d0"}}>
+                {crew && leadRate === 0 && masonRate === 0 && laborRate === 0 && (
+                  <div style={{fontSize:12,color:"#92400e",marginBottom:6}}>⚠️ No hourly rates on file for this crew.</div>
+                )}
+                {!crew && (
+                  <div style={{fontSize:12,color:"#065f46",marginBottom:6}}>Select a crew above to see live rates.</div>
+                )}
+                {crew && (leadRate > 0 || masonRate > 0 || laborRate > 0) && (
+                  <div style={{fontSize:11,color:"#065f46",marginBottom:6,display:"flex",gap:12}}>
+                    {leadRate  > 0 && <span>Lead: {fmt(leadRate)}/hr</span>}
+                    {masonRate > 0 && <span>Mason: {fmt(masonRate)}/hr</span>}
+                    {laborRate > 0 && <span>Labor: {fmt(laborRate)}/hr</span>}
+                  </div>
+                )}
+                {hourlyCalc.leadPay  > 0 && <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#065f46",padding:"2px 0"}}><span>{numLead} Lead × {hours}h × {fmt(leadRate)}</span><span>{fmt(hourlyCalc.leadPay)}</span></div>}
+                {hourlyCalc.masonPay > 0 && <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#065f46",padding:"2px 0"}}><span>{numMason} Mason × {hours}h × {fmt(masonRate)}</span><span>{fmt(hourlyCalc.masonPay)}</span></div>}
+                {hourlyCalc.laborPay > 0 && <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#065f46",padding:"2px 0"}}><span>{numLabor} Labor × {hours}h × {fmt(laborRate)}</span><span>{fmt(hourlyCalc.laborPay)}</span></div>}
+                {hourlyCalc.total > 0 && (
+                  <div style={{display:"flex",justifyContent:"space-between",fontSize:15,fontWeight:800,color:"#065f46",paddingTop:8,marginTop:6,borderTop:"1px solid #86efac"}}>
+                    <span>Estimated Total</span><span>{fmt(hourlyCalc.total)}</span>
+                  </div>
+                )}
               </div>
             </>
+          )}
+        </div>
+
+        {/* Photos */}
+        <div className="card">
+          <div className="card-title">📷 Photos</div>
+          {photos.length > 0 && (
+            <div className="photo-grid">
+              {photos.map((p, i) => (
+                <div key={i} className="photo-thumb">
+                  <img src={p.url} alt={p.name} />
+                  <button className="photo-thumb-remove" onClick={() => removePhoto(i)}>✕</button>
+                </div>
+              ))}
+            </div>
+          )}
+          <label className="photo-upload-btn">
+            📷 {photos.length === 0 ? "Add Photos" : "Add More Photos"}
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              style={{display:"none"}}
+              onChange={handlePhotoAdd}
+            />
+          </label>
+          {photos.length > 0 && (
+            <div style={{fontSize:12,color:"var(--gray)",marginTop:6,textAlign:"center"}}>
+              {photos.length} photo{photos.length !== 1 ? "s" : ""} selected
+            </div>
           )}
         </div>
 
@@ -766,12 +934,19 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
           <div className="pay-bar-label">{t.estPay}</div>
           <div className="pay-bar-amount">{fmt(grandTotal)}</div>
         </div>
-        {grandTotal > 0 && (
+        {grandTotal > 0 && payType === "Unit" && (
           <div style={{fontSize:11,color:"#aaa",textAlign:"right",maxWidth:200}}>
             {payA > 0 && <div>Scope A: {fmt(payA)}</div>}
             {payB > 0 && <div>Scope B: {fmt(payB)}</div>}
             {detailTotal > 0 && <div>Details: {fmt(detailTotal)}</div>}
             {cleanPay > 0 && <div>Clean: {fmt(cleanPay)}</div>}
+          </div>
+        )}
+        {grandTotal > 0 && payType === "Hourly" && (
+          <div style={{fontSize:11,color:"#aaa",textAlign:"right",maxWidth:200}}>
+            {hourlyCalc.leadPay  > 0 && <div>Lead: {fmt(hourlyCalc.leadPay)}</div>}
+            {hourlyCalc.masonPay > 0 && <div>Mason: {fmt(hourlyCalc.masonPay)}</div>}
+            {hourlyCalc.laborPay > 0 && <div>Labor: {fmt(hourlyCalc.laborPay)}</div>}
           </div>
         )}
       </div>
@@ -784,24 +959,36 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
 // ── MY SUBMISSIONS ────────────────────────────────────────────────────────────
 function SubmissionsScreen({onNav, lang, crew}) {
   const t = T[lang];
-  const [subs, setSubs] = useState([]);
+  const [allSubs, setAllSubs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [viewStub, setViewStub] = useState(null);
   const [filterCrew, setFilterCrew] = useState(crew || "");
+  const [filterWeek, setFilterWeek] = useState("");
 
   async function load() {
     setLoading(true);
     try {
-      const data = await apiGetSubmissions(filterCrew);
-      setSubs(data);
+      // Load all subs; filter client-side so both dropdowns work together
+      const data = await apiGetSubmissions("");
+      setAllSubs(data);
     } catch(e) {
-      setSubs([]);
+      setAllSubs([]);
     } finally {
       setLoading(false);
     }
   }
 
-  useEffect(() => { load(); }, [filterCrew]);
+  useEffect(() => { load(); }, []);
+
+  // Build unique sorted week options from loaded data
+  const weekOptions = [...new Set(allSubs.map(s => s.weekEnding).filter(Boolean))].sort().reverse();
+
+  // Apply filters client-side
+  const subs = allSubs.filter(s => {
+    if (filterCrew && (s.crew || s.crewDisplay) !== filterCrew) return false;
+    if (filterWeek && s.weekEnding !== filterWeek) return false;
+    return true;
+  });
 
   if (viewStub) {
     const s = viewStub;
@@ -831,7 +1018,7 @@ function SubmissionsScreen({onNav, lang, crew}) {
               <div key={i} className="stub-line"><span>{d.cat}: {d.type} ×{d.qty}</span><span>{fmt(calcDetailPay(d.cat,d.type,d.qty))}</span></div>
             ))}
             {s.cleanType && s.cleanType !== "None" && <div className="stub-line"><span>{s.cleanType}</span><span>{fmt(s.cleanPay||0)}</span></div>}
-            {s.payType === "Hourly" && <div className="stub-line"><span>Hourly ({s.hours}h)</span><span>{fmt(s.hourlyPay||0)}</span></div>}
+            {s.payType === "Hourly" && <div className="stub-line"><span>Hourly ({s.hours}h)</span><span>{fmt(s.totalPay||0)}</span></div>}
             <div className="section-divider"/>
             <div className="stub-total"><span>{t.totalPay}</span><span style={{color:"var(--green)"}}>{fmt(s.totalPay||0)}</span></div>
           </div>
@@ -851,14 +1038,37 @@ function SubmissionsScreen({onNav, lang, crew}) {
         </div>
       </div>
       <div className="content">
-        <div className="field" style={{marginBottom:14}}>
-          <label>{t.crew}</label>
-          <div className="select-wrap">
-            <select value={filterCrew} onChange={e => setFilterCrew(e.target.value)}>
-              <option value="">— All Crews —</option>
-              {CREWS.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
+
+        {/* Filter card */}
+        <div className="card" style={{marginBottom:12}}>
+          <div className="card-title" style={{marginBottom:10}}>Filter</div>
+          <div className="field" style={{marginBottom:10}}>
+            <label>{t.crew}</label>
+            <div className="select-wrap">
+              <select value={filterCrew} onChange={e => setFilterCrew(e.target.value)}>
+                <option value="">— All Crews —</option>
+                {CREWS.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
           </div>
+          <div className="field" style={{marginBottom:0}}>
+            <label>{t.weekEnding}</label>
+            <div className="select-wrap">
+              <select value={filterWeek} onChange={e => setFilterWeek(e.target.value)}>
+                <option value="">— All Weeks —</option>
+                {weekOptions.map(w => <option key={w} value={w}>{w}</option>)}
+              </select>
+            </div>
+          </div>
+          {(filterCrew || filterWeek) && (
+            <button
+              className="btn btn-outline btn-sm"
+              style={{marginTop:10,width:"100%"}}
+              onClick={() => { setFilterCrew(""); setFilterWeek(""); }}
+            >
+              ✕ Clear Filters
+            </button>
+          )}
         </div>
 
         {loading ? (
