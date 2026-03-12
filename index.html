@@ -26,7 +26,6 @@
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); min-height: 100vh; }
   #root { min-height: 100vh; }
 
-  /* Layout */
   .screen { min-height: 100vh; display: flex; flex-direction: column; }
   .header { background: var(--dark); color: white; padding: 12px 16px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
   .header-logo { width: 36px; height: 36px; }
@@ -38,11 +37,9 @@
 
   .content { flex: 1; padding: 16px; max-width: 480px; margin: 0 auto; width: 100%; }
 
-  /* Cards */
   .card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border); }
   .card-title { font-size: 13px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
 
-  /* Form elements */
   .field { margin-bottom: 14px; }
   .field label { display: block; font-size: 12px; font-weight: 600; color: var(--gray); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
   .field select, .field input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 15px; background: white; color: var(--dark); appearance: none; -webkit-appearance: none; outline: none; transition: border-color 0.15s; }
@@ -52,7 +49,6 @@
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .field-row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 
-  /* Buttons */
   .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.15s; letter-spacing: 0.3px; }
   .btn-green { background: var(--green); color: white; }
   .btn-green:hover { background: var(--green-dark); }
@@ -63,22 +59,18 @@
   .btn-blue { background: var(--blue); color: white; }
   .btn-gray { background: #eee; color: var(--dark); }
 
-  /* Pay toggle */
   .pay-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
   .pay-toggle button { padding: 11px; border: none; background: white; font-size: 14px; font-weight: 600; color: var(--gray); cursor: pointer; transition: all 0.15s; }
   .pay-toggle button.active { background: var(--green); color: white; }
 
-  /* Category toggle */
   .cat-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
   .cat-toggle button { padding: 10px; border: none; background: white; font-size: 13px; font-weight: 600; color: var(--gray); cursor: pointer; transition: all 0.15s; }
   .cat-toggle button.active { background: var(--dark); color: white; }
 
-  /* Pay summary bar */
   .pay-bar { background: var(--dark); color: white; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; position: sticky; bottom: 0; z-index: 50; }
   .pay-bar-label { font-size: 12px; color: var(--gray); }
   .pay-bar-amount { font-size: 22px; font-weight: 800; color: var(--green); }
 
-  /* Scope row */
   .scope-row { background: #f8f8f8; border-radius: 9px; padding: 12px; margin-bottom: 10px; border: 1px solid var(--border); }
   .scope-row-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
   .scope-label { font-size: 12px; font-weight: 700; color: var(--gray); text-transform: uppercase; }
@@ -88,13 +80,11 @@
   .remove-btn { background: none; border: none; color: #ccc; font-size: 18px; cursor: pointer; padding: 0 4px; line-height: 1; }
   .remove-btn:hover { color: var(--red); }
 
-  /* Toast */
   .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--dark); color: white; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; z-index: 999; box-shadow: 0 4px 20px rgba(0,0,0,0.3); animation: slideUp 0.2s ease; white-space: nowrap; }
   .toast.error { background: var(--red); }
   .toast.success { background: var(--green); }
   @keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 
-  /* Status badges */
   .badge { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
   .badge-pending { background: #FEF3C7; color: #92400E; }
   .badge-sent { background: #DBEAFE; color: #1E40AF; }
@@ -102,7 +92,6 @@
   .badge-disputed { background: #FEE2E2; color: #991B1B; }
   .badge-paid { background: #F0FDF4; color: #166534; border: 1px solid #86EFAC; }
 
-  /* Submission cards */
   .sub-card { background: white; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 10px; overflow: hidden; box-shadow: var(--shadow); }
   .sub-card-stripe { height: 4px; }
   .sub-card-body { padding: 14px; }
@@ -112,7 +101,6 @@
   .sub-card-meta { font-size: 12px; color: var(--gray); margin-bottom: 10px; }
   .sub-card-actions { display: flex; gap: 8px; }
 
-  /* Suite launcher */
   .suite-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .suite-card { background: white; border-radius: 14px; padding: 20px 16px; box-shadow: var(--shadow); border: 1px solid var(--border); cursor: pointer; transition: all 0.15s; text-align: center; position: relative; }
   .suite-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
@@ -124,37 +112,28 @@
   .suite-badge { position: absolute; top: 10px; right: 10px; background: var(--red); color: white; border-radius: 10px; font-size: 10px; font-weight: 800; padding: 2px 6px; }
   .coming-soon { font-size: 10px; color: var(--gray); font-style: italic; margin-top: 4px; }
 
-  /* DBM logo SVG */
   .logo-svg { width: 36px; height: 36px; }
-
-  /* Section divider */
   .section-divider { height: 1px; background: var(--border); margin: 14px 0; }
 
-  /* Info row */
   .info-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
   .info-label { font-size: 13px; color: var(--gray); }
   .info-value { font-size: 13px; font-weight: 600; color: var(--dark); }
 
-  /* Dispute note */
   .dispute-note { background: #FEF3C7; border: 1px solid #FCD34D; border-radius: 9px; padding: 10px 12px; font-size: 13px; color: #92400E; margin-bottom: 12px; }
   .dispute-note strong { display: block; margin-bottom: 3px; }
 
-  /* Loading */
   .loading { text-align: center; padding: 40px; color: var(--gray); font-size: 14px; }
   .spinner { width: 24px; height: 24px; border: 3px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Empty state */
   .empty { text-align: center; padding: 60px 20px; color: var(--gray); }
   .empty-icon { font-size: 48px; margin-bottom: 12px; }
   .empty p { font-size: 15px; }
 
-  /* Stub viewer */
   .stub-line { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
   .stub-line:last-child { border-bottom: none; }
   .stub-total { display: flex; justify-content: space-between; padding: 12px 0 4px; font-size: 16px; font-weight: 800; }
 
-  /* Back button */
   .back-btn { background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 0; line-height: 1; margin-right: 4px; }
 </style>
 </head>
@@ -236,7 +215,6 @@ const CLEAN_RATES_MAP = {
   "Clean ($150)":150,"Clean ($300)":300,"Clean ($500)":500,"Clean ($1000 Lg Comm.)":1000,
 };
 
-// Spanish translations
 const T = {
   en: {
     appName:"DBM Field Report", suite:"DBM Operations Suite",
@@ -340,11 +318,13 @@ function statusBadgeClass(s) {
 }
 
 // ── API ───────────────────────────────────────────────────────────────────────
+// Uses text/plain Content-Type to avoid CORS preflight with Google Apps Script
 async function apiSubmit(record) {
   const res = await fetch(API_BASE, {
-    method:"POST", redirect:"follow",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({action:"submit", record}),
+    method: "POST",
+    redirect: "follow",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify({ action: "submit", record }),
   });
   const data = await res.json();
   if (!data.success) throw new Error(data.error || "Unknown error");
@@ -357,6 +337,18 @@ async function apiGetSubmissions(crew) {
   const data = await res.json();
   if (!data.success) throw new Error(data.error || "Unknown error");
   return data.submissions || [];
+}
+
+async function apiTransition(payload) {
+  const res = await fetch(API_BASE, {
+    method: "POST",
+    redirect: "follow",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify({ action: "transition", ...payload }),
+  });
+  const data = await res.json();
+  if (!data.success) throw new Error(data.error || "Unknown error");
+  return data;
 }
 
 // ── SVG LOGO ──────────────────────────────────────────────────────────────────
@@ -400,7 +392,7 @@ function SuiteLauncher({onNav, submissions, lang}) {
       <div className="header">
         <DBMLogo />
         <div>
-          <div className="header h1" style={{fontSize:17,fontWeight:700,letterSpacing:0.5}}>{t.suite}</div>
+          <div style={{fontSize:17,fontWeight:700,letterSpacing:0.5,color:"white"}}>{t.suite}</div>
           <div className="header-sub">Design Build Masonry</div>
         </div>
         <div className="header-right">
@@ -441,26 +433,20 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
   const [category, setCategory] = useState("Commercial");
   const [payType, setPayType] = useState("Unit");
 
-  // Scope A
   const [scopeA, setScopeA] = useState("");
   const [cubesA, setCubesA] = useState("");
   const [bpcA, setBpcA] = useState("500");
   const [multA, setMultA] = useState("None");
 
-  // Scope B
   const [showScopeB, setShowScopeB] = useState(false);
   const [scopeB, setScopeB] = useState("");
   const [cubesB, setCubesB] = useState("");
   const [bpcB, setBpcB] = useState("500");
   const [multB, setMultB] = useState("None");
 
-  // Details
   const [details, setDetails] = useState([]);
-
-  // Clean
   const [cleanType, setCleanType] = useState("None");
 
-  // Hourly
   const [hours, setHours] = useState("");
   const [numLead, setNumLead] = useState("0");
   const [numMason, setNumMason] = useState("0");
@@ -471,7 +457,6 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
 
   const scopes = category === "Commercial" ? COMMERCIAL_SCOPES : RESIDENTIAL_SCOPES;
 
-  // Calc total
   const payA = calcScopePay(scopeA, cubesA, multA, category, bpcA);
   const payB = showScopeB ? calcScopePay(scopeB, cubesB, multB, category, bpcB) : 0;
   const detailTotal = details.reduce((s, d) => s + calcDetailPay(d.cat, d.type, d.qty), 0);
@@ -511,12 +496,28 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
     setSubmitting(true);
     try {
       const record = {
-        weekEnding, project, crew, category, payType,
-        scopeA, cubesA: parseFloat(cubesA)||0, bpcA: parseFloat(bpcA)||500, multA,
-        scopeB: showScopeB ? scopeB : "", cubesB: showScopeB ? parseFloat(cubesB)||0 : 0, bpcB: parseFloat(bpcB)||500, multB: showScopeB ? multB : "None",
+        weekEnding,
+        project,
+        projectDisplay: project,
+        crew,
+        crewDisplay: crew,
+        category,
+        payType,
+        scopeA,
+        cubesA: parseFloat(cubesA) || 0,
+        bpcA: parseFloat(bpcA) || 500,
+        multA,
+        scopeB: showScopeB ? scopeB : "",
+        cubesB: showScopeB ? parseFloat(cubesB) || 0 : 0,
+        bpcB: parseFloat(bpcB) || 500,
+        multB: showScopeB ? multB : "None",
         details: details.map(d => ({cat:d.cat, type:d.type, qty:parseInt(d.qty)||1})),
-        cleanType, cleanPay,
-        hours: parseFloat(hours)||0, numLead: parseInt(numLead)||0, numMason: parseInt(numMason)||0, numLabor: parseInt(numLabor)||0,
+        cleanType,
+        cleanPay,
+        hours: parseFloat(hours) || 0,
+        numLead: parseInt(numLead) || 0,
+        numMason: parseInt(numMason) || 0,
+        numLabor: parseInt(numLabor) || 0,
         totalPay: grandTotal,
       };
       await apiSubmit(record);
@@ -524,7 +525,7 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
       onSubmitDone && onSubmitDone();
       setTimeout(() => onNav("screen","suite"), 1500);
     } catch(e) {
-      setToast({msg:t.errorMsg, type:"error"});
+      setToast({msg:t.errorMsg + " (" + e.message + ")", type:"error"});
     } finally {
       setSubmitting(false);
     }
@@ -546,8 +547,6 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
       </div>
 
       <div className="content" style={{paddingBottom:100}}>
-
-        {/* Job Info */}
         <div className="card">
           <div className="card-title">Job Info</div>
           <div className="field">
@@ -581,7 +580,6 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
           </div>
         </div>
 
-        {/* Pay Type */}
         <div className="card">
           <div className="card-title">{t.payType}</div>
           <div className="pay-toggle">
@@ -591,7 +589,6 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
 
           {payType === "Unit" && (
             <>
-              {/* Scope A */}
               <div className="scope-row">
                 <div className="scope-row-header">
                   <span className="scope-label">{t.scopeA}</span>
@@ -631,7 +628,6 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
                 )}
               </div>
 
-              {/* Scope B */}
               {!showScopeB ? (
                 <button className="add-btn" onClick={() => setShowScopeB(true)}>+ {t.addScopeB}</button>
               ) : (
@@ -678,7 +674,6 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
                 </div>
               )}
 
-              {/* Details */}
               {details.length > 0 && (
                 <div className="card" style={{background:"#f8f8f8",boxShadow:"none",border:"1px solid #e8e8e8",marginBottom:10}}>
                   <div className="card-title">{t.details}</div>
@@ -723,7 +718,6 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
               )}
               <button className="add-btn" onClick={addDetail}>+ {t.addDetail}</button>
 
-              {/* Clean */}
               <div className="field">
                 <label>{t.cleanType}</label>
                 <div className="select-wrap">
@@ -762,13 +756,11 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
           )}
         </div>
 
-        {/* Submit */}
         <button className="btn btn-green" onClick={handleSubmit} disabled={submitting}>
           {submitting ? t.submitting : t.submit}
         </button>
       </div>
 
-      {/* Pay bar */}
       <div className="pay-bar">
         <div>
           <div className="pay-bar-label">{t.estPay}</div>
@@ -821,10 +813,10 @@ function SubmissionsScreen({onNav, lang, crew}) {
         </div>
         <div className="content">
           <div className="card">
-            <div className="info-row"><span className="info-label">{t.project}</span><span className="info-value">{s.project}</span></div>
-            <div className="info-row"><span className="info-label">{t.crew}</span><span className="info-value">{s.crew}</span></div>
+            <div className="info-row"><span className="info-label">{t.project}</span><span className="info-value">{s.project || s.projectDisplay}</span></div>
+            <div className="info-row"><span className="info-label">{t.crew}</span><span className="info-value">{s.crew || s.crewDisplay}</span></div>
             <div className="info-row"><span className="info-label">{t.weekEnding}</span><span className="info-value">{s.weekEnding}</span></div>
-            <div className="info-row"><span className="info-label">{t.status}</span><span className={statusBadgeClass(s.status)}>{s.status?.toUpperCase()}</span></div>
+            <div className="info-row"><span className="info-label">{t.status}</span><span className={statusBadgeClass(s.status || s.stubStatus)}>{(s.status || s.stubStatus || "pending").toUpperCase()}</span></div>
           </div>
           {s.ownerNote && (
             <div className="dispute-note">
@@ -876,15 +868,15 @@ function SubmissionsScreen({onNav, lang, crew}) {
         ) : (
           subs.map((s,i) => (
             <div key={i} className="sub-card">
-              <div className="sub-card-stripe" style={{background:statusColor(s.status)}}/>
+              <div className="sub-card-stripe" style={{background:statusColor(s.status || s.stubStatus)}}/>
               <div className="sub-card-body">
                 <div className="sub-card-top">
-                  <div className="sub-card-project">{s.project}</div>
+                  <div className="sub-card-project">{s.project || s.projectDisplay}</div>
                   <div className="sub-card-amount">{fmt(s.totalPay)}</div>
                 </div>
-                <div className="sub-card-meta">{s.crew} • {s.weekEnding} • {s.payType}</div>
-                <div style={{marginBottom:8}}><span className={statusBadgeClass(s.status)}>{s.status?.toUpperCase()}</span></div>
-                {s.status === "disputed" && s.ownerNote && (
+                <div className="sub-card-meta">{s.crew || s.crewDisplay} • {s.weekEnding} • {s.payType}</div>
+                <div style={{marginBottom:8}}><span className={statusBadgeClass(s.status || s.stubStatus)}>{(s.status || s.stubStatus || "pending").toUpperCase()}</span></div>
+                {(s.status === "disputed" || s.stubStatus === "disputed") && s.ownerNote && (
                   <div className="dispute-note" style={{marginBottom:10}}>
                     <strong>⚠️ Disputed:</strong>{s.ownerNote}
                   </div>
@@ -901,7 +893,7 @@ function SubmissionsScreen({onNav, lang, crew}) {
   );
 }
 
-// ── OWNER DASHBOARD (simple) ──────────────────────────────────────────────────
+// ── OWNER DASHBOARD ───────────────────────────────────────────────────────────
 function OwnerScreen({onNav, lang}) {
   const t = T[lang];
   const [subs, setSubs] = useState([]);
@@ -921,24 +913,21 @@ function OwnerScreen({onNav, lang}) {
 
   async function transition(s, newStatus, ownerNote="") {
     try {
-      const res = await fetch(API_BASE, {
-        method:"POST", redirect:"follow",
-        headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({action:"transition", crewDisplay:s.crew, weekEnding:s.weekEnding, newStatus, ownerNote}),
+      await apiTransition({
+        crewDisplay: s.crewDisplay || s.crew,
+        weekEnding: s.weekEnding,
+        newStatus,
+        ownerNote,
       });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.error);
       setToast({msg:`Marked ${newStatus}`, type:"success"});
       load();
     } catch(e) {
-      setToast({msg:"Action failed", type:"error"});
+      setToast({msg:"Action failed: " + e.message, type:"error"});
     }
   }
 
-  const pending = subs.filter(s => s.status === "pending" || s.status === "sent" || s.status === "opened");
-  const disputed = subs.filter(s => s.status === "disputed");
-  const approved = subs.filter(s => s.status === "approved");
-
+  const pending  = subs.filter(s => ["pending","sent","opened"].includes(s.status || s.stubStatus));
+  const disputed = subs.filter(s => (s.status || s.stubStatus) === "disputed");
   const weekTotal = subs.reduce((a,s) => a + (parseFloat(s.totalPay)||0), 0);
 
   return (
@@ -952,7 +941,6 @@ function OwnerScreen({onNav, lang}) {
         </div>
       </div>
       <div className="content">
-        {/* Stats */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:14}}>
           {[
             {label:"Weekly Total", val:fmt(weekTotal), color:"var(--green)"},
@@ -971,33 +959,36 @@ function OwnerScreen({onNav, lang}) {
         ) : subs.length === 0 ? (
           <div className="empty"><div className="empty-icon">📭</div><p>No submissions yet</p></div>
         ) : (
-          subs.map((s,i) => (
-            <div key={i} className="sub-card">
-              <div className="sub-card-stripe" style={{background:statusColor(s.status)}}/>
-              <div className="sub-card-body">
-                <div className="sub-card-top">
-                  <div className="sub-card-project">{s.crew}</div>
-                  <div className="sub-card-amount">{fmt(s.totalPay)}</div>
+          subs.map((s,i) => {
+            const status = s.status || s.stubStatus || "pending";
+            return (
+              <div key={i} className="sub-card">
+                <div className="sub-card-stripe" style={{background:statusColor(status)}}/>
+                <div className="sub-card-body">
+                  <div className="sub-card-top">
+                    <div className="sub-card-project">{s.crewDisplay || s.crew}</div>
+                    <div className="sub-card-amount">{fmt(s.totalPay)}</div>
+                  </div>
+                  <div className="sub-card-meta">{s.projectDisplay || s.project} • {s.weekEnding}</div>
+                  <div style={{marginBottom:10}}><span className={statusBadgeClass(status)}>{status.toUpperCase()}</span></div>
+                  {status === "pending" && (
+                    <div className="sub-card-actions">
+                      <button className="btn btn-green btn-sm" onClick={() => transition(s,"approved")}>✓ Approve</button>
+                      <button className="btn btn-red btn-sm" onClick={() => {
+                        const note = prompt("Dispute reason:");
+                        if (note !== null) transition(s, "disputed", note);
+                      }}>✗ Dispute</button>
+                    </div>
+                  )}
+                  {status === "approved" && (
+                    <div className="sub-card-actions">
+                      <button className="btn btn-blue btn-sm" onClick={() => transition(s,"paid")}>💰 Mark Paid</button>
+                    </div>
+                  )}
                 </div>
-                <div className="sub-card-meta">{s.project} • {s.weekEnding}</div>
-                <div style={{marginBottom:10}}><span className={statusBadgeClass(s.status)}>{s.status?.toUpperCase()}</span></div>
-                {s.status === "pending" && (
-                  <div className="sub-card-actions">
-                    <button className="btn btn-green btn-sm" onClick={() => transition(s,"approved")}>✓ Approve</button>
-                    <button className="btn btn-red btn-sm" onClick={() => {
-                      const note = prompt("Dispute reason:");
-                      if (note !== null) transition(s, "disputed", note);
-                    }}>✗ Dispute</button>
-                  </div>
-                )}
-                {s.status === "approved" && (
-                  <div className="sub-card-actions">
-                    <button className="btn btn-blue btn-sm" onClick={() => transition(s,"paid")}>💰 Mark Paid</button>
-                  </div>
-                )}
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
       {toast && <Toast msg={toast.msg} type={toast.type} onDone={() => setToast(null)} />}
