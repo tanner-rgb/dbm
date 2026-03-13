@@ -151,37 +151,10 @@ const API_BASE = "https://script.google.com/macros/s/AKfycbwOwATCsmUJx9quvzb_TgT
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
 // Projects include their category so selecting one auto-sets Commercial/Residential
-const PROJECT_LIST = [
-  {name:"1025 N Morgan Ave",                 category:"Residential"},
-  {name:"1819 Guilford",                     category:"Residential"},
-  {name:"20976 Alba Ct",                     category:"Residential"},
-  {name:"507 NE 1st St",                     category:"Commercial"},
-  {name:"6309 Oak Tree",                     category:"Residential"},
-  {name:"Cherokee Youth Shelter (Talequah)", category:"Commercial"},
-  {name:"Epperly Heights",                   category:"Residential"},
-  {name:"Loves House",                       category:"Residential"},
-  {name:"Purcell ICF",                       category:"Commercial"},
-  {name:"Spokes Superquads",                 category:"Commercial"},
-  {name:"Wings",                             category:"Commercial"},
-  {name:"503 NE 1st St",                     category:"Commercial"},
-  {name:"505 NE 1st St",                     category:"Commercial"},
-  {name:"13700 Shoreline",                   category:"Commercial"},
-  {name:"14000 Shoreline",                   category:"Commercial"},
-  {name:"180 Medical",                       category:"Commercial"},
-  {name:"22555 N Meridian",                  category:"Residential"},
-  {name:"2538 Pembrook",                     category:"Residential"},
-  {name:"4504 Ashton",                       category:"Residential"},
-  {name:"6800 Cove Creek",                   category:"Residential"},
-  {name:"BOAZ",                              category:"Commercial"},
-  {name:"First Fidelity - Edmond",           category:"Commercial"},
-  {name:"Heritage Hall",                     category:"Commercial"},
-];
-// Flat name list kept for places that only need names
-const PROJECTS = PROJECT_LIST.map(p => p.name);
-function getProjectCategory(name) {
-  const p = PROJECT_LIST.find(x => x.name === name);
-  return p ? p.category : null;
-}
+// Project list is now loaded live from the spreadsheet via apiGetProjects().
+// The module-level constants below are intentionally empty — FieldForm
+// maintains its own projectList state and passes helpers down as needed.
+const PROJECT_LIST = []; // kept as fallback; populated at runtime by FieldForm
 
 const CREWS = [
   "Alan Gonzalez","Alfonso Marrufo (Poncho)","Alonso Soto","Antonio Gaytan",
@@ -423,6 +396,15 @@ async function apiGetCrews() {
   return data.crews || []; // [{displayName, leadRate, masonRate, laborRate}, …]
 }
 
+
+async function apiGetProjects() {
+  const qs = new URLSearchParams({action:"projects"}).toString();
+  const res = await fetch(API_BASE + "?" + qs, {redirect:"follow"});
+  const data = await res.json();
+  if (!data.success) throw new Error(data.error || "Unknown error");
+  return data.projects || []; // [{name, category, active, bpc}, ...]
+}
+
 async function apiTransition(payload) {
   const res = await fetch(API_BASE, {
     method: "POST",
@@ -571,6 +553,19 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
       .catch(() => {})
       .finally(() => setCrewRatesLoading(false));
   }, []);
+
+  const [projectList, setProjectList] = useState([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  useEffect(() => {
+    apiGetProjects()
+      .then(list => setProjectList(list.filter(p => p.active)))
+      .catch(() => {})
+      .finally(() => setProjectsLoading(false));
+  }, []);
+  function getProjectCategory(name) {
+    const p = projectList.find(x => x.name === name);
+    return p ? p.category : null;
+  }
   const selectedRates = crewRates.find(r => r.displayName === crew) || {};
   const leadRate  = selectedRates.leadRate  || 0;
   const masonRate = selectedRates.masonRate || 0;
@@ -716,7 +711,9 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
             <div className="select-wrap">
               <select value={project} onChange={e => handleProjectChange(e.target.value)}>
                 <option value="">— Select —</option>
-                {PROJECTS.map(p => <option key={p} value={p}>{p}</option>)}
+                {projectsLoading
+                    ? <option>Loading…</option>
+                    : projectList.map(p => <option key={p.name} value={p.name}>{p.name}</option>)}
               </select>
             </div>
           </div>
