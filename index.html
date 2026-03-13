@@ -57,15 +57,10 @@
   .btn-sm { padding: 8px 14px; font-size: 13px; width: auto; border-radius: 8px; }
   .btn-red { background: var(--red); color: white; }
   .btn-blue { background: var(--blue); color: white; }
-  .btn-gray { background: #eee; color: var(--dark); }
 
   .pay-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
   .pay-toggle button { padding: 11px; border: none; background: white; font-size: 14px; font-weight: 600; color: var(--gray); cursor: pointer; transition: all 0.15s; }
   .pay-toggle button.active { background: var(--green); color: white; }
-
-  .cat-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
-  .cat-toggle button { padding: 10px; border: none; background: white; font-size: 13px; font-weight: 600; color: var(--gray); cursor: pointer; transition: all 0.15s; }
-  .cat-toggle button.active { background: var(--dark); color: white; }
 
   .pay-bar { background: var(--dark); color: white; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; position: sticky; bottom: 0; z-index: 50; }
   .pay-bar-label { font-size: 12px; color: var(--gray); }
@@ -149,7 +144,7 @@
 <div id="root"></div>
 
 <script type="text/babel">
-const { useState, useEffect, useCallback, useRef } = React;
+const { useState, useEffect } = React;
 
 // ── CONFIG ────────────────────────────────────────────────────────────────────
 const API_BASE = "https://script.google.com/macros/s/AKfycbwOwATCsmUJx9quvzb_TgT1-Ze6rFHGOesywksSNZBs4U8Dp_ClljrTnM0qYgNue6R71w/exec";
@@ -312,7 +307,7 @@ function getUnit(scope) {
 }
 
 function calcScopePay(scope, qty, mult, category, bpc) {
-  if (!scope || !qty) return 0;
+  if (!scope || parseFloat(qty) <= 0 || qty === "") return 0;
   const key = `${category} ${scope}`;
   const rate = UNIT_RATES[key] || 0;
   const unit = getUnit(scope);
@@ -327,33 +322,45 @@ function calcDetailPay(cat, type, qty) {
   if (!cat || !type) return 0;
   const items = DETAIL_TREE[cat] || [];
   const item = items.find(i => i.type === type);
-  const rate = item?.rate || 0;
-  return rate * (parseInt(qty) || 1);
+  if (!item || item.rate === null) return null; // null = TBD / custom rate
+  return item.rate * (parseInt(qty) || 1);
+}
+
+function fmtDetailPay(cat, type, qty) {
+  const val = calcDetailPay(cat, type, qty);
+  if (val === null) return "TBD";
+  return fmt(val);
 }
 
 function calcCleanPay(cleanType) {
   return CLEAN_RATES_MAP[cleanType] || 0;
 }
 
-// Returns YYYY-MM-DD of the most recent Friday on or before today
+// Returns YYYY-MM-DD of the most recent Friday on or before today (local time)
 function lastFriday() {
   const d = new Date();
   const dow = d.getDay(); // 0=Sun … 5=Fri … 6=Sat
-  const daysBack = dow >= 5 ? dow - 5 : dow + 2; // days since last Friday
+  const daysBack = dow >= 5 ? dow - 5 : dow + 2;
   d.setDate(d.getDate() - daysBack);
-  return d.toISOString().split("T")[0];
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${dd}`;
 }
 
-// Snap any date string to the nearest Friday (same week, not past)
+// Snap any date string back to the most recent Friday (local time, never jumps forward)
 function snapToFriday(dateStr) {
   if (!dateStr) return lastFriday();
   const [y, m, d] = dateStr.split("-").map(Number);
-  const dt = new Date(Date.UTC(y, m - 1, d));
-  const dow = dt.getUTCDay();
+  const dt = new Date(y, m - 1, d); // local midnight
+  const dow = dt.getDay();
   if (dow === 5) return dateStr; // already Friday
-  // Move forward to next Friday
-  dt.setUTCDate(dt.getUTCDate() + ((5 - dow + 7) % 7));
-  return dt.toISOString().split("T")[0];
+  const daysBack = dow > 5 ? dow - 5 : dow + 2;
+  dt.setDate(dt.getDate() - daysBack);
+  const yr = dt.getFullYear();
+  const mo = String(dt.getMonth() + 1).padStart(2, "0");
+  const dy = String(dt.getDate()).padStart(2, "0");
+  return `${yr}-${mo}-${dy}`;
 }
 
 // Calculate hourly pay from headcount, hours, and per-person rates
@@ -366,7 +373,14 @@ function calcHourlyPay(hours, numLead, numMason, numLabor, leadRate, masonRate, 
 }
 
 function fmt(n) {
-  return "$" + (n || 0).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+  const num = parseFloat(n) || 0;
+  return "$" + num.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function fmtDate(dateStr) {
+  if (!dateStr) return "";
+  const [y, m, d] = dateStr.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString("en-US", {month:"short", day:"numeric", year:"numeric"});
 }
 
 function statusColor(s) {
@@ -441,14 +455,14 @@ function Toast({msg, type, onDone}) {
   useEffect(() => {
     const t = setTimeout(onDone, 2800);
     return () => clearTimeout(t);
-  }, []);
+  }, [onDone]);
   return <div className={`toast ${type}`}>{msg}</div>;
 }
 
 // ── SUITE LAUNCHER ────────────────────────────────────────────────────────────
 function SuiteLauncher({onNav, submissions, lang}) {
   const t = T[lang];
-  const disputed = submissions.filter(s => s.status === "disputed").length;
+  const disputed = submissions.filter(s => (s.status === "disputed" || s.stubStatus === "disputed")).length;
   const apps = [
     {id:"field", icon:"📋", name:t.fieldReport, sub:"Submit work reports", color:"#6DD44E", live:true},
     {id:"subs",  icon:"📨", name:t.mySubmissions, sub:"Track your pay", color:"#2563EB", live:true, badge:disputed||0},
@@ -497,12 +511,39 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
   const t = T[lang];
 
   // ── Week Ending — defaults to last Friday, snaps on change ────────────────
-  const [weekEnding, setWeekEnding] = useState(lastFriday);
+  const [weekEnding, setWeekEnding] = useState(() => lastFriday());
   function handleWeekChange(e) { setWeekEnding(snapToFriday(e.target.value)); }
 
-  // ── Project → auto-sets category ──────────────────────────────────────────
-  const [project, setProject] = useState("");
+  // ── Core fields ───────────────────────────────────────────────────────────
+  const [project,  setProject]  = useState("");
   const [category, setCategory] = useState("Commercial");
+  const [crew,     setCrew]     = useState("");
+  const [payType,  setPayType]  = useState("Unit");
+
+  const [scopeA,  setScopeA]  = useState("");
+  const [cubesA,  setCubesA]  = useState("");
+  const [bpcA,    setBpcA]    = useState("500");
+  const [multA,   setMultA]   = useState("None");
+
+  const [showScopeB, setShowScopeB] = useState(false);
+  const [scopeB,  setScopeB]  = useState("");
+  const [cubesB,  setCubesB]  = useState("");
+  const [bpcB,    setBpcB]    = useState("500");
+  const [multB,   setMultB]   = useState("None");
+
+  const [details,   setDetails]   = useState([]);
+  const [cleanType, setCleanType] = useState("None");
+
+  const [hours,    setHours]    = useState("");
+  const [numLead,  setNumLead]  = useState("0");
+  const [numMason, setNumMason] = useState("0");
+  const [numLabor, setNumLabor] = useState("0");
+
+  const [photos,     setPhotos]     = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [toast,      setToast]      = useState(null);
+
+  // ── Project → auto-sets category (declared after all setters are in scope) ─
   function handleProjectChange(name) {
     setProject(name);
     setScopeA(""); setScopeB(""); setShowScopeB(false);
@@ -510,35 +551,26 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
     if (cat) setCategory(cat);
   }
 
-  const [crew, setCrew] = useState("");
-  const [payType, setPayType] = useState("Unit");
-
-  const [scopeA, setScopeA] = useState("");
-  const [cubesA, setCubesA] = useState("");
-  const [bpcA, setBpcA] = useState("500");
-  const [multA, setMultA] = useState("None");
-
-  const [showScopeB, setShowScopeB] = useState(false);
-  const [scopeB, setScopeB] = useState("");
-  const [cubesB, setCubesB] = useState("");
-  const [bpcB, setBpcB] = useState("500");
-  const [multB, setMultB] = useState("None");
-
-  const [details, setDetails] = useState([]);
-  const [cleanType, setCleanType] = useState("None");
-
-  const [hours, setHours] = useState("");
-  const [numLead, setNumLead] = useState("0");
-  const [numMason, setNumMason] = useState("0");
-  const [numLabor, setNumLabor] = useState("0");
-
-  const [photos, setPhotos] = useState([]);
-  const [submitting, setSubmitting] = useState(false);
-  const [toast, setToast] = useState(null);
+  // ── Reset all form fields ─────────────────────────────────────────────────
+  function resetForm() {
+    setWeekEnding(lastFriday());
+    setProject(""); setCategory("Commercial"); setCrew(""); setPayType("Unit");
+    setScopeA(""); setCubesA(""); setBpcA("500"); setMultA("None");
+    setShowScopeB(false); setScopeB(""); setCubesB(""); setBpcB("500"); setMultB("None");
+    setDetails([]); setCleanType("None");
+    setHours(""); setNumLead("0"); setNumMason("0"); setNumLabor("0");
+    setPhotos([]);
+  }
 
   // ── Crew hourly rates (fetched once on mount) ─────────────────────────────
   const [crewRates, setCrewRates] = useState([]);
-  useEffect(() => { apiGetCrews().then(setCrewRates).catch(() => {}); }, []);
+  const [crewRatesLoading, setCrewRatesLoading] = useState(true);
+  useEffect(() => {
+    apiGetCrews()
+      .then(setCrewRates)
+      .catch(() => {})
+      .finally(() => setCrewRatesLoading(false));
+  }, []);
   const selectedRates = crewRates.find(r => r.displayName === crew) || {};
   const leadRate  = selectedRates.leadRate  || 0;
   const masonRate = selectedRates.masonRate || 0;
@@ -565,7 +597,7 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
 
   const payA = calcScopePay(scopeA, cubesA, multA, category, bpcA);
   const payB = showScopeB ? calcScopePay(scopeB, cubesB, multB, category, bpcB) : 0;
-  const detailTotal = details.reduce((s, d) => s + calcDetailPay(d.cat, d.type, d.qty), 0);
+  const detailTotal = details.reduce((s, d) => s + (calcDetailPay(d.cat, d.type, d.qty) || 0), 0);
   const cleanPay = calcCleanPay(cleanType);
   const grandTotal = payType === "Unit"
     ? payA + payB + detailTotal + cleanPay
@@ -600,6 +632,17 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
       setToast({msg:"Please select at least Scope A", type:"error"});
       return;
     }
+    if (payType === "Hourly") {
+      if (!hours || parseFloat(hours) <= 0) {
+        setToast({msg:"Please enter hours worked", type:"error"});
+        return;
+      }
+      const totalWorkers = (parseInt(numLead)||0) + (parseInt(numMason)||0) + (parseInt(numLabor)||0);
+      if (totalWorkers === 0) {
+        setToast({msg:"Please enter at least one worker (Lead, Mason, or Labor)", type:"error"});
+        return;
+      }
+    }
 
     setSubmitting(true);
     try {
@@ -615,10 +658,12 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
         cubesA: parseFloat(cubesA) || 0,
         bpcA: parseFloat(bpcA) || 500,
         multA,
+        payA,
         scopeB: showScopeB ? scopeB : "",
         cubesB: showScopeB ? parseFloat(cubesB) || 0 : 0,
         bpcB: parseFloat(bpcB) || 500,
         multB: showScopeB ? multB : "None",
+        payB: showScopeB ? payB : 0,
         details: details.map(d => ({cat:d.cat, type:d.type, qty:parseInt(d.qty)||1})),
         cleanType,
         cleanPay,
@@ -633,7 +678,7 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
       await apiSubmit(record);
       setToast({msg:t.successMsg, type:"success"});
       onSubmitDone && onSubmitDone();
-      setTimeout(() => onNav("screen","suite"), 1500);
+      setTimeout(() => { resetForm(); onNav("screen","suite"); }, 1500);
     } catch(e) {
       setToast({msg:t.errorMsg + " (" + e.message + ")", type:"error"});
     } finally {
@@ -709,7 +754,7 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
               <div className="scope-row">
                 <div className="scope-row-header">
                   <span className="scope-label">{t.scopeA}</span>
-                  <span className="scope-pay">{fmt(payA)}</span>
+                  {payA > 0 && <span className="scope-pay">{fmt(payA)}</span>}
                 </div>
                 <div className="field" style={{marginBottom:8}}>
                   <div className="select-wrap">
@@ -723,12 +768,12 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
                   <div className="field-row">
                     <div className="field" style={{marginBottom:0}}>
                       <label>{getUnitLabel(scopeA)}</label>
-                      <input type="number" inputMode="decimal" placeholder="0" value={cubesA} onChange={e => setCubesA(e.target.value)} />
+                      <input type="number" inputMode="decimal" min="0" placeholder="0" value={cubesA} onChange={e => setCubesA(e.target.value)} />
                     </div>
                     {getUnit(scopeA) === "Cubes" && (
                       <div className="field" style={{marginBottom:0}}>
                         <label>{t.bpc}</label>
-                        <input type="number" inputMode="decimal" placeholder="500" value={bpcA} onChange={e => setBpcA(e.target.value)} />
+                        <input type="number" inputMode="decimal" min="1" placeholder="500" value={bpcA} onChange={e => setBpcA(e.target.value)} />
                       </div>
                     )}
                   </div>
@@ -752,7 +797,7 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
                   <div className="scope-row-header">
                     <span className="scope-label">{t.scopeB}</span>
                     <div style={{display:"flex",alignItems:"center",gap:8}}>
-                      <span className="scope-pay">{fmt(payB)}</span>
+                      {payB > 0 && <span className="scope-pay">{fmt(payB)}</span>}
                       <button className="remove-btn" onClick={() => { setShowScopeB(false); setScopeB(""); setCubesB(""); }}>✕</button>
                     </div>
                   </div>
@@ -768,12 +813,12 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
                     <div className="field-row">
                       <div className="field" style={{marginBottom:0}}>
                         <label>{getUnitLabel(scopeB)}</label>
-                        <input type="number" inputMode="decimal" placeholder="0" value={cubesB} onChange={e => setCubesB(e.target.value)} />
+                        <input type="number" inputMode="decimal" min="0" placeholder="0" value={cubesB} onChange={e => setCubesB(e.target.value)} />
                       </div>
                       {getUnit(scopeB) === "Cubes" && (
                         <div className="field" style={{marginBottom:0}}>
                           <label>{t.bpc}</label>
-                          <input type="number" inputMode="decimal" placeholder="500" value={bpcB} onChange={e => setBpcB(e.target.value)} />
+                          <input type="number" inputMode="decimal" min="1" placeholder="500" value={bpcB} onChange={e => setBpcB(e.target.value)} />
                         </div>
                       )}
                     </div>
@@ -797,9 +842,15 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
                   {details.map(d => (
                     <div key={d.id} className="scope-row" style={{marginBottom:8}}>
                       <div className="scope-row-header">
-                        <span className="scope-label">{t.details}</span>
+                        <span className="scope-label">{d.cat || t.details}</span>
                         <div style={{display:"flex",alignItems:"center",gap:8}}>
-                          <span className="scope-pay">{fmt(calcDetailPay(d.cat,d.type,d.qty))}</span>
+                          {d.cat && d.type && (
+                            calcDetailPay(d.cat,d.type,d.qty) === null
+                              ? <span className="scope-pay" style={{fontSize:12,color:"var(--amber)"}}>TBD</span>
+                              : calcDetailPay(d.cat,d.type,d.qty) > 0
+                                ? <span className="scope-pay">{fmtDetailPay(d.cat,d.type,d.qty)}</span>
+                                : null
+                          )}
                           <button className="remove-btn" onClick={() => removeDetail(d.id)}>✕</button>
                         </div>
                       </div>
@@ -825,7 +876,7 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
                           </div>
                           <div className="field" style={{marginBottom:0}}>
                             <label>{t.count}</label>
-                            <input type="number" inputMode="numeric" placeholder="1" value={d.qty} onChange={e => updateDetail(d.id,"qty",e.target.value)} />
+                            <input type="number" inputMode="numeric" min="1" placeholder="1" value={d.qty} onChange={e => updateDetail(d.id,"qty",e.target.value)} />
                           </div>
                         </div>
                       )}
@@ -850,46 +901,48 @@ function FieldReportScreen({onNav, onSubmitDone, lang}) {
             <>
               <div className="field">
                 <label>{t.hoursWorked}</label>
-                <input type="number" inputMode="decimal" placeholder="0" value={hours} onChange={e => setHours(e.target.value)} />
+                <input type="number" inputMode="decimal" min="0" placeholder="0" value={hours} onChange={e => setHours(e.target.value)} />
               </div>
               <div className="field-row3">
                 <div className="field" style={{marginBottom:0}}>
                   <label>{t.numLead}</label>
-                  <input type="number" inputMode="numeric" placeholder="0" value={numLead} onChange={e => setNumLead(e.target.value)} />
+                  <input type="number" inputMode="numeric" min="0" placeholder="0" value={numLead} onChange={e => setNumLead(e.target.value)} />
                 </div>
                 <div className="field" style={{marginBottom:0}}>
                   <label>{t.numMason}</label>
-                  <input type="number" inputMode="numeric" placeholder="0" value={numMason} onChange={e => setNumMason(e.target.value)} />
+                  <input type="number" inputMode="numeric" min="0" placeholder="0" value={numMason} onChange={e => setNumMason(e.target.value)} />
                 </div>
                 <div className="field" style={{marginBottom:0}}>
                   <label>{t.numLabor}</label>
-                  <input type="number" inputMode="numeric" placeholder="0" value={numLabor} onChange={e => setNumLabor(e.target.value)} />
+                  <input type="number" inputMode="numeric" min="0" placeholder="0" value={numLabor} onChange={e => setNumLabor(e.target.value)} />
                 </div>
               </div>
-              {/* Live hourly breakdown */}
-              <div style={{marginTop:12,background:"#f0fdf4",borderRadius:9,padding:"10px 14px",border:"1px solid #bbf7d0"}}>
-                {crew && leadRate === 0 && masonRate === 0 && laborRate === 0 && (
-                  <div style={{fontSize:12,color:"#92400e",marginBottom:6}}>⚠️ No hourly rates on file for this crew.</div>
-                )}
-                {!crew && (
-                  <div style={{fontSize:12,color:"#065f46",marginBottom:6}}>Select a crew above to see live rates.</div>
-                )}
-                {crew && (leadRate > 0 || masonRate > 0 || laborRate > 0) && (
-                  <div style={{fontSize:11,color:"#065f46",marginBottom:6,display:"flex",gap:12}}>
-                    {leadRate  > 0 && <span>Lead: {fmt(leadRate)}/hr</span>}
-                    {masonRate > 0 && <span>Mason: {fmt(masonRate)}/hr</span>}
-                    {laborRate > 0 && <span>Labor: {fmt(laborRate)}/hr</span>}
-                  </div>
-                )}
-                {hourlyCalc.leadPay  > 0 && <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#065f46",padding:"2px 0"}}><span>{numLead} Lead × {hours}h × {fmt(leadRate)}</span><span>{fmt(hourlyCalc.leadPay)}</span></div>}
-                {hourlyCalc.masonPay > 0 && <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#065f46",padding:"2px 0"}}><span>{numMason} Mason × {hours}h × {fmt(masonRate)}</span><span>{fmt(hourlyCalc.masonPay)}</span></div>}
-                {hourlyCalc.laborPay > 0 && <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#065f46",padding:"2px 0"}}><span>{numLabor} Labor × {hours}h × {fmt(laborRate)}</span><span>{fmt(hourlyCalc.laborPay)}</span></div>}
-                {hourlyCalc.total > 0 && (
-                  <div style={{display:"flex",justifyContent:"space-between",fontSize:15,fontWeight:800,color:"#065f46",paddingTop:8,marginTop:6,borderTop:"1px solid #86efac"}}>
-                    <span>Estimated Total</span><span>{fmt(hourlyCalc.total)}</span>
-                  </div>
-                )}
-              </div>
+              {/* Live hourly breakdown — only shown when crew is selected */}
+              {crew && (
+                <div style={{marginTop:12,background:"#f0fdf4",borderRadius:9,padding:"10px 14px",border:"1px solid #bbf7d0"}}>
+                  {crewRatesLoading ? (
+                    <div style={{fontSize:12,color:"#065f46"}}>Loading rates...</div>
+                  ) : leadRate === 0 && masonRate === 0 && laborRate === 0 ? (
+                    <div style={{fontSize:12,color:"#92400e"}}>⚠️ No hourly rates on file for this crew.</div>
+                  ) : (
+                    <>
+                      <div style={{fontSize:11,color:"#065f46",marginBottom:6,display:"flex",gap:12}}>
+                        {leadRate  > 0 && <span>Lead: {fmt(leadRate)}/hr</span>}
+                        {masonRate > 0 && <span>Mason: {fmt(masonRate)}/hr</span>}
+                        {laborRate > 0 && <span>Labor: {fmt(laborRate)}/hr</span>}
+                      </div>
+                      {hourlyCalc.leadPay  > 0 && <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#065f46",padding:"2px 0"}}><span>{numLead} Lead × {hours}h × {fmt(leadRate)}</span><span>{fmt(hourlyCalc.leadPay)}</span></div>}
+                      {hourlyCalc.masonPay > 0 && <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#065f46",padding:"2px 0"}}><span>{numMason} Mason × {hours}h × {fmt(masonRate)}</span><span>{fmt(hourlyCalc.masonPay)}</span></div>}
+                      {hourlyCalc.laborPay > 0 && <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#065f46",padding:"2px 0"}}><span>{numLabor} Labor × {hours}h × {fmt(laborRate)}</span><span>{fmt(hourlyCalc.laborPay)}</span></div>}
+                      {hourlyCalc.total > 0 && (
+                        <div style={{display:"flex",justifyContent:"space-between",fontSize:15,fontWeight:800,color:"#065f46",paddingTop:8,marginTop:6,borderTop:"1px solid #86efac"}}>
+                          <span>Estimated Total</span><span>{fmt(hourlyCalc.total)}</span>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
             </>
           )}
         </div>
@@ -1002,12 +1055,12 @@ function SubmissionsScreen({onNav, lang, crew}) {
           <div className="card">
             <div className="info-row"><span className="info-label">{t.project}</span><span className="info-value">{s.project || s.projectDisplay}</span></div>
             <div className="info-row"><span className="info-label">{t.crew}</span><span className="info-value">{s.crew || s.crewDisplay}</span></div>
-            <div className="info-row"><span className="info-label">{t.weekEnding}</span><span className="info-value">{s.weekEnding}</span></div>
+            <div className="info-row"><span className="info-label">{t.weekEnding}</span><span className="info-value">{fmtDate(s.weekEnding)}</span></div>
             <div className="info-row"><span className="info-label">{t.status}</span><span className={statusBadgeClass(s.status || s.stubStatus)}>{(s.status || s.stubStatus || "pending").toUpperCase()}</span></div>
           </div>
           {s.ownerNote && (
             <div className="dispute-note">
-              <strong>⚠️ Owner Note:</strong>{s.ownerNote}
+              <strong>⚠️ Owner Note:</strong> {s.ownerNote}
             </div>
           )}
           <div className="card">
@@ -1015,7 +1068,7 @@ function SubmissionsScreen({onNav, lang, crew}) {
             {s.scopeA && <div className="stub-line"><span>Scope A: {s.scopeA}</span><span>{fmt(s.payA||0)}</span></div>}
             {s.scopeB && <div className="stub-line"><span>Scope B: {s.scopeB}</span><span>{fmt(s.payB||0)}</span></div>}
             {(s.details||[]).map((d,i) => (
-              <div key={i} className="stub-line"><span>{d.cat}: {d.type} ×{d.qty}</span><span>{fmt(calcDetailPay(d.cat,d.type,d.qty))}</span></div>
+              <div key={i} className="stub-line"><span>{d.cat}: {d.type} ×{d.qty}</span><span>{fmtDetailPay(d.cat,d.type,d.qty)}</span></div>
             ))}
             {s.cleanType && s.cleanType !== "None" && <div className="stub-line"><span>{s.cleanType}</span><span>{fmt(s.cleanPay||0)}</span></div>}
             {s.payType === "Hourly" && <div className="stub-line"><span>Hourly ({s.hours}h)</span><span>{fmt(s.totalPay||0)}</span></div>}
@@ -1056,7 +1109,7 @@ function SubmissionsScreen({onNav, lang, crew}) {
             <div className="select-wrap">
               <select value={filterWeek} onChange={e => setFilterWeek(e.target.value)}>
                 <option value="">— All Weeks —</option>
-                {weekOptions.map(w => <option key={w} value={w}>{w}</option>)}
+                {weekOptions.map(w => <option key={w} value={w}>{fmtDate(w)}</option>)}
               </select>
             </div>
           </div>
@@ -1073,8 +1126,10 @@ function SubmissionsScreen({onNav, lang, crew}) {
 
         {loading ? (
           <div className="loading"><div className="spinner"/><p>Loading...</p></div>
-        ) : subs.length === 0 ? (
+        ) : subs.length === 0 && allSubs.length === 0 ? (
           <div className="empty"><div className="empty-icon">📭</div><p>{t.noSubmissions}</p></div>
+        ) : subs.length === 0 ? (
+          <div className="empty"><div className="empty-icon">🔍</div><p>No submissions match your filters.</p></div>
         ) : (
           subs.map((s,i) => (
             <div key={i} className="sub-card">
@@ -1082,13 +1137,13 @@ function SubmissionsScreen({onNav, lang, crew}) {
               <div className="sub-card-body">
                 <div className="sub-card-top">
                   <div className="sub-card-project">{s.project || s.projectDisplay}</div>
-                  <div className="sub-card-amount">{fmt(s.totalPay)}</div>
+                  <div className="sub-card-amount">{fmt(parseFloat(s.totalPay)||0)}</div>
                 </div>
-                <div className="sub-card-meta">{s.crew || s.crewDisplay} • {s.weekEnding} • {s.payType}</div>
+                <div className="sub-card-meta">{s.crew || s.crewDisplay} • {fmtDate(s.weekEnding)} • {s.payType || ""}</div>
                 <div style={{marginBottom:8}}><span className={statusBadgeClass(s.status || s.stubStatus)}>{(s.status || s.stubStatus || "pending").toUpperCase()}</span></div>
                 {(s.status === "disputed" || s.stubStatus === "disputed") && s.ownerNote && (
                   <div className="dispute-note" style={{marginBottom:10}}>
-                    <strong>⚠️ Disputed:</strong>{s.ownerNote}
+                    <strong>⚠️ Disputed:</strong> {s.ownerNote}
                   </div>
                 )}
                 <div className="sub-card-actions">
@@ -1109,6 +1164,8 @@ function OwnerScreen({onNav, lang}) {
   const [subs, setSubs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
+  const [disputeFor, setDisputeFor] = useState(null);
+  const [disputeNote, setDisputeNote] = useState("");
 
   async function load() {
     setLoading(true);
@@ -1130,6 +1187,8 @@ function OwnerScreen({onNav, lang}) {
         ownerNote,
       });
       setToast({msg:`Marked ${newStatus}`, type:"success"});
+      setDisputeFor(null);
+      setDisputeNote("");
       load();
     } catch(e) {
       setToast({msg:"Action failed: " + e.message, type:"error"});
@@ -1138,7 +1197,10 @@ function OwnerScreen({onNav, lang}) {
 
   const pending  = subs.filter(s => ["pending","sent","opened"].includes(s.status || s.stubStatus));
   const disputed = subs.filter(s => (s.status || s.stubStatus) === "disputed");
-  const weekTotal = subs.reduce((a,s) => a + (parseFloat(s.totalPay)||0), 0);
+  const thisWeek = lastFriday();
+  const weekTotal = subs
+    .filter(s => s.weekEnding === thisWeek)
+    .reduce((a,s) => a + (parseFloat(s.totalPay)||0), 0);
 
   return (
     <div className="screen">
@@ -1151,11 +1213,42 @@ function OwnerScreen({onNav, lang}) {
         </div>
       </div>
       <div className="content">
+
+        {/* Inline dispute sheet — slides up from bottom */}
+        {disputeFor && (
+          <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:200,display:"flex",alignItems:"flex-end"}}>
+            <div style={{background:"white",borderRadius:"16px 16px 0 0",padding:20,width:"100%",maxWidth:480,margin:"0 auto"}}>
+              <div style={{fontWeight:700,fontSize:16,marginBottom:4}}>Dispute Reason</div>
+              <div style={{fontSize:13,color:"var(--gray)",marginBottom:12}}>
+                {disputeFor.crewDisplay || disputeFor.crew} — {fmtDate(disputeFor.weekEnding)}
+              </div>
+              <textarea
+                value={disputeNote}
+                onChange={e => setDisputeNote(e.target.value)}
+                placeholder="Describe the issue..."
+                rows={3}
+                style={{width:"100%",padding:"10px 14px",border:"1.5px solid var(--border)",borderRadius:9,fontSize:15,resize:"none",outline:"none",marginBottom:12,fontFamily:"inherit"}}
+              />
+              <div style={{display:"flex",gap:10}}>
+                <button className="btn btn-outline" style={{flex:1}} onClick={() => { setDisputeFor(null); setDisputeNote(""); }}>Cancel</button>
+                <button
+                  className="btn btn-red"
+                  style={{flex:1,opacity:disputeNote.trim()?1:0.5}}
+                  disabled={!disputeNote.trim()}
+                  onClick={() => transition(disputeFor, "disputed", disputeNote.trim())}
+                >
+                  Confirm Dispute
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:14}}>
           {[
-            {label:"Weekly Total", val:fmt(weekTotal), color:"var(--green)"},
-            {label:"Pending Review", val:pending.length, color:"var(--amber)"},
-            {label:"Disputed", val:disputed.length, color:"var(--red)"},
+            {label:`Week of ${fmtDate(thisWeek)}`, val:fmt(weekTotal),  color:"var(--green)"},
+            {label:"Pending Review", val:pending.length,  color:"var(--amber)"},
+            {label:"Disputed",       val:disputed.length, color:"var(--red)"},
           ].map(s => (
             <div key={s.label} className="card" style={{textAlign:"center",padding:"12px 8px",marginBottom:0}}>
               <div style={{fontSize:18,fontWeight:800,color:s.color}}>{s.val}</div>
@@ -1177,17 +1270,19 @@ function OwnerScreen({onNav, lang}) {
                 <div className="sub-card-body">
                   <div className="sub-card-top">
                     <div className="sub-card-project">{s.crewDisplay || s.crew}</div>
-                    <div className="sub-card-amount">{fmt(s.totalPay)}</div>
+                    <div className="sub-card-amount">{fmt(parseFloat(s.totalPay)||0)}</div>
                   </div>
-                  <div className="sub-card-meta">{s.projectDisplay || s.project} • {s.weekEnding}</div>
+                  <div className="sub-card-meta">{s.projectDisplay || s.project} • {fmtDate(s.weekEnding)}</div>
                   <div style={{marginBottom:10}}><span className={statusBadgeClass(status)}>{status.toUpperCase()}</span></div>
+                  {(status === "disputed") && s.ownerNote && (
+                    <div className="dispute-note" style={{marginBottom:10}}>
+                      <strong>⚠️ Disputed:</strong> {s.ownerNote}
+                    </div>
+                  )}
                   {status === "pending" && (
                     <div className="sub-card-actions">
                       <button className="btn btn-green btn-sm" onClick={() => transition(s,"approved")}>✓ Approve</button>
-                      <button className="btn btn-red btn-sm" onClick={() => {
-                        const note = prompt("Dispute reason:");
-                        if (note !== null) transition(s, "disputed", note);
-                      }}>✗ Dispute</button>
+                      <button className="btn btn-red btn-sm" onClick={() => { setDisputeFor(s); setDisputeNote(""); }}>✗ Dispute</button>
                     </div>
                   )}
                   {status === "approved" && (
@@ -1212,15 +1307,31 @@ function App() {
   const [lang, setLang] = useState("en");
   const [submissions, setSubmissions] = useState([]);
 
+  // Load submissions once so the suite badge shows disputed count
+  useEffect(() => {
+    apiGetSubmissions("").then(setSubmissions).catch(() => {});
+  }, []);
+
+  // Reload after a field report is submitted so badge refreshes
+  function onSubmitDone() {
+    apiGetSubmissions("").then(setSubmissions).catch(() => {});
+  }
+
   function onNav(type, val) {
-    if (type === "screen") setScreen(val);
+    if (type === "screen") {
+      setScreen(val);
+      // Refresh badge whenever we return to suite
+      if (val === "suite") {
+        apiGetSubmissions("").then(setSubmissions).catch(() => {});
+      }
+    }
     if (type === "lang") setLang(val);
   }
 
   const props = {onNav, lang, submissions};
 
   if (screen === "suite")  return <SuiteLauncher {...props} />;
-  if (screen === "field")  return <FieldReportScreen {...props} onSubmitDone={() => {}} />;
+  if (screen === "field")  return <FieldReportScreen {...props} onSubmitDone={onSubmitDone} />;
   if (screen === "subs")   return <SubmissionsScreen {...props} />;
   if (screen === "owner")  return <OwnerScreen {...props} />;
   return <SuiteLauncher {...props} />;
