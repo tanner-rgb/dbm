@@ -1,348 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="DBM"/>
-<meta name="theme-color" content="#1A1A1A"/>
-<title>DBM Operations Suite</title>
-
-<!-- Home screen icon (iOS + Android) -->
-<link rel="apple-touch-icon" href="data:image/png;base64,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"/>
-<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAMQ0lEQVR42u1dTa7cuBGuYvfzwoCTjTdzB2/tQ9jJKbKeWRgGfJXsjRzB9mwGAbL0u0G2BmaTZ8ADzGRmkoiVhaQWJVH/JMWSvvKmXz+6Xqv4qfhVkfqa3717J5fLhWAnMxG6XK/05s0b+vz5MxljSERIROiP3zymb3/4E12uTNYSMeu5LEOk6wPDAuF5ziBm0gYNU92sG646ZkRhuyJehLQh2oxmZ46IRT7WPSSZYXFx+J2sJu4AZYnHiPDiEHHE8MdMCFp9h/8sMv8d1hUsQyQzOPRZoKCM426JeWfSmbtTUb0hui5unEPDMs6yYUEl3r+okEODcWIFIF9WU5rlzPAdCJpx6BWAPbWL6J8d0y5pYafl510Ozaxyg8KUBYJkRzokom+QJaJ+d4v7V6qQdpQceqB1tyfp4Ii+z06WuEU5jrU6m7KSRZF2OtohnjVHPLeuqAM07NzV4cTyoyzZmdG7EPvQh/XN3fdFbq+lNZ6VAXrFWY7sySh8T/qWqQEsSikH6HOeHDeyd+605MT5i7r70LDsqW0K78zcqQOrxjRnfCEMQMMGlgDx/l6C/53Yy5iZvoVQYR3R923rgZ2iMCHpiVgUTn1wVFhH8y1ExNQu+pipfZaj2voWnUUhznKcjp8L9/Nxb/db1B3nqCgHWh1no8/d0w7cO8yvlXIAzKfM0DyTS4jGrW/IGJwzS0/CngkyBlkU87BAvIQgY7C1mEezLc1nmS1joC1DQ8Ygf9/hP4usekdDsCBjoJbjboz5iIwBN6UjZAxgSm7zERkDUZxvIGOAFaDHoZufNT5TCBmDc64AkDGAHZqfQ8YgLumAjEFkUEPGIC3pgIxB3GuAjAHsWLQDMgawY1aHI8tPeYpJI+U4GBmF70nfs2QMFDYMIGNwUt/TMgY6q2DIGOTKcSN7n5YxUHvAH5Y7tU3hHTIGsEMtAZAxQIWl2vdxZQyqDy7ey3d/137sXQbG9n4nNOBZBgcN+xavbzmE796oaL6FpDewL2NAKmUMrsxMzKbRaWhRFHZu4tZhWU/Lkv3Uhv3kh0fI0LBv9vrmQ/jue4/nm4mFWoXhrUPnqo4qlDG4FkXR3LUyEMmR98dEENgbqBlcn5tv5Z30PeOjZut7RgyX+F46P9TqbDCJdFcffdvi19evX6NAOnEn5evXr0REZK3ttfI0wvr65csXzCxsAO5c6ncoQvSVIcpxapOhqq9u22nj0IIHCmE+LCvNc9MZerCq8LCrpTJ5G337bkZmJmOwXzTHrLXDGTome44opzidoWXBL2VNKtjqux0dEaG6cwNbB7S2jEEE2hGRFFz/8M3jlDdQEN9MZZx//tevZAu5ZWYRoadPn9Lz58/Lqn3pWYShpBQiWYXy7Ru/0LeIkDGG7u/v6eHh4RY7L960cejvfnhFjaCIVA1P57UbmFsjtHoOsd4/ZSdy4qD29k1K3IxZ6rsewE2hwhdD//nlv/TXP39PP/347xvNKIqCXrx4Qe/fv0e2nWGvXr2iDx8+3GLXQT1p3P6+Xq6Xdtpr0Njc4HVXvz7LVI0V4urZNHaAW2aA1s7UFt/uoQMWEinBe7kz3r6pLWzJDa0lBpf2c2exZNhQUVgvFdDc97qKbR9YaXSD3S8ukN5iJFQ+aCnWT4zEc86Babtvqf9Zac4ZdB4jMsaQJSq39OfOjnRWmklGsIArZORbpEwdxnhi4/LBWsZAWRfs2k2kzc88yWNpzfiZY4VcWQjnnIg4vJjHZ29Ri539n2v+6QodvhdhVK2MQaYF92SBfMwn8TMxPLGSGOiMbx4IjVnIGOw0C3NjjV3Q8ZhMiSeplTHQlqPr1p+Mr46CFL4sJoeQMdBsvOnXpzReOhCUIxHtA1qjFXvRZQw4R0DvJLjCvrnhY1Xqe6fv6DIGEg8nJuKNTsl8C0hH8EykV8ZA6ZKJ5Ls7NQGHDhLm+kAUT29SAvSrMKxZxkDxxoqQxFRNPz0b0SljYDJPFsPvC2HjJGrQQTkSly48KswCxhEGswJAxwa6R58NjCNgonBHsrpvKzFqp2TGzAhy9HhMeCo1y5G+STb3mZk+y4EcvS4mmmUMdG99g3JEpBxn2/rOqboBcteWhSNsrpYxSPsRTlgUOi8mKQc49GrKoTRZHCNDg3SEz45KZQz0nuWY7ELDFt/jB5AxUHyWY8bZaDCO9WCvZQwA6LgrI7tLIs8dDFs3CaAc0VdGyBjkRrYB6EBAh4xBcMxCxmCnWYCMQRgaARmDTHJ0recGGYPleIaMQaZZeoaeIeC8ISaQMUhJ+xhojV7sQcYgyQVDxiBV3CFjkD6JALfxMhFkDBIvmTjLkQk1AYfeGGbIGMTGMGQMdlkwZzxghQS9jUNDxiD+giehOR5sIOigHMlLF8gYnBKzR6McTq8OGytREkUzkrGxkmxKZsQaMgYTMYGMQU4zAxmDWDkaMgZ7zQsoR0TKARmDtEUNZAxClIVDbI4gY5A6w0DGIC7lUJosIGOABD1co0DGIOWMQMYgeIKGjMEecIaMQRKw1zIG6EPHXRkhY5ByEtCHjr4yQsYgN7INQAcCOmQMgmMWMgY7zQJkDLbRiKFlEDIGO+VoyBisxzNkDDLN0pAxCFqbDA4E5UhB+yBjEL/Yi9iUhozBwK8gYxAx7hxmkiFjQJAxyIN0EGQMUi6ZOMsROczoQyeC83wZA3TtFiZMyBjsu2DKgrGwGTGBjEH6TCKt9CtAdLSgg3IkL10gY3BKzB6NckDGIHaiaEbi+Gi6KYGMwcoMPfMsB2QMUs8MZAyC52i3IwoZgx3mBZQjIuVAUZi2qIGMQYiycAT04NBpMwxkDMLnaN85c3DobBINUveWexwyBqlnBDIGwUk0ZAz2gPN8GQMJIIouEQunPXyPns04gIzBNec8zGMx78oYOPzPWkvWChljAWqPWWsn3YsVkkJI3PYoAB1+ZWwB3XPA/2IMGWPI6K0O4i/LVXDMxQwG/9HjC13uLmSt9OeCF9xrQ2OXvj/T91XbZLRkDDxZ59OnT/Ty5Uuy1hIzd24E93YYfyixPX7J2Px9iwgZY+j+/r6TsUt0/PLld/rbX/5BzPVBAxmcBxlBGndyjnTG8MheLq/0fdWXX4TqM43C7UkiInp4eKCPHz8iDS+JaBW7ml//7/eC/vn3H1Vei0JAj8sYMPNtSYWNm7X2BuYeLbkwAJ00Sw+svCJCRVEArVvBXggAna77MX50lCEwc1pbD+gl1WhA360Ox0DFIXiYEIBelSpjpuH57Y7W+EePHtGTJ088oN7WDxr/33PH+3sDWn2HiyEH862zy+E5BWaMIWstPXv2jN6+fUu//fobsQH1QIbOHs5V/3lAxoDZ0N3dHRVFAS4NQOdv0zIGctv6ZlPB390ar15z3SzhqsysXrO7h87dnUkh4XpLpz9gnm+hykm5e++s5q0xnaq35ZvqR6mW+xaS3rGucL77tXrPd/WfY/lWd5bj9n7neGNflk2I67NXrQzeHsfOYafWRLPPL7d2Ktf5bmZgcLznyruLzVrfHNU3TfvmuL5Vyxi4o1oPsAhOQp/VVMsYDFFkNO0AaF0seuJxt5JzMZANQKtpdZS6a85ZDq/EBEfI3BJxVZBw4Tmrb9UyBq3Tdm4M2P/0LAf6u+s5f5DCYZ2bk/g+pIwBj/ZJlF0nfB+9KHReDMgYSKivU8jhOuH7JJRjJBWwzifwYecE9AwZg+iIhm8AOtiUzJAxEKa40vPwDUCHnpKujEELz/GEdMFkAOh4gBK/1E+59S1xbygYAB0WUAwxMNhBikJuqPJQFsfWNwCtJ0ePyBjUuXsM8KdsQpzEt9I+tIxvBHLErRU0OLL2rbQo5DlfFQID5cj/rmQfahmwhm0FdA4yBkNfSSH6z3LATlMUToOeWZCgAWhlNiBjcAM7EjQAfZQkLdH2CWEAdHCw1i/GZAwAZwA6N0axcFRfxgCgBqA1UGfIGMCOxaEhYwA7WlEIGYPlbiBjkH+ihozBAjeQMcg3OferQF8MIGNwNN9xAb33WQ7IGJzOd1xA732bQ8YAdgwOPd22g4xBroQAgPZMiSNjIAPrHGQMMiUEAPTwlEDGAHaMDO3+ABkDmHoO3UALMgawA1AOyBjADpWhd5YxgAHQUZj06Eagf2vlLA2xMzcVjyljEPO8hYJi8cxNRd0yBjI2HgQalEPT2jP2HcmQMTit/R/ecW72Umwu/QAAAABJRU5ErkJggg=="/>
-
-<!-- Web App Manifest (inline via data URI for single-file deploy) -->
-<link rel="manifest" href='data:application/json,{"name":"DBM Operations Suite","short_name":"DBM","start_url":".","display":"standalone","background_color":"%231A1A1A","theme_color":"%231A1A1A","icons":[{"src":"data:image/png;base64,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","sizes":"180x180","type":"image/png"}]}'/>
-
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>DBM Field App</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
-/* ═══ RESET & TOKENS ═══ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #F2F2F2; --surface: #FFFFFF; --dark: #1A1A1A; --card: #2E2E2E;
-  --green: #6DD44E; --green-dim: #5AB83E; --blue: #2563EB; --purple: #7C3AED;
-  --amber: #D97706; --red: #E53E3E; --gray: #999; --gray-light: #E5E5E5;
-  --text: #1A1A1A; --text-dim: #666; --text-inv: #FFFFFF;
-  --radius: 12px; --radius-sm: 8px;
-  --shadow: 0 2px 12px rgba(0,0,0,0.08);
-  --font: 'DM Sans', system-ui, sans-serif;
-}
-html, body, #root { height: 100%; font-family: var(--font); background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
-input, select, textarea, button { font-family: inherit; font-size: inherit; }
-
-/* ═══ LAYOUT ═══ */
-.screen { display: flex; flex-direction: column; min-height: 100vh; max-width: 480px; margin: 0 auto; position: relative; }
-.header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: var(--dark); position: sticky; top: 0; z-index: 100; }
-.header-sub { font-size: 11px; color: var(--gray); letter-spacing: 0.5px; margin-top: 2px; }
-.header-right { margin-left: auto; display: flex; gap: 4px; }
-.header-logo { width: 36px; height: 36px; border-radius: 6px; }
-.content { flex: 1; padding: 16px 16px 120px 16px; overflow-y: auto; }
-.back-btn { background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 4px 8px 4px 0; line-height: 1; }
-
-/* ═══ LANG TOGGLE ═══ */
-.lang-btn { background: transparent; border: 1px solid #555; color: #888; font-size: 11px; padding: 4px 10px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: all .2s; }
-.lang-btn.active { background: var(--green); border-color: var(--green); color: var(--dark); }
-
-/* ═══ SUITE GRID ═══ */
-.suite-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.suite-card { background: var(--surface); border-radius: var(--radius); padding: 20px 16px; text-align: center; cursor: pointer; position: relative; box-shadow: var(--shadow); transition: transform .15s; }
-.suite-card:active { transform: scale(0.97); }
-.suite-card.disabled { opacity: 0.45; cursor: default; filter: grayscale(0.5); }
-.suite-icon { font-size: 32px; margin-bottom: 8px; }
-.suite-name { font-size: 14px; font-weight: 700; }
-.suite-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
-.suite-badge { position: absolute; top: 8px; right: 8px; background: var(--red); color: white; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
-.coming-soon { font-size: 10px; color: var(--amber); font-weight: 600; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-/* ═══ CARDS & FORMS ═══ */
-.card { background: var(--surface); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; box-shadow: var(--shadow); }
-.card-title { font-size: 13px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px; }
-.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.field { margin-bottom: 14px; }
-.field-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-dim); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.3px; }
-.field-input, .field-select { width: 100%; padding: 11px 14px; border: 1.5px solid var(--gray-light); border-radius: var(--radius-sm); font-size: 15px; background: white; color: var(--text); transition: border-color .2s; appearance: none; -webkit-appearance: none; }
-.field-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%23999' stroke-width='2'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
-.field-input:focus, .field-select:focus { outline: none; border-color: var(--green); }
-.field-row { display: flex; gap: 10px; }
-.field-row > .field { flex: 1; }
-.field-hint { font-size: 11px; color: var(--gray); margin-top: 3px; }
-.toggle-group { display: flex; border-radius: var(--radius-sm); overflow: hidden; border: 1.5px solid var(--gray-light); }
-.toggle-btn { flex: 1; padding: 10px 8px; border: none; background: white; font-size: 13px; font-weight: 600; color: var(--text-dim); cursor: pointer; transition: all .2s; }
-.toggle-btn.active { background: var(--green); color: var(--dark); }
-
-/* ═══ BUTTONS ═══ */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 20px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: all .15s; width: 100%; }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn-green { background: var(--green); color: var(--dark); }
-.btn-green:active:not(:disabled) { background: var(--green-dim); }
-.btn-red { background: var(--red); color: white; }
-.btn-blue { background: var(--blue); color: white; }
-.btn-outline { background: transparent; border: 1.5px solid var(--gray-light); color: var(--text); }
-.btn-outline:active { background: var(--gray-light); }
-.btn-sm { padding: 8px 14px; font-size: 12px; }
-.btn-xs { padding: 4px 12px; font-size: 11px; width: auto; }
-.btn-remove { background: none; border: none; font-size: 18px; color: var(--red); cursor: pointer; padding: 0 4px; }
-
-/* ═══ PAY BAR ═══ */
-.pay-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--dark); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; z-index: 100; border-top: 2px solid var(--green); }
-.pay-bar-label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; }
-.pay-bar-amount { font-size: 24px; font-weight: 700; color: var(--green); font-variant-numeric: tabular-nums; }
-.pay-bar-detail { font-size: 11px; color: #aaa; text-align: right; max-width: 200px; line-height: 1.5; }
-
-/* ═══ SUBMISSION CARDS ═══ */
-.sub-card { display: flex; background: var(--surface); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; box-shadow: var(--shadow); cursor: pointer; }
-.sub-card-stripe { width: 5px; flex-shrink: 0; }
-.sub-card-body { flex: 1; padding: 14px 16px; }
-.sub-card-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
-.sub-card-project { font-size: 15px; font-weight: 700; }
-.sub-card-amount { font-size: 15px; font-weight: 700; color: var(--green); font-variant-numeric: tabular-nums; }
-.sub-card-meta { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
-.sub-card-actions { display: flex; gap: 8px; margin-top: 8px; }
-
-/* ═══ STATUS BADGES ═══ */
-.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; }
-.badge-pending { background: #FEF3C7; color: #92400E; }
-.badge-sent { background: #DBEAFE; color: #1E40AF; }
-.badge-opened { background: #E0E7FF; color: #3730A3; }
-.badge-approved { background: #D1FAE5; color: #065F46; }
-.badge-disputed { background: #FEE2E2; color: #991B1B; }
-.badge-paid { background: #ECFDF5; color: #047857; }
-.dispute-note { background: #FEF2F2; border-left: 3px solid var(--red); padding: 10px 14px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 13px; color: #991B1B; }
-
-/* ═══ DETAIL QTY STEPPER ═══ */
-.detail-qty { display: flex; align-items: center; gap: 8px; }
-.detail-qty button { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--gray-light); background: white; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text); }
-.detail-qty span { font-size: 15px; font-weight: 700; min-width: 24px; text-align: center; }
-
-/* ═══ PHOTOS ═══ */
-.photo-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.photo-thumb { width: 64px; height: 64px; border-radius: var(--radius-sm); object-fit: cover; }
-.photo-wrap { position: relative; display: inline-block; }
-.photo-remove { position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%; background: var(--red); color: white; border: none; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; }
-.photo-add { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; border: 2px dashed var(--gray-light); border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-dim); width: 100%; }
-.photo-add:active { background: var(--gray-light); }
-
-/* ═══ TOAST ═══ */
-.toast { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: var(--radius); font-size: 14px; font-weight: 600; z-index: 200; animation: toastIn .3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-.toast.success { background: #065F46; color: white; }
-.toast.error { background: var(--red); color: white; }
-@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-
-/* ═══ LOADING / EMPTY ═══ */
-.loading { text-align: center; padding: 40px 0; color: var(--text-dim); }
-.spinner { width: 36px; height: 36px; border: 3px solid var(--gray-light); border-top-color: var(--green); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 12px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.empty { text-align: center; padding: 40px 0; color: var(--text-dim); }
-.empty-icon { font-size: 48px; margin-bottom: 12px; }
-
-/* ═══ INFO ROWS ═══ */
-.info-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f0f0f0; }
-.info-row:last-child { border-bottom: none; }
-.info-label { font-size: 13px; color: var(--text-dim); }
-.info-value { font-size: 13px; font-weight: 600; text-align: right; }
-
-/* ═══ MATERIAL TRACKER ═══ */
-.mat-project { background: var(--surface); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; box-shadow: var(--shadow); }
-.mat-project-name { font-size: 15px; font-weight: 700; margin-bottom: 12px; }
-.mat-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
-.mat-row:last-child { border-bottom: none; }
-.mat-label { font-size: 13px; color: var(--text-dim); }
-.mat-value { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.mat-alert { padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; margin-top: 8px; }
-.mat-alert.ok { background: #D1FAE5; color: #065F46; }
-.mat-alert.warn { background: #FEF3C7; color: #92400E; }
-.mat-alert.danger { background: #FEE2E2; color: #991B1B; }
-.mat-input { width: 70px; padding: 6px 8px; border: 1.5px solid var(--gray-light); border-radius: var(--radius-sm); font-size: 14px; text-align: center; font-weight: 600; }
-.mat-input:focus { outline: none; border-color: var(--green); }
-
-::-webkit-scrollbar { width: 0; height: 0; }
+  :root{--green:#6DD44E;--green-dark:#52b038;--gray:#999;--dark:#2E2E2E;--bg:#F2F2F2;--white:#fff;--red:#E53E3E;--amber:#D97706;--blue:#2563EB;--card:#fff;--border:#e0e0e0;--shadow:0 2px 8px rgba(0,0,0,0.08);}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+  #root{min-height:100vh;}
+  .screen{min-height:100vh;display:flex;flex-direction:column;}
+  .header{background:var(--dark);color:white;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.3);}
+  .header-logo{width:36px;height:36px;}
+  .header-sub{font-size:11px;color:var(--gray);margin-top:1px;}
+  .header-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+  .lang-btn{background:rgba(255,255,255,0.12);border:none;color:white;padding:5px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;}
+  .lang-btn.active{background:var(--green);}
+  .content{flex:1;padding:16px;max-width:480px;margin:0 auto;width:100%;}
+  .card{background:var(--card);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid var(--border);}
+  .card-title{font-size:13px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--gray);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;}
+  .field select,.field input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:15px;background:white;color:var(--dark);appearance:none;-webkit-appearance:none;outline:none;}
+  .field select:focus,.field input:focus{border-color:var(--green);}
+  .select-wrap{position:relative;}.select-wrap::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--gray);pointer-events:none;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .field-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+  .btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.15s;letter-spacing:0.3px;}
+  .btn-green{background:var(--green);color:white;}.btn-green:active{transform:scale(0.98);}
+  .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--dark);}
+  .btn-sm{padding:8px 14px;font-size:13px;width:auto;border-radius:8px;}
+  .btn-red{background:var(--red);color:white;}
+  .btn-blue{background:var(--blue);color:white;}
+  .pay-toggle{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;}
+  .pay-toggle button{padding:11px;border:none;background:white;font-size:14px;font-weight:600;color:var(--gray);cursor:pointer;}
+  .pay-toggle button.active{background:var(--green);color:white;}
+  .pay-bar{background:var(--dark);color:white;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;bottom:0;z-index:50;}
+  .scope-row{background:#FAFAFA;border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid #eee;}
+  .scope-row-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+  .scope-label{font-size:13px;font-weight:700;}.scope-pay{font-size:14px;font-weight:700;color:var(--green);}
+  .section-divider{height:1px;background:var(--border);margin:12px 0;}
+  .add-btn{background:none;border:1.5px dashed var(--border);border-radius:9px;padding:11px;width:100%;color:var(--gray);font-size:13px;font-weight:600;cursor:pointer;}
+  .remove-btn{background:none;border:none;color:var(--red);font-size:18px;cursor:pointer;padding:0 4px;}
+  .suite-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .suite-card{background:white;border-radius:14px;padding:20px 14px;text-align:center;cursor:pointer;border:1px solid var(--border);box-shadow:var(--shadow);position:relative;transition:transform 0.1s;}
+  .suite-card:active{transform:scale(0.97);}.suite-card.disabled{opacity:0.5;cursor:default;}
+  .suite-icon{font-size:32px;margin-bottom:8px;}.suite-name{font-size:14px;font-weight:700;}.suite-sub{font-size:11px;color:var(--gray);margin-top:2px;}
+  .suite-badge{position:absolute;top:8px;right:10px;background:var(--red);color:white;border-radius:99px;padding:2px 7px;font-size:11px;font-weight:700;}
+  .coming-soon{font-size:10px;color:var(--amber);font-weight:600;margin-top:6px;}
+  .status-pending{background:#FEF3C7;color:#92400E;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;}
+  .status-approved{background:#D1FAE5;color:#065F46;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;}
+  .status-disputed{background:#FEE2E2;color:#991B1B;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;}
+  .status-paid{background:#DBEAFE;color:#1E40AF;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;}
+  .status-sent,.status-opened{background:#E0E7FF;color:#3730A3;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;}
+  .dispute-note{background:#FEF3C7;border:1px solid #F59E0B;border-radius:8px;padding:10px 12px;font-size:13px;color:#92400E;margin-bottom:12px;}
+  .info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;}
+  .info-row:last-child{border-bottom:none;}
+  .info-label{font-size:13px;color:var(--gray);}.info-value{font-size:13px;font-weight:600;}
+  .back-btn{background:none;border:none;color:white;font-size:22px;cursor:pointer;padding:0;line-height:1;margin-right:4px;}
+  .loading{text-align:center;padding:40px;color:var(--gray);}.spinner{width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .empty{text-align:center;padding:60px 20px;color:var(--gray);}.empty-icon{font-size:48px;margin-bottom:12px;}
+  .stub-line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13px;}
+  .stub-total{display:flex;justify-content:space-between;padding:12px 0 4px;font-size:16px;font-weight:800;}
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:flex-end;justify-content:center;}
+  .modal-sheet{background:white;border-radius:16px 16px 0 0;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;padding:20px 16px 32px;}
+  .modal-handle{width:40px;height:4px;background:#ddd;border-radius:99px;margin:0 auto 16px;}
+  .modal-title{font-size:17px;font-weight:700;margin-bottom:16px;}
+  .mat-alert{border-radius:8px;padding:10px 12px;font-size:12px;font-weight:600;margin-top:8px;}
+  .mat-alert-ok{background:#D1FAE5;color:#065F46;}.mat-alert-low{background:#FEF3C7;color:#92400E;}.mat-alert-short{background:#FEE2E2;color:#991B1B;}
+  .foreman-note{margin-top:8px;padding:8px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:6px;font-size:12px;color:#6B7280;}
+  .role-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;text-transform:uppercase;}
+  .role-owner{background:#DBEAFE;color:#1E40AF;}.role-finance{background:#FEF3C7;color:#92400E;}.role-foreman{background:#D1FAE5;color:#065F46;}.role-crew_lead{background:#E0E7FF;color:#3730A3;}
+  .user-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #f0f0f0;}
+  .user-row:last-child{border-bottom:none;}
+  .login-screen{min-height:100vh;display:flex;flex-direction:column;background:var(--dark);}
+  .login-card{background:white;border-radius:16px;padding:24px;margin:auto;width:100%;max-width:360px;}
+  .login-logo{text-align:center;margin-bottom:24px;}
+  .login-logo h2{color:var(--dark);font-size:20px;margin-top:12px;}
+  .login-logo p{color:var(--gray);font-size:13px;margin-top:4px;}
+  .pin-dots{display:flex;gap:12px;justify-content:center;margin:20px 0 8px;}
+  .pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);transition:all 0.15s;}
+  .pin-dot.filled{background:var(--green);border-color:var(--green);}
 </style>
 </head>
 <body>
 <div id="root"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <script type="text/babel">
-const { useState, useEffect, useRef } = React;
+const {useState,useEffect,useMemo,useCallback} = React;
 
-// ═════════════════════════════════════════════════════════════════════════════
-// CONFIG
-// ═════════════════════════════════════════════════════════════════════════════
 const API_BASE = "https://script.google.com/macros/s/AKfycbwmgEnpxc7lX-4V_dxC_2ChGwak7MaNIgM1vR1SjDmkdmOlrdjyUjY9VoAWLHCSwhILQQ/exec";
-const DEFAULT_BPC = 500;
-const LOGO_SRC = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAACvklEQVR42u2bv4oTQRzHv/ObCXETIY3dki6FtWAheG2CjW8QsPEBfAPFyhc4nyClIAhiXsBWFNEm1eUaEdEQznX/zVgkWY/z4nrs7GYy+Q2kyBYzm8/9fp/5zZ8Tk8nECCGwz01rjU6ngydPH+P9uw+48+Am7j+7jbNvv0CSKvVN8KmZiw+q/+H9ArSNEwPaEjeGAZVklGFAVwPGkmZJN938BsSSLskowZJmB3Gh6ObsfiAOYkmXAWNJ1y5plec5fNgPyvMcZk3IpqRVr9eDLxtmSinrq3l1/PwYAmLPM8ugpVqYz09X3405R6jab1PTN1PvZjG9AWQhM5S96BEguepLKdV42hpjkOkUeaqt9qsevhxWfTOoQOHL5x948egtVEthOp2i3+9Daw0iqt0/RIT5yRzDe0PkaWJVGKp/60Y1PtqgfV0VQhRCYDAYIAzDRiOo3W7/nVE2JJ2cpZUBAUAaZcWzKIqgtW40gqIo2lIoVpS0oOoBKUig6McARFSAqRvQZozLx3FxNe9CxWDxHfxcixkG9N8zLAOqOdXIbzC85Vr/DOm1pHlHsSzVXJS0cYoQF4pcKHKh6DYolvRBStrpQlH4FYRcKB72UoMdVJLu7CAuFLlQ5EKRC0WvV/OqjnfaHBpqrWtHsBnj4lhGm9WHXAMEIAiCfxzmWa5012MEQfDnmRRoBQqta9kl/1B3tdNW+4CMwWw2QxzHDV9eOCmOwaNFgq+zBX5+T4obJ7uPoPUZVJZlGI1GO7n+kmcaUkp8fDXHp9enVvpVNQQQ4jjerZtzACncBESScHT3CN1uF01fEDXnTlKFsDOhWgS0AiFJYjweIwxDJEmy9xdEa5jFDJbLJRaLBQPaVpORJEgpIaXce0B89MyAXAFkGBBHkC1JCwZ0ONnGDmIHOeggBsQRxI0lzRHEkuYIcqH9BnRp86enwbbnAAAAAElFTkSuQmCC";
+const BRICK_PER_MORTAR_BAG = 1500;
 
-// ═════════════════════════════════════════════════════════════════════════════
-// TRANSLATIONS — cosmetic only. Rates always use English keys from the sheet.
-// New items added to the spreadsheet show in English until translated here.
-// ═════════════════════════════════════════════════════════════════════════════
-const SCOPE_ES = {"Brick":"Ladrillo","Stone - MJ/DS":"Piedra - MJ/DS","Thin Brick/Stone":"Ladrillo/Piedra Delgado","4\" CMU - Veneer":"CMU 4\" - Enchape","4\" CMU - Structural":"CMU 4\" - Estructural","6\" CMU":"CMU 6\"","8\" CMU":"CMU 8\"","10\" CMU":"CMU 10\"","12\" CMU":"CMU 12\"","Cast Stone":"Piedra Fundida","Stone - MJ":"Piedra - MJ","Stone - DS":"Piedra - DS","4\" CMU":"CMU 4\"","Footing":"Cimiento","Stucco":"Estuco","Pavers":"Adoquines","Flag Stone":"Piedra Laja"};
-const MULT_ES_MAP = {"None":"Ninguno","Highwork":"Trabajo en Altura","Professional Scaffold":"Andamio Profesional"};
-const DETAIL_CAT_ES = {"Arch":"Arco","Brick Column":"Columna de Ladrillo","Column Caps":"Tapas de Columna","Fireplace":"Chimenea","Fire Feature":"Elemento de Fuego","Mailbox":"Buzón","Tooth-In":"Inserción","Infill":"Relleno","Door Install":"Instalación de Puerta","Brick Design Detail":"Detalle de Diseño Ladrillo","Cast Stone Detail":"Detalle de Piedra Fundida","Outdoor Kitchen":"Cocina Exterior","Residential Highwork":"Trabajo en Altura Residencial","Demo":"Demolición","Gas":"Gas"};
-const DETAIL_TYPE_ES = {"Arch (Less 9ft)":"Menos 9ft","Arch (9ft-15ft)":"9ft-15ft","Arch (16ft Greater)":"16ft Mayor","Brick Column (Base/Small)":"Base / Pequeña","Brick Column (4x4)":"4x4","Brick Column (Two Story)":"Dos Pisos","Railcuts":"Cortes de Rieles","Xtra Small":"Xtra Pequeño","Medium":"Mediano","Large":"Grande","Brick Hearth":"Hogar de Ladrillo","Brick Insert Fireplace (Up to Mantle)":"Hasta Repisa","Brick Insert Fireplace (Single Story - Ceiling)":"Un Piso - Techo","Brick Insert Fireplace (Two Story - Ceiling)":"Dos Pisos - Techo","Brick Insert Fireplace (Large Base - Two Story - Ceiling)":"Base Grande - Dos Pisos","Masonry (Brick/Stone) Fireplace w/ Chimney":"Mampostería con Chimenea","Firebox":"Caja de Fuego","Firebox w/ Flu Tiles":"Caja de Fuego con Revestimiento","Isokern Firebox w/ Metal Pipe":"Isokern con Tubo","Isokern Firebox w/ Flu Tiles":"Isokern con Revestimiento","Stone Mantle":"Repisa de Piedra","Slab on Hearth":"Losa en Hogar","Fire Pit":"Fogata","Fire Feature":"Elemento de Fuego","Mailbox (Brick or Rock)":"Buzón (Ladrillo o Roca)","Mailbox (New Home Build)":"Buzón (Casa Nueva)","Mailbox (1 Planter)":"Buzón (1 Maceta)","Mailbox (2 Planters)":"Buzón (2 Macetas)","Mailbox w/ Demo":"Buzón con Demo","Tooth-In Window":"Ventana Tooth-In","Tooth-In Door":"Puerta Tooth-In","Infill Window/Door":"Ventana/Puerta de Relleno","HM Doors Install & Grout":"Puertas HM","Herringbone/Diamond (Less 25SF)":"Espina (Menos 25SF)","Herringbone/Diamond (~25SF)":"Espina (~25SF)","Herringbone/Diamond (Entire Wall)":"Espina (Pared Entera)","Knockout w/o Gable":"Knockout sin Frontón","Knockout w/ Gable":"Knockout con Frontón","Brick Corbel":"Voladizo","Wings (Gables)":"Alas (Frontones)","Rowlock":"Moldura","Header/Sill":"Cabezal/Alféizar","Radius":"Radio","Openings (1)":"Aberturas (1)","Openings (3)":"Aberturas (3)","Openings (4)":"Aberturas (4)","Openings (5+)":"Aberturas (5+)","Some Highwork":"Algo de Altura","Average Highwork":"Altura Promedio","Heavy Highwork":"Mucha Altura","Extra Highwork":"Altura Extra","Small":"Pequeño","Medium (mailbox size)":"Mediano (Buzón)","Extra Large":"Extra Grande","Gas":"Gas"};
-const ACID_ES = {"Acid Wash ($150)":"Lavado Ácido ($150)","Acid Wash ($300)":"Lavado Ácido ($300)","Acid Wash ($500)":"Lavado Ácido ($500)","Acid Wash ($1000 Lg Comm.)":"Lavado Ácido ($1000)"};
-const CLEAN_ES = {"Clean ($150)":"Limpieza ($150)","Clean ($300)":"Limpieza ($300)","Clean ($500)":"Limpieza ($500)","Clean ($1000 Lg Comm.)":"Limpieza ($1000)"};
+function DBMLogo(){return <img className="header-logo" alt="DBM" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA2lJREFUWEftl0tIVFEYx//nzp2ZO+OMOr7fj0zNMNJILCIiKAhq06JFi6BVtIiCIIhWbYKgRRQt2rRoUYseCEFBD4qiMjN7mJqO+Rp1nBnvnTt3buc7c0cnnVGnRdCC+eDOnHu+8/2/7/9952OQ5GOS+WOSAcj2zK0V6L8VF4xZNjSvM7h0nePqfAbPPQAZg4CtFPnLPJdoD3NxqW+3qWUQ0E/6pLXQlZhNkvIFBFuZ2w5y0amDyB5AemPqBhYU6r4KRgbSExMhkFcB6fQ9EkwJJUApfm/TH6TsMwYnWU/0SSmAHbROFpYJruCkRgfD0eMj8IQBCD3mKUNFocLk/jKZ7PJn0u/3cC5OxCMTIcT3wCy6QZxOx4i/JzfDN32+z3vfp5MRAqABSPvBQ4sF/F5VkKSv1tIjwWYtM7ddbEaR8OBiCIwOQKXON2J+QNQLQD+iuuKygq0LS/PIm94sRQIBfwDG/6LlIiQAoIBIJIh4OOeC7b7cCPqrT/LfJxUAuicuXtWr6RWjEUC0AdSHUCqiKyGPJsGIFkD8LJCYDBefgm9gPpQg+4CenBqH8sUPsG4h8+TP+iB2n5AGklGo9m9ZYVZkdZ2ZXm3eCvlmfb35KaOgDJEenQ6fP8vXnG3iFJlUKIAYq0r8C1XKSS4l9VptLe8NuWkBxCRAaH+MaHXt4dcVMd/FMHIK2CcWy5XWlR2VV+ctUmVOB/JdDeNbF1CwBJM2AcNFY1L3rIJ4F9CrADpC3AEsZ88WqrlKpqtc1fT2K0KXvSWiJACiw7S9srZF/2h2DXO4K0D5EehKkMU0/KeUaFVVn7j3E+VNA8gCiBmQNh6+DfL8gEuYvVdFUVLHVaLjfEk3oEwC6WtoB7C8X6qs7UhRnQ6J1pPo2UEeVxRA8rPRRsPDKx2dMT6ApxWHnKjqoiNdHdPjCQAkAaT3I+3NyPZCJGjSxahyGsKoq62tdWr2vYNR94vSIiA1P7t+5WNFcqmhcfkwOAv0jPR2DsC3yfSdUdN6/AcA0hmhRhSb1r9AaGTuSXqYbxc0V0T3pUaHBmfHE0KgHgeKB88uXiJdKS4bLdqS2lNqG96H3wjkP4G0AuBH0Dyb8sJjkkHAH9k7v8NIPkrkDsF/gB4mOSXoB/tRwAAAABJRU5ErkJggg=="/>;}
 
-function esLabel(en, map) { return map[en] || en; }
-function enFromEs(es, map) { const e = Object.entries(map).find(([,v]) => v === es); return e ? e[0] : es; }
+// ── STATIC DATA ──
+const CREWS=["Alan Gonzalez","Alfonso Marrufo (Poncho)","Alonso Soto","Antonio Gaytan","Arturo","Chuy Arias","Edwin Aguilera Ramirez (Canelo)","Federico Rios","Felipe Flores (Texano)","German Torres","GJ Masonry (Jose Salazar)","GM Masonry Construction (Gerardo)","Gonzalo Najera Lopez","Jesus Morales","Jose Estrada","Murillo Masonry (Pechiyos)","Rosendo Flores","Ubaldo Flores (Belly)"];
+const COMMERCIAL_SCOPES=["Brick","Stone - MJ/DS","Thin Brick/Stone","4\" CMU - Veneer","4\" CMU - Structural","6\" CMU","8\" CMU","10\" CMU","12\" CMU","Cast Stone"];
+const RESIDENTIAL_SCOPES=["Brick","Stone - MJ","Stone - DS","Thin Brick/Stone","4\" CMU","6\" CMU","8\" CMU","10\" CMU","12\" CMU","Cast Stone","Footing","Stucco","Pavers","Flag Stone"];
+const SF_SCOPES=new Set(["Stone - MJ/DS","Stone - MJ","Stone - DS","Thin Brick/Stone","Footing","Stucco","Pavers","Flag Stone"]);
+const UNIT_RATES={"Commercial Brick":0.80,"Commercial Stone - MJ/DS":10,"Commercial Thin Brick/Stone":10,"Commercial 4\" CMU - Veneer":5,"Commercial 4\" CMU - Structural":7,"Commercial 6\" CMU":10,"Commercial 8\" CMU":10,"Commercial 10\" CMU":10,"Commercial 12\" CMU":12,"Commercial Cast Stone":10,"Residential Brick":0.35,"Residential Stone - MJ":6,"Residential Stone - DS":7,"Residential Thin Brick/Stone":8,"Residential 4\" CMU":4,"Residential 6\" CMU":4,"Residential 8\" CMU":5,"Residential 10\" CMU":5,"Residential 12\" CMU":6,"Residential Cast Stone":6,"Residential Footing":20,"Residential Stucco":8,"Residential Pavers":10,"Residential Flag Stone":7};
+const MULTIPLIER_RATES={"None":1,"Highwork":1.5,"Professional Scaffold":1.1};
+const DETAIL_TREE={"Arch":[{type:"Less 9ft",rate:200},{type:"9ft-15ft",rate:500},{type:"16ft Greater",rate:800}],"Brick Column":[{type:"Base/Small",rate:75},{type:"4x4",rate:100},{type:"Two Story",rate:200},{type:"Railcuts",rate:200}],"Column Caps":[{type:"Xtra Small",rate:2},{type:"1ft x 1ft",rate:5},{type:"2ft x 2ft",rate:25},{type:"Medium",rate:50},{type:"Large",rate:100}],"Fireplace":[{type:"Brick Hearth",rate:200},{type:"Brick Insert Fireplace (Up to Mantle)",rate:400},{type:"Brick Insert Fireplace (Single Story - Ceiling)",rate:600},{type:"Brick Insert Fireplace (Two Story - Ceiling)",rate:800},{type:"Brick Insert Fireplace (Large Base - Two Story - Ceiling)",rate:1000},{type:"Masonry (Brick/Stone) Fireplace w/ Chimney",rate:2500},{type:"Firebox",rate:500},{type:"Firebox w/ Flu Tiles",rate:1500},{type:"Isokern Firebox w/ Metal Pipe",rate:900},{type:"Isokern Firebox w/ Flu Tiles",rate:1500},{type:"Stone Mantle",rate:150},{type:"Slab on Hearth",rate:150}],"Fire Feature":[{type:"Fire Pit",rate:350},{type:"Fire Feature",rate:150}],"Mailbox":[{type:"Brick or Rock",rate:400},{type:"New Home Build",rate:250},{type:"1 Planter",rate:300},{type:"2 Planters",rate:350},{type:"w/ Demo",rate:1000}],"Tooth-In":[{type:"Window",rate:100},{type:"Door",rate:200}],"Infill":[{type:"Window/Door",rate:200}],"Door Install":[{type:"HM Doors Install & Grout",rate:400}],"Brick Design Detail":[{type:"Herringbone/Diamond (Less 25SF)",rate:300},{type:"Herringbone/Diamond (~25SF)",rate:500},{type:"Herringbone/Diamond (Entire Wall)",rate:800},{type:"Knockout w/o Gable",rate:500},{type:"Knockout w/ Gable",rate:800},{type:"Brick Corbel",rate:10},{type:"Wings (Gables)",rate:100},{type:"Rowlock",rate:2}],"Cast Stone Detail":[{type:"Header/Sill",rate:8},{type:"Radius",rate:10}],"Outdoor Kitchen":[{type:"Openings (1)",rate:400},{type:"Openings (3)",rate:600},{type:"Openings (4)",rate:800},{type:"Openings (5+)",rate:1200}],"Residential Highwork":[{type:"Some Highwork",rate:400},{type:"Average Highwork",rate:800},{type:"Heavy Highwork",rate:1000},{type:"Extra Highwork",rate:200}],"Demo":[{type:"Small",rate:150},{type:"Medium (mailbox size)",rate:500},{type:"Large",rate:1000},{type:"Extra Large",rate:null}],"Gas":[{type:"Gas",rate:75}]};
+const CLEAN_TYPES=["Acid Wash ($150)","Acid Wash ($300)","Acid Wash ($500)","Acid Wash ($1000 Lg Comm.)","Clean ($150)","Clean ($300)","Clean ($500)","Clean ($1000 Lg Comm.)"];
+const CLEAN_RATES_MAP={"Acid Wash ($150)":150,"Acid Wash ($300)":300,"Acid Wash ($500)":500,"Acid Wash ($1000 Lg Comm.)":1000,"Clean ($150)":150,"Clean ($300)":300,"Clean ($500)":500,"Clean ($1000 Lg Comm.)":1000};
 
-// ═════════════════════════════════════════════════════════════════════════════
-// DYNAMIC RATE ENGINE — zero hardcoded rates, everything from spreadsheet
-// ═════════════════════════════════════════════════════════════════════════════
+// ── HELPERS ──
+function getUnit(s){if(!s)return null;if(s==="Brick")return"Cubes";if(SF_SCOPES.has(s))return"SF";if(s==="Cast Stone")return"LF";return"EA";}
+function getUnitLabel(s){const u=getUnit(s);if(u==="SF")return"Square Feet";if(u==="LF")return"Linear Feet";if(u==="Cubes")return"Remaining Cubes";return"Count (EA)";}
+function calcScopePay(s,q,m,cat,bpc){if(!s||parseFloat(q)<=0||q==="")return 0;const r=UNIT_RATES[`${cat} ${s}`]||0;const u=getUnit(s);const pq=u==="Cubes"?(parseFloat(q)||0)*(parseFloat(bpc)||500):(parseFloat(q)||0);return pq*r*(MULTIPLIER_RATES[m]||1);}
+function calcDetailPay(c,t,q){if(!c||!t)return 0;const it=(DETAIL_TREE[c]||[]).find(i=>i.type===t);if(!it||it.rate===null)return null;return it.rate*(parseInt(q)||1);}
+function fmtDetailPay(c,t,q){const v=calcDetailPay(c,t,q);return v===null?"TBD":fmt(v);}
+function calcCleanPay(c){return CLEAN_RATES_MAP[c]||0;}
+function fmt(n){return"$"+Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtDate(d){if(!d)return"";const s=String(d).substring(0,10);const[y,m,dd]=s.split("-");return`${m}/${dd}/${y}`;}
+function lastFriday(){const d=new Date();const dow=d.getDay();const back=dow>=5?dow-5:dow+2;d.setDate(d.getDate()-back);return d.toISOString().substring(0,10);}
+function snapToFriday(val){const d=new Date(val+"T12:00:00");const dow=d.getDay();const diff=dow>=5?dow-5:dow+2;d.setDate(d.getDate()-diff);return d.toISOString().substring(0,10);}
+function statusBadgeClass(s){const l=(s||"pending").toLowerCase();if(l==="approved")return"status-approved";if(l==="disputed")return"status-disputed";if(l==="paid")return"status-paid";if(l==="sent"||l==="opened")return"status-sent";return"status-pending";}
+function fmtPhone(p){if(!p||p.length!==10)return p;return`(${p.slice(0,3)}) ${p.slice(3,6)}-${p.slice(6)}`;}
 
-function cfgGetScopes(cfg, cat) {
-  return (cfg.unitRates || []).filter(r => r.category === cat && r.scope).map(r => r.scope.replace(cat + " ", ""));
-}
+// ── API ──
+async function apiGet(action,params={}){const qs=new URLSearchParams({action,...params}).toString();const r=await fetch(API_BASE+"?"+qs,{redirect:"follow"});const d=await r.json();if(!d.success)throw new Error(d.error);return d;}
+async function apiPost(body){const r=await fetch(API_BASE,{method:"POST",redirect:"follow",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const d=await r.json();if(!d.success)throw new Error(d.error);return d;}
 
-function cfgGetUnit(cfg, scope, cat) {
-  const e = (cfg.unitRates || []).find(r => r.scope === cat + " " + scope);
-  return e ? (e.unit || "EA") : "EA";
-}
+// ═══════════════════════════════════════════════════════════════════════════════
+// LOGIN SCREEN
+// ═══════════════════════════════════════════════════════════════════════════════
+function LoginScreen({onLogin, onShowRegister}){
+  const[phone,setPhone]=useState("");
+  const[pin,setPin]=useState("");
+  const[error,setError]=useState("");
+  const[loading,setLoading]=useState(false);
 
-function cfgCalcScopePay(cfg, scope, qty, mult, cat, bpc) {
-  const e = (cfg.unitRates || []).find(r => r.scope === cat + " " + scope);
-  const rate = e ? (parseFloat(e.rate) || 0) : 0;
-  const me = (cfg.multipliers || []).find(m => m.scope === mult);
-  const mf = me ? (parseFloat(me.rate) || 1) : 1;
-  const q = parseFloat(qty) || 0;
-  const unit = cfgGetUnit(cfg, scope, cat);
-  const payQty = (scope === "Brick") ? q * (bpc || DEFAULT_BPC) : q;
-  return { rate, mult: mf, payQty, total: payQty * rate * mf, unit };
-}
-
-function cfgDetailCats(cfg) {
-  const cats = [];
-  (cfg.detailRates || []).forEach(r => { if (r.category && !cats.includes(r.category)) cats.push(r.category); });
-  return cats;
-}
-
-function cfgDetailTypes(cfg, cat) {
-  return (cfg.detailRates || []).filter(r => r.category === cat && r.type).map(r => ({ type: r.type, rate: r.rate, unit: r.unit }));
-}
-
-function cfgCalcDetailPay(cfg, cat, type, qty, railcuts) {
-  const items = cfgDetailTypes(cfg, cat);
-  const item = items.find(i => i.type === type);
-  if (!item) return 0;
-  let total = (parseFloat(item.rate) || 0) * (qty || 1);
-  if (railcuts && cat === "Brick Column") {
-    const rc = items.find(i => i.type === "Railcuts");
-    if (rc) total += (parseFloat(rc.rate) || 0) * (qty || 1);
+  async function handleLogin(){
+    if(phone.replace(/\D/g,"").length<10){setError("Enter a 10-digit phone number");return;}
+    if(pin.length<4){setError("Enter your 4-digit PIN");return;}
+    setLoading(true);setError("");
+    try{
+      const data=await apiPost({action:"login",phone:phone.replace(/\D/g,""),pin});
+      onLogin(data.user);
+    }catch(e){setError(e.message);}
+    setLoading(false);
   }
-  return total;
-}
 
-function cfgMultipliers(cfg) {
-  return ["None", ...(cfg.multipliers || []).filter(m => m.scope).map(m => m.scope)];
-}
-
-function cfgCleanOpts(cfg, type) {
-  return (cfg.cleanRates || []).filter(r => r.category === type && r.type).map(r => ({ label: r.type, rate: parseFloat(r.rate) || 0 }));
-}
-
-function cfgCleanPay(cfg, label) {
-  if (!label || label === "None") return 0;
-  const e = (cfg.cleanRates || []).find(r => r.type === label);
-  return e ? (parseFloat(e.rate) || 0) : 0;
-}
-
-function calcHourlyPay(hrs, nL, nM, nLb, rL, rM, rLb) {
-  const h = parseFloat(hrs) || 0;
-  const lp = h * (parseInt(nL) || 0) * (rL || 0);
-  const mp = h * (parseInt(nM) || 0) * (rM || 0);
-  const bp = h * (parseInt(nLb) || 0) * (rLb || 0);
-  return { leadPay: lp, masonPay: mp, laborPay: bp, total: lp + mp + bp };
-}
-
-// ═════════════════════════════════════════════════════════════════════════════
-// UI LABELS
-// ═════════════════════════════════════════════════════════════════════════════
-const T = {
-  en: { suite:"DBM Operations Suite", fieldReport:"Field Report", mySubmissions:"My Submissions", ownerDash:"Owner Dashboard", materials:"Materials", payroll:"Payroll", estimating:"Estimating", comingSoon:"Coming Soon", weekEnding:"Week Ending", project:"Project", category:"Category", crew:"Crew", payType:"Pay Type", scope:"Scope", bpc:"Brick/Cube", multiplier:"Multiplier", details:"Details/Misc", cleanUp:"Clean Up", acidWash:"Acid Wash", hours:"Hours", numLead:"# Lead", numMason:"# Mason", numLabor:"# Labor", photos:"Photos", submit:"Submit Report", submitting:"Submitting...", estPay:"Est. Pay", noSubs:"No submissions yet", viewStub:"View Stub", payBreak:"Pay Breakdown", approve:"Approve", dispute:"Dispute", markPaid:"Mark Paid", sendStub:"Send Stub", all:"All", brickRem:"Brick Remaining", mortarRem:"Mortar Remaining", updateCount:"Update Count", cubesSite:"Cubes on Site", bagsSite:"Bags on Site", notes:"Notes", loading:"Loading...", sel:"Select...", none:"None" },
-  es: { suite:"DBM Suite de Operaciones", fieldReport:"Reporte de Campo", mySubmissions:"Mis Envíos", ownerDash:"Panel del Dueño", materials:"Materiales", payroll:"Nómina", estimating:"Estimación", comingSoon:"Próximamente", weekEnding:"Semana que Termina", project:"Proyecto", category:"Categoría", crew:"Cuadrilla", payType:"Tipo de Pago", scope:"Alcance", bpc:"Ladrillo/Cubo", multiplier:"Multiplicador", details:"Detalles/Varios", cleanUp:"Limpieza", acidWash:"Lavado Ácido", hours:"Horas", numLead:"# Líder", numMason:"# Albañil", numLabor:"# Peón", photos:"Fotos", submit:"Enviar Reporte", submitting:"Enviando...", estPay:"Pago Est.", noSubs:"Sin envíos", viewStub:"Ver Talón", payBreak:"Desglose de Pago", approve:"Aprobar", dispute:"Disputar", markPaid:"Marcar Pagado", sendStub:"Enviar Talón", all:"Todos", brickRem:"Ladrillo Restante", mortarRem:"Mortero Restante", updateCount:"Actualizar Conteo", cubesSite:"Cubos en Sitio", bagsSite:"Bolsas en Sitio", notes:"Notas", loading:"Cargando...", sel:"Seleccionar...", none:"Ninguno" },
-};
-
-// ═════════════════════════════════════════════════════════════════════════════
-// API
-// ═════════════════════════════════════════════════════════════════════════════
-async function apiGet(action, params = {}) {
-  const qs = new URLSearchParams({ action, ...params }).toString();
-  const res = await fetch(API_BASE + "?" + qs, { redirect: "follow" });
-  const data = await res.json();
-  if (!data.success) throw new Error(data.error || "Unknown error");
-  return data;
-}
-async function apiPost(body) {
-  const res = await fetch(API_BASE, { method: "POST", redirect: "follow", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(body) });
-  const data = await res.json();
-  if (!data.success) throw new Error(data.error || "Unknown error");
-  return data;
-}
-const apiProjects = () => apiGet("projects").then(d => d.projects || []);
-const apiCrews = () => apiGet("crews").then(d => d.crews || []);
-const apiSubs = (c) => apiGet("submissions", c ? { crew: c } : {}).then(d => d.submissions || []);
-const apiConfig = () => apiGet("config");
-const apiSubmit = (r) => apiPost({ action: "submit", record: r });
-const apiTransition = (p) => apiPost({ action: "transition", ...p });
-const apiMatUpdate = (proj, cubes, bags) => apiPost({ action: "updateMaterials", project: proj, cubes, bags });
-
-// ═════════════════════════════════════════════════════════════════════════════
-// HELPERS
-// ═════════════════════════════════════════════════════════════════════════════
-const fmt = v => "$" + Number(v || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const fmtDate = d => { if (!d) return ""; try { return new Date(d + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }); } catch { return d; } };
-function lastFriday() { const d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 2) % 7 || 7)); return d.toISOString().split("T")[0]; }
-function snapToFriday(s) { const d = new Date(s + "T12:00:00"); const day = d.getDay(); if (day === 5) return s; d.setDate(d.getDate() - ((day + 2) % 7 || 7)); return d.toISOString().split("T")[0]; }
-function statusColor(s) { return ({ pending: "#D97706", sent: "#2563EB", opened: "#6366F1", approved: "#059669", disputed: "#DC2626", paid: "#047857" })[(s || "").toLowerCase()] || "#999"; }
-function badgeCls(s) { return "badge badge-" + (s || "pending").toLowerCase(); }
-
-function DBMLogo() { return <img className="header-logo" src={LOGO_SRC} alt="DBM"/>; }
-function Toast({ msg, type, onDone }) { useEffect(() => { const t = setTimeout(onDone, 3000); return () => clearTimeout(t); }, [onDone]); return <div className={"toast " + type}>{msg}</div>; }
-
-
-// ═════════════════════════════════════════════════════════════════════════════
-// SUITE LAUNCHER
-// ═════════════════════════════════════════════════════════════════════════════
-function SuiteLauncher({ onNav, submissions, lang }) {
-  const t = T[lang];
-  const disputed = submissions.filter(s => (s.status || s.stubStatus || "").toLowerCase() === "disputed").length;
-  const apps = [
-    { id: "field",     icon: "📋", name: t.fieldReport,    sub: lang === "es" ? "Enviar reportes" : "Submit work reports",  color: "#6DD44E", live: true },
-    { id: "subs",      icon: "📨", name: t.mySubmissions,   sub: lang === "es" ? "Rastrear tu pago" : "Track your pay",     color: "#2563EB", live: true, badge: disputed },
-    { id: "owner",     icon: "👔", name: t.ownerDash,       sub: lang === "es" ? "Revisar y aprobar" : "Review & approve",  color: "#7C3AED", live: true },
-    { id: "materials", icon: "🧱", name: t.materials,       sub: lang === "es" ? "Conteo en sitio" : "Site inventory",      color: "#D97706", live: true },
-    { id: "payroll",   icon: "💰", name: t.payroll,         sub: t.comingSoon, color: "#999", live: false },
-    { id: "estimating",icon: "📐", name: t.estimating,      sub: t.comingSoon, color: "#999", live: false },
-  ];
-
-  return (
-    <div className="screen">
-      <div className="header">
-        <DBMLogo />
-        <div>
-          <div style={{ fontSize: 17, fontWeight: 700, letterSpacing: 0.5, color: "white" }}>{t.suite}</div>
-          <div className="header-sub">Design Build Masonry</div>
+  return(
+    <div className="login-screen">
+      <div style={{padding:"16px",textAlign:"center"}}>
+        <div style={{fontSize:13,color:"var(--gray)"}}>Design Build Masonry</div>
+      </div>
+      <div className="login-card" style={{margin:"auto 16px"}}>
+        <div className="login-logo">
+          <div style={{fontSize:48}}>🧱</div>
+          <h2>DBM Operations</h2>
+          <p>Sign in with your phone number</p>
         </div>
-        <div className="header-right">
-          <button className={`lang-btn${lang === "en" ? " active" : ""}`} onClick={() => onNav("lang", "en")}>EN</button>
-          <button className={`lang-btn${lang === "es" ? " active" : ""}`} onClick={() => onNav("lang", "es")}>ES</button>
+        {error&&<div style={{background:"#FEE2E2",color:"#991B1B",padding:"10px 14px",borderRadius:8,fontSize:13,marginBottom:14}}>{error}</div>}
+        <div className="field">
+          <label>Phone Number</label>
+          <input type="tel" placeholder="(405) 555-1234" value={phone}
+            onChange={e=>setPhone(e.target.value)} inputMode="tel"/>
+        </div>
+        <div className="field">
+          <label>PIN</label>
+          <input type="password" placeholder="4-digit PIN" maxLength={6} value={pin}
+            onChange={e=>setPin(e.target.value.replace(/\D/g,""))} inputMode="numeric"
+            onKeyDown={e=>e.key==="Enter"&&handleLogin()}/>
+        </div>
+        <div className="pin-dots">
+          {[0,1,2,3].map(i=><div key={i} className={`pin-dot${pin.length>i?" filled":""}`}/>)}
+        </div>
+        <button className="btn btn-green" onClick={handleLogin} disabled={loading} style={{marginTop:12}}>
+          {loading?"Signing in...":"Sign In"}
+        </button>
+        <div style={{textAlign:"center",marginTop:16}}>
+          <span style={{fontSize:13,color:"var(--gray)"}}>No account? </span>
+          <button onClick={onShowRegister} style={{background:"none",border:"none",color:"var(--green)",fontSize:13,fontWeight:700,cursor:"pointer"}}>Create Account</button>
         </div>
       </div>
-      <div className="content" style={{ paddingTop: 24 }}>
+      <div style={{height:80}}/>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// REGISTER SCREEN
+// ═══════════════════════════════════════════════════════════════════════════════
+function RegisterScreen({onRegister, onShowLogin}){
+  const[phone,setPhone]=useState("");
+  const[name,setName]=useState("");
+  const[crew,setCrew]=useState("");
+  const[pin,setPin]=useState("");
+  const[pin2,setPin2]=useState("");
+  const[error,setError]=useState("");
+  const[loading,setLoading]=useState(false);
+
+  async function handleRegister(){
+    if(phone.replace(/\D/g,"").length<10){setError("Enter a 10-digit phone number");return;}
+    if(!name.trim()){setError("Enter your name");return;}
+    if(pin.length<4){setError("PIN must be at least 4 digits");return;}
+    if(pin!==pin2){setError("PINs don't match");return;}
+    setLoading(true);setError("");
+    try{
+      const data=await apiPost({action:"register",phone:phone.replace(/\D/g,""),name:name.trim(),pin,crew});
+      onRegister(data.user);
+    }catch(e){setError(e.message);}
+    setLoading(false);
+  }
+
+  return(
+    <div className="login-screen">
+      <div style={{padding:"16px",textAlign:"center"}}>
+        <div style={{fontSize:13,color:"var(--gray)"}}>Design Build Masonry</div>
+      </div>
+      <div className="login-card" style={{margin:"auto 16px"}}>
+        <div className="login-logo">
+          <div style={{fontSize:48}}>🧱</div>
+          <h2>Create Account</h2>
+          <p>You'll start with Crew Lead access</p>
+        </div>
+        {error&&<div style={{background:"#FEE2E2",color:"#991B1B",padding:"10px 14px",borderRadius:8,fontSize:13,marginBottom:14}}>{error}</div>}
+        <div className="field"><label>Phone Number</label><input type="tel" placeholder="(405) 555-1234" value={phone} onChange={e=>setPhone(e.target.value)} inputMode="tel"/></div>
+        <div className="field"><label>Your Name</label><input placeholder="e.g. Alan Gonzalez" value={name} onChange={e=>setName(e.target.value)}/></div>
+        <div className="field"><label>Your Crew</label>
+          <div className="select-wrap"><select value={crew} onChange={e=>setCrew(e.target.value)}>
+            <option value="">— Select your crew —</option>
+            {CREWS.map(c=><option key={c} value={c}>{c}</option>)}
+          </select></div>
+        </div>
+        <div className="field-row">
+          <div className="field"><label>Choose PIN</label><input type="password" placeholder="4+ digits" maxLength={6} value={pin} onChange={e=>setPin(e.target.value.replace(/\D/g,""))} inputMode="numeric"/></div>
+          <div className="field"><label>Confirm PIN</label><input type="password" placeholder="Repeat" maxLength={6} value={pin2} onChange={e=>setPin2(e.target.value.replace(/\D/g,""))} inputMode="numeric"/></div>
+        </div>
+        <button className="btn btn-green" onClick={handleRegister} disabled={loading} style={{marginTop:8}}>
+          {loading?"Creating...":"Create Account"}
+        </button>
+        <div style={{textAlign:"center",marginTop:16}}>
+          <span style={{fontSize:13,color:"var(--gray)"}}>Already have an account? </span>
+          <button onClick={onShowLogin} style={{background:"none",border:"none",color:"var(--green)",fontSize:13,fontWeight:700,cursor:"pointer"}}>Sign In</button>
+        </div>
+      </div>
+      <div style={{height:80}}/>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SUITE LAUNCHER (role-filtered)
+// ═══════════════════════════════════════════════════════════════════════════════
+function SuiteLauncher({onNav,lang,user,submissions}){
+  const disputed=submissions.filter(s=>(s.stubStatus||"").toLowerCase()==="disputed").length;
+  const roleName={owner:"Owner",finance:"Finance",foreman:"Foreman",crew_lead:"Crew Lead"}[user.role]||user.role;
+
+  const allApps=[
+    {id:"field",name:"Field Report",sub:"Submit payroll",icon:"📋",color:"var(--green)",roles:["owner","foreman"]},
+    {id:"subs",name:"Submissions",sub:"View & track",icon:"📊",color:"var(--blue)",roles:["owner","finance","foreman"],badge:disputed},
+    {id:"owner",name:"Owner Dashboard",sub:"Approve & pay",icon:"👔",color:"var(--amber)",roles:["owner"]},
+    {id:"myPay",name:"My Paycheck",sub:"View your pay",icon:"💰",color:"var(--green)",roles:["crew_lead"]},
+    {id:"users",name:"Manage Users",sub:"Roles & access",icon:"👥",color:"#7C3AED",roles:["owner"]},
+    {id:"est",name:"Estimating",sub:"Coming Soon",icon:"📐",color:"var(--gray)",roles:["owner"],disabled:true},
+  ];
+
+  const apps=allApps.filter(a=>a.roles.includes(user.role));
+
+  return(
+    <div className="screen">
+      <div className="header">
+        <DBMLogo/>
+        <div><div style={{fontSize:17,fontWeight:700,color:"white"}}>DBM Operations Suite</div><div className="header-sub">{user.name} · <span className={`role-badge role-${user.role}`}>{roleName}</span></div></div>
+        <div className="header-right">
+          <button className={`lang-btn${lang==="en"?" active":""}`} onClick={()=>onNav("lang","en")}>EN</button>
+          <button className={`lang-btn${lang==="es"?" active":""}`} onClick={()=>onNav("lang","es")}>ES</button>
+          <button onClick={()=>onNav("logout")} style={{background:"none",border:"none",color:"var(--gray)",fontSize:12,cursor:"pointer",marginLeft:4}}>Logout</button>
+        </div>
+      </div>
+      <div className="content" style={{paddingTop:24}}>
         <div className="suite-grid">
-          {apps.map(app => (
-            <div key={app.id} className={`suite-card${app.live ? "" : " disabled"}`}
-              onClick={() => app.live && onNav("screen", app.id)}
-              style={app.live ? { borderTop: `3px solid ${app.color}` } : {}}>
-              {app.badge > 0 && <span className="suite-badge">{app.badge}</span>}
+          {apps.map(app=>(
+            <div key={app.id} className={`suite-card${app.disabled?" disabled":""}`}
+              onClick={()=>!app.disabled&&onNav("screen",app.id)}
+              style={!app.disabled?{borderTop:`3px solid ${app.color}`}:{}}>
+              {(app.badge||0)>0&&<span className="suite-badge">{app.badge}</span>}
               <div className="suite-icon">{app.icon}</div>
               <div className="suite-name">{app.name}</div>
               <div className="suite-sub">{app.sub}</div>
-              {!app.live && <div className="coming-soon">{t.comingSoon}</div>}
+              {app.disabled&&<div className="coming-soon">Coming Soon</div>}
             </div>
           ))}
         </div>
@@ -351,725 +296,369 @@ function SuiteLauncher({ onNav, submissions, lang }) {
   );
 }
 
-// ═════════════════════════════════════════════════════════════════════════════
-// FIELD REPORT — unlimited scopes & details, all rates from spreadsheet
-// ═════════════════════════════════════════════════════════════════════════════
-function FieldReportScreen({ onNav, onSubmitDone, lang, cfg }) {
-  const t = T[lang];
+// ═══════════════════════════════════════════════════════════════════════════════
+// USER MANAGEMENT (owner only)
+// ═══════════════════════════════════════════════════════════════════════════════
+function UserManagementScreen({onNav,user}){
+  const[users,setUsers]=useState([]);
+  const[loading,setLoading]=useState(true);
+  const[editUser,setEditUser]=useState(null);
+  const[editRole,setEditRole]=useState("");
+  const[editCrew,setEditCrew]=useState("");
+  const[saving,setSaving]=useState(false);
 
-  // ── Form state ──
-  const [weekEnding, setWeekEnding] = useState(() => lastFriday());
-  const [project, setProject] = useState("");
-  const [category, setCategory] = useState("Commercial");
-  const [crew, setCrew] = useState("");
-  const [payType, setPayType] = useState("Unit");
+  useEffect(()=>{
+    apiGet("users").then(d=>setUsers(d.users||[])).catch(()=>{}).finally(()=>setLoading(false));
+  },[]);
 
-  // Dynamic arrays — add as many as needed
-  const [scopes, setScopes] = useState([{ scope: "", qty: "", bpc: "500", mult: "None" }]);
-  const [details, setDetails] = useState([]);
-
-  const [acidType, setAcidType] = useState("None");
-  const [cleanType, setCleanType] = useState("None");
-  const [hours, setHours] = useState("");
-  const [numLead, setNumLead] = useState("0");
-  const [numMason, setNumMason] = useState("0");
-  const [numLabor, setNumLabor] = useState("0");
-  const [photos, setPhotos] = useState([]);
-  const [notes, setNotes] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [toast, setToast] = useState(null);
-
-  // ── Live data from spreadsheet ──
-  const [projectList, setProjectList] = useState([]);
-  const [crewRates, setCrewRates] = useState([]);
-  const [dataLoading, setDataLoading] = useState(true);
-  useEffect(() => {
-    Promise.all([apiProjects(), apiCrews()])
-      .then(([p, c]) => { setProjectList(p); setCrewRates(c); })
-      .catch(() => {})
-      .finally(() => setDataLoading(false));
-  }, []);
-
-  const defaultBpc = projectList.find(x => x.name === project)?.bpc || 500;
-
-  function handleProjectChange(name) {
-    setProject(name);
-    const p = projectList.find(x => x.name === name);
-    const bpc = p?.bpc ? String(p.bpc) : "500";
-    setCategory(p?.category || "Commercial");
-    setScopes([{ scope: "", qty: "", bpc, mult: "None" }]);
+  async function saveRole(){
+    setSaving(true);
+    try{
+      await apiPost({action:"updateRole",targetPhone:editUser.phone,newRole:editRole,newCrew:editCrew});
+      const d=await apiGet("users");setUsers(d.users||[]);
+      setEditUser(null);
+    }catch(e){alert(e.message);}
+    setSaving(false);
   }
 
-  function resetForm() {
-    setWeekEnding(lastFriday()); setProject(""); setCategory("Commercial"); setCrew(""); setPayType("Unit");
-    setScopes([{ scope: "", qty: "", bpc: "500", mult: "None" }]); setDetails([]);
-    setAcidType("None"); setCleanType("None"); setHours(""); setNumLead("0"); setNumMason("0"); setNumLabor("0");
-    setPhotos([]); setNotes("");
+  async function toggleActive(u){
+    try{
+      await apiPost({action:"updateRole",targetPhone:u.phone,active:!u.active});
+      const d=await apiGet("users");setUsers(d.users||[]);
+    }catch(e){alert(e.message);}
   }
 
-  // ── Scope helpers ──
-  function addScope() { setScopes(s => [...s, { scope: "", qty: "", bpc: String(defaultBpc), mult: "None" }]); }
-  function updScope(i, k, v) { setScopes(s => s.map((x, j) => j !== i ? x : { ...x, [k]: v, ...(k === "scope" ? { qty: "", mult: "None" } : {}) })); }
-  function rmScope(i) { setScopes(s => s.length <= 1 ? [{ scope: "", qty: "", bpc: String(defaultBpc), mult: "None" }] : s.filter((_, j) => j !== i)); }
-
-  // ── Detail helpers ──
-  function addDetail() { setDetails(d => [...d, { category: "", type: "", qty: 1, railcuts: false }]); }
-  function updDetail(i, k, v) { setDetails(d => d.map((x, j) => j !== i ? x : { ...x, [k]: v, ...(k === "category" ? { type: "", qty: 1, railcuts: false } : {}) })); }
-  function rmDetail(i) { setDetails(d => d.filter((_, j) => j !== i)); }
-
-  // ── Pay calculations ──
-  const scopePays = scopes.map(s => {
-    const en = lang === "es" ? enFromEs(s.scope, SCOPE_ES) : s.scope;
-    const em = lang === "es" ? enFromEs(s.mult, MULT_ES_MAP) : s.mult;
-    return { ...cfgCalcScopePay(cfg, en, s.qty, em, category, parseFloat(s.bpc) || DEFAULT_BPC), enScope: en, enMult: em };
-  });
-  const scopeTotal = scopePays.reduce((s, p) => s + p.total, 0);
-
-  const detailPays = details.map(d => {
-    const ec = lang === "es" ? enFromEs(d.category, DETAIL_CAT_ES) : d.category;
-    const et = lang === "es" ? enFromEs(d.type, DETAIL_TYPE_ES) : d.type;
-    return { enCat: ec, enType: et, total: cfgCalcDetailPay(cfg, ec, et, d.qty, d.railcuts) };
-  });
-  const detailTotal = detailPays.reduce((s, p) => s + p.total, 0);
-
-  const enAcid = lang === "es" ? enFromEs(acidType, ACID_ES) : acidType;
-  const enClean = lang === "es" ? enFromEs(cleanType, CLEAN_ES) : cleanType;
-  const acidPay = cfgCleanPay(cfg, enAcid);
-  const cleanPay = cfgCleanPay(cfg, enClean);
-
-  const selRates = crewRates.find(r => r.displayName === crew) || {};
-  const hourlyCalc = calcHourlyPay(hours, numLead, numMason, numLabor, selRates.leadRate || 0, selRates.masonRate || 0, selRates.laborRate || 0);
-  const grandTotal = payType === "Unit" ? scopeTotal + detailTotal + acidPay + cleanPay : hourlyCalc.total + cleanPay;
-
-  // ── Dropdown options (all from cfg) ──
-  const scopeOpts = lang === "es" ? cfgGetScopes(cfg, category).map(s => esLabel(s, SCOPE_ES)) : cfgGetScopes(cfg, category);
-  const multOpts = lang === "es" ? cfgMultipliers(cfg).map(m => esLabel(m, MULT_ES_MAP)) : cfgMultipliers(cfg);
-  const acidOpts = [{ label: t.none, en: "None" }, ...cfgCleanOpts(cfg, "Acid Wash").map(a => ({ label: lang === "es" ? esLabel(a.label, ACID_ES) : a.label, en: a.label }))];
-  const cleanOpts = [{ label: t.none, en: "None" }, ...cfgCleanOpts(cfg, "Clean Up").map(c => ({ label: lang === "es" ? esLabel(c.label, CLEAN_ES) : c.label, en: c.label }))];
-  const detCatOpts = lang === "es" ? cfgDetailCats(cfg).map(c => esLabel(c, DETAIL_CAT_ES)) : cfgDetailCats(cfg);
-
-  function detTypeOpts(cat) {
-    const en = lang === "es" ? enFromEs(cat, DETAIL_CAT_ES) : cat;
-    const items = cfgDetailTypes(cfg, en);
-    return items.map(i => ({ ...i, label: lang === "es" ? esLabel(i.type, DETAIL_TYPE_ES) : i.type }));
-  }
-
-  function qtyLabel(enScope) {
-    if (enScope === "Brick") return lang === "es" ? "Cubos Instalados" : "Cubes Installed";
-    const u = cfgGetUnit(cfg, enScope, category);
-    return u === "SF" ? "SF" : u === "LF" ? "LF" : "EA";
-  }
-
-  function handlePhotoAdd(e) {
-    Array.from(e.target.files).forEach(f => {
-      const r = new FileReader();
-      r.onload = ev => setPhotos(p => [...p, { url: ev.target.result, name: f.name }]);
-      r.readAsDataURL(f);
-    });
-    e.target.value = "";
-  }
-
-  // ── Submit ──
-  async function handleSubmit() {
-    if (!project || !crew) { setToast({ msg: lang === "es" ? "Selecciona proyecto y cuadrilla" : "Select project and crew", type: "error" }); return; }
-    setSubmitting(true);
-    try {
-      const record = {
-        weekEnding, projectDisplay: project, crewDisplay: crew, category, payType, lang,
-        scopes: scopes.filter(s => s.scope).map((s, i) => {
-          const p = scopePays[i] || {};
-          return { scope: p.enScope, rawQty: s.qty, bpc: parseFloat(s.bpc) || DEFAULT_BPC, multiplier: p.enMult, pay: p };
-        }),
-        details: details.filter(d => d.category && d.type).map((d, i) => {
-          const p = detailPays[i] || {};
-          return { enCat: p.enCat, enType: p.enType, qty: d.qty, railcuts: d.railcuts, pay: p.total };
-        }),
-        enAcidWash: enAcid === "None" ? null : enAcid,
-        enCleanUp: enClean === "None" ? null : enClean,
-        hours: payType === "Hourly" ? hours : null,
-        leads: payType === "Hourly" ? numLead : null,
-        masons: payType === "Hourly" ? numMason : null,
-        laborers: payType === "Hourly" ? numLabor : null,
-        leadRate: selRates.leadRate || 0, masonRate: selRates.masonRate || 0, laborRate: selRates.laborRate || 0,
-        acidPay, cleanPay, detailTotal, scopeTotal, hourlyTotal: hourlyCalc.total, grandTotal, notes,
-        photos: photos.map(p => ({ data: p.url, name: p.name })),
-      };
-      await apiSubmit(record);
-      setToast({ msg: lang === "es" ? "¡Reporte enviado!" : "Report submitted!", type: "success" });
-      resetForm();
-      if (onSubmitDone) onSubmitDone();
-    } catch (err) { setToast({ msg: "Error: " + err.message, type: "error" }); }
-    finally { setSubmitting(false); }
-  }
-
-  // ── Render ──
-  return (
+  return(
     <div className="screen">
       <div className="header">
-        <button className="back-btn" onClick={() => onNav("screen", "suite")}>←</button>
-        <div style={{ fontSize: 17, fontWeight: 700, color: "white" }}>{t.fieldReport}</div>
-        <div className="header-right">
-          <button className={`lang-btn${lang === "en" ? " active" : ""}`} onClick={() => onNav("lang", "en")}>EN</button>
-          <button className={`lang-btn${lang === "es" ? " active" : ""}`} onClick={() => onNav("lang", "es")}>ES</button>
-        </div>
-      </div>
-
-      <div className="content">
-        {/* ── Week Ending ── */}
-        <div className="card">
-          <div className="field">
-            <label className="field-label">{t.weekEnding}</label>
-            <input type="date" className="field-input" value={weekEnding} onChange={e => setWeekEnding(snapToFriday(e.target.value))} />
-            <div className="field-hint">{lang === "es" ? "Se ajusta al viernes" : "Snaps to Friday"}</div>
-          </div>
-        </div>
-
-        {/* ── Project / Crew / Pay Type ── */}
-        <div className="card">
-          <div className="field">
-            <label className="field-label">{t.project}</label>
-            <select className="field-select" value={project} onChange={e => handleProjectChange(e.target.value)}>
-              <option value="">{dataLoading ? t.loading : t.sel}</option>
-              {projectList.filter(p => p.active).map(p => <option key={p.name} value={p.name}>{p.name}</option>)}
-            </select>
-          </div>
-          <div className="field">
-            <label className="field-label">{t.category}</label>
-            <div className="toggle-group">
-              <button className={`toggle-btn${category === "Commercial" ? " active" : ""}`} onClick={() => { setCategory("Commercial"); setScopes([{ scope: "", qty: "", bpc: String(defaultBpc), mult: "None" }]); }}>Commercial</button>
-              <button className={`toggle-btn${category === "Residential" ? " active" : ""}`} onClick={() => { setCategory("Residential"); setScopes([{ scope: "", qty: "", bpc: String(defaultBpc), mult: "None" }]); }}>Residential</button>
-            </div>
-          </div>
-          <div className="field">
-            <label className="field-label">{t.crew}</label>
-            <select className="field-select" value={crew} onChange={e => setCrew(e.target.value)}>
-              <option value="">{dataLoading ? t.loading : t.sel}</option>
-              {crewRates.map(c => <option key={c.displayName} value={c.displayName}>{c.displayName}</option>)}
-            </select>
-          </div>
-          <div className="field" style={{ marginBottom: 0 }}>
-            <label className="field-label">{t.payType}</label>
-            <div className="toggle-group">
-              <button className={`toggle-btn${payType === "Unit" ? " active" : ""}`} onClick={() => setPayType("Unit")}>{lang === "es" ? "Unidad" : "Unit"}</button>
-              <button className={`toggle-btn${payType === "Hourly" ? " active" : ""}`} onClick={() => setPayType("Hourly")}>{lang === "es" ? "Por Hora" : "Hourly"}</button>
-            </div>
-          </div>
-        </div>
-
-        {/* ══════ UNIT PAY MODE ══════ */}
-        {payType === "Unit" && (<>
-
-          {/* ── Dynamic Scopes ── */}
-          {scopes.map((s, idx) => {
-            const en = scopePays[idx]?.enScope || "";
-            const pay = scopePays[idx] || { total: 0 };
-            return (
-              <div key={idx} className="card">
-                <div className="card-header">
-                  <div className="card-title" style={{ marginBottom: 0 }}>{t.scope}{scopes.length > 1 ? " " + String.fromCharCode(65 + idx) : ""}</div>
-                  {scopes.length > 1 && <button className="btn-remove" onClick={() => rmScope(idx)}>✕</button>}
-                </div>
-                <div className="field">
-                  <select className="field-select" value={s.scope} onChange={e => updScope(idx, "scope", e.target.value)}>
-                    <option value="">{t.sel}</option>
-                    {scopeOpts.map(o => <option key={o} value={o}>{o}</option>)}
-                  </select>
-                </div>
-                {s.scope && (<>
-                  <div className="field-row">
-                    <div className="field" style={{ flex: 2 }}>
-                      <label className="field-label">{qtyLabel(en)}</label>
-                      <input type="number" className="field-input" value={s.qty} onChange={e => updScope(idx, "qty", e.target.value)} placeholder="0" inputMode="decimal" />
-                    </div>
-                    {en === "Brick" && (
-                      <div className="field" style={{ flex: 1 }}>
-                        <label className="field-label">{t.bpc}</label>
-                        <input type="number" className="field-input" value={s.bpc} onChange={e => updScope(idx, "bpc", e.target.value)} inputMode="numeric" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="field">
-                    <label className="field-label">{t.multiplier}</label>
-                    <select className="field-select" value={s.mult} onChange={e => updScope(idx, "mult", e.target.value)}>
-                      {multOpts.map(m => <option key={m} value={m}>{m}</option>)}
-                    </select>
-                  </div>
-                  {pay.total > 0 && (
-                    <div className="field-hint" style={{ textAlign: "right", fontWeight: 600, color: "var(--green)" }}>
-                      {fmt(pay.total)} <span style={{ fontWeight: 400, color: "var(--gray)", fontSize: 10 }}>({pay.payQty} {pay.unit} × {fmt(pay.rate)}{pay.mult > 1 ? ` × ${pay.mult}` : ""})</span>
-                    </div>
-                  )}
-                </>)}
-              </div>
-            );
-          })}
-          <button className="btn btn-outline" style={{ marginBottom: 14 }} onClick={addScope}>+ {lang === "es" ? "Agregar Alcance" : "Add Scope"}</button>
-
-          {/* ── Dynamic Details ── */}
-          <div className="card">
-            <div className="card-title">{t.details}</div>
-            {details.map((d, idx) => {
-              const types = detTypeOpts(d.category);
-              const dp = detailPays[idx] || { total: 0, enCat: "" };
-              return (
-                <div key={idx} style={{ padding: "10px 0", borderBottom: "1px solid #eee" }}>
-                  <div className="field-row" style={{ marginBottom: 8 }}>
-                    <div className="field" style={{ flex: 1, marginBottom: 0 }}>
-                      <select className="field-select" value={d.category} onChange={e => updDetail(idx, "category", e.target.value)} style={{ fontSize: 13, padding: 8 }}>
-                        <option value="">{lang === "es" ? "Categoría..." : "Category..."}</option>
-                        {detCatOpts.map(c => <option key={c} value={c}>{c}</option>)}
-                      </select>
-                    </div>
-                    <button className="btn-remove" onClick={() => rmDetail(idx)}>✕</button>
-                  </div>
-                  {d.category && types.length > 0 && (
-                    <div className="field" style={{ marginBottom: 8 }}>
-                      <select className="field-select" value={d.type} onChange={e => updDetail(idx, "type", e.target.value)} style={{ fontSize: 13, padding: 8 }}>
-                        <option value="">{lang === "es" ? "Tipo..." : "Type..."}</option>
-                        {types.map(tp => <option key={tp.label} value={tp.label}>{tp.label}{tp.rate ? " — " + fmt(tp.rate) : ""}</option>)}
-                      </select>
-                    </div>
-                  )}
-                  {d.type && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      <div className="detail-qty">
-                        <button onClick={() => updDetail(idx, "qty", Math.max(1, d.qty - 1))}>−</button>
-                        <span>{d.qty}</span>
-                        <button onClick={() => updDetail(idx, "qty", d.qty + 1)}>+</button>
-                      </div>
-                      {dp.enCat === "Brick Column" && (
-                        <label style={{ fontSize: 12, display: "flex", alignItems: "center", gap: 4, color: "var(--text-dim)" }}>
-                          <input type="checkbox" checked={d.railcuts} onChange={e => updDetail(idx, "railcuts", e.target.checked)} /> Railcuts
-                        </label>
-                      )}
-                      {dp.total > 0 && <div style={{ marginLeft: "auto", fontSize: 13, fontWeight: 600, color: "var(--green)" }}>{fmt(dp.total)}</div>}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-            <button className="btn btn-outline" style={{ marginTop: 10 }} onClick={addDetail}>+ {lang === "es" ? "Agregar Detalle" : "Add Detail"}</button>
-          </div>
-
-          {/* ── Acid Wash + Clean Up ── */}
-          <div className="card">
-            <div className="field-row">
-              <div className="field">
-                <label className="field-label">{t.acidWash}</label>
-                <select className="field-select" value={acidType} onChange={e => setAcidType(e.target.value)}>
-                  {acidOpts.map(a => <option key={a.label} value={a.label}>{a.label}</option>)}
-                </select>
-              </div>
-              <div className="field">
-                <label className="field-label">{t.cleanUp}</label>
-                <select className="field-select" value={cleanType} onChange={e => setCleanType(e.target.value)}>
-                  {cleanOpts.map(c => <option key={c.label} value={c.label}>{c.label}</option>)}
-                </select>
-              </div>
-            </div>
-          </div>
-        </>)}
-
-        {/* ══════ HOURLY PAY MODE ══════ */}
-        {payType === "Hourly" && (
-          <div className="card">
-            <div className="card-title">{lang === "es" ? "Pago por Hora" : "Hourly Pay"}</div>
-            <div className="field">
-              <label className="field-label">{t.hours}</label>
-              <input type="number" className="field-input" value={hours} onChange={e => setHours(e.target.value)} placeholder="0" inputMode="decimal" />
-            </div>
-            <div className="field-row">
-              <div className="field"><label className="field-label">{t.numLead}</label><select className="field-select" value={numLead} onChange={e => setNumLead(e.target.value)}>{[0,1,2,3,4,5].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
-              <div className="field"><label className="field-label">{t.numMason}</label><select className="field-select" value={numMason} onChange={e => setNumMason(e.target.value)}>{[0,1,2,3,4,5,6,7,8].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
-              <div className="field"><label className="field-label">{t.numLabor}</label><select className="field-select" value={numLabor} onChange={e => setNumLabor(e.target.value)}>{[0,1,2,3,4,5,6,7,8].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
-            </div>
-            {hourlyCalc.total > 0 && <div style={{ marginTop: 10, fontSize: 12, color: "var(--text-dim)" }}>
-              {hourlyCalc.leadPay > 0 && <div>Lead: {fmt(hourlyCalc.leadPay)}</div>}
-              {hourlyCalc.masonPay > 0 && <div>Mason: {fmt(hourlyCalc.masonPay)}</div>}
-              {hourlyCalc.laborPay > 0 && <div>Labor: {fmt(hourlyCalc.laborPay)}</div>}
-            </div>}
-            <div className="field" style={{ marginTop: 14 }}>
-              <label className="field-label">{t.cleanUp}</label>
-              <select className="field-select" value={cleanType} onChange={e => setCleanType(e.target.value)}>
-                {cleanOpts.map(c => <option key={c.label} value={c.label}>{c.label}</option>)}
-              </select>
-            </div>
-          </div>
-        )}
-
-        {/* ── Notes ── */}
-        <div className="card">
-          <div className="field" style={{ marginBottom: 0 }}>
-            <label className="field-label">{t.notes}</label>
-            <textarea className="field-input" rows={2} value={notes} onChange={e => setNotes(e.target.value)} placeholder={lang === "es" ? "Notas opcionales..." : "Optional notes..."} style={{ resize: "vertical" }} />
-          </div>
-        </div>
-
-        {/* ── Photos ── */}
-        <div className="card">
-          <div className="card-title">{t.photos}</div>
-          {photos.length > 0 && (
-            <div className="photo-grid">
-              {photos.map((p, i) => (
-                <div key={i} className="photo-wrap">
-                  <img className="photo-thumb" src={p.url} alt={p.name} />
-                  <button className="photo-remove" onClick={() => setPhotos(ph => ph.filter((_, j) => j !== i))}>✕</button>
-                </div>
-              ))}
-            </div>
-          )}
-          <label className="photo-add">
-            📷 {photos.length === 0 ? (lang === "es" ? "Agregar Fotos" : "Add Photos") : (lang === "es" ? "Más Fotos" : "More Photos")}
-            <input type="file" accept="image/*" multiple style={{ display: "none" }} onChange={handlePhotoAdd} />
-          </label>
-        </div>
-
-        {/* ── Submit ── */}
-        <button className="btn btn-green" onClick={handleSubmit} disabled={submitting}>{submitting ? t.submitting : t.submit}</button>
-      </div>
-
-      {/* ── Sticky Pay Bar ── */}
-      <div className="pay-bar">
-        <div>
-          <div className="pay-bar-label">{t.estPay}</div>
-          <div className="pay-bar-amount">{fmt(grandTotal)}</div>
-        </div>
-        {grandTotal > 0 && payType === "Unit" && (
-          <div className="pay-bar-detail">
-            {scopePays.filter(p => p.total > 0).map((p, i) => <div key={i}>{p.enScope}: {fmt(p.total)}</div>)}
-            {detailTotal > 0 && <div>{t.details}: {fmt(detailTotal)}</div>}
-            {acidPay > 0 && <div>{t.acidWash}: {fmt(acidPay)}</div>}
-            {cleanPay > 0 && <div>{t.cleanUp}: {fmt(cleanPay)}</div>}
-          </div>
-        )}
-        {grandTotal > 0 && payType === "Hourly" && (
-          <div className="pay-bar-detail">
-            {hourlyCalc.leadPay > 0 && <div>Lead: {fmt(hourlyCalc.leadPay)}</div>}
-            {hourlyCalc.masonPay > 0 && <div>Mason: {fmt(hourlyCalc.masonPay)}</div>}
-            {hourlyCalc.laborPay > 0 && <div>Labor: {fmt(hourlyCalc.laborPay)}</div>}
-            {cleanPay > 0 && <div>{t.cleanUp}: {fmt(cleanPay)}</div>}
-          </div>
-        )}
-      </div>
-
-      {toast && <Toast msg={toast.msg} type={toast.type} onDone={() => setToast(null)} />}
-    </div>
-  );
-}
-
-
-// ═════════════════════════════════════════════════════════════════════════════
-// MY SUBMISSIONS
-// ═════════════════════════════════════════════════════════════════════════════
-function SubmissionsScreen({ onNav, lang }) {
-  const t = T[lang];
-  const [allSubs, setAllSubs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [viewStub, setViewStub] = useState(null);
-  const [filterCrew, setFilterCrew] = useState("");
-  const [filterWeek, setFilterWeek] = useState("");
-
-  useEffect(() => { apiSubs("").then(setAllSubs).catch(() => []).finally(() => setLoading(false)); }, []);
-
-  const weekOpts = [...new Set(allSubs.map(s => s.weekEnding).filter(Boolean))].sort().reverse();
-  const crewOpts = [...new Set(allSubs.map(s => s.crew || s.crewDisplay).filter(Boolean))].sort();
-  const subs = allSubs.filter(s => {
-    if (filterCrew && (s.crew || s.crewDisplay) !== filterCrew) return false;
-    if (filterWeek && s.weekEnding !== filterWeek) return false;
-    return true;
-  });
-
-  if (viewStub) {
-    const s = viewStub;
-    return (
-      <div className="screen">
-        <div className="header">
-          <button className="back-btn" onClick={() => setViewStub(null)}>←</button>
-          <div style={{ fontSize: 17, fontWeight: 700, color: "white" }}>{t.payBreak}</div>
-        </div>
-        <div className="content">
-          <div className="card">
-            <div className="info-row"><span className="info-label">{t.project}</span><span className="info-value">{s.project || s.projectDisplay}</span></div>
-            <div className="info-row"><span className="info-label">{t.crew}</span><span className="info-value">{s.crew || s.crewDisplay}</span></div>
-            <div className="info-row"><span className="info-label">{t.weekEnding}</span><span className="info-value">{fmtDate(s.weekEnding)}</span></div>
-            <div className="info-row"><span className="info-label">{t.payType}</span><span className="info-value">{s.payType || ""}</span></div>
-            <div className="info-row"><span className="info-label">Status</span><span className="info-value"><span className={badgeCls(s.status || s.stubStatus)}>{(s.status || s.stubStatus || "pending").toUpperCase()}</span></span></div>
-            {s.totalPay && <div className="info-row"><span className="info-label">Total</span><span className="info-value" style={{ color: "var(--green)", fontSize: 16 }}>{fmt(parseFloat(s.totalPay) || 0)}</span></div>}
-          </div>
-          {s.ownerNote && (
-            <div className="card" style={{ padding: 14 }}>
-              <div className="card-title" style={{ marginBottom: 8 }}>📝 {t.notes}</div>
-              <div style={{ fontSize: 13, color: "var(--text)", lineHeight: 1.5, whiteSpace: "pre-wrap" }}>{s.ownerNote}</div>
-            </div>
-          )}
-          {(s.status === "disputed" || s.stubStatus === "disputed") && (
-            <div className="dispute-note" style={{ marginBottom: 14 }}><strong>⚠️ {lang === "es" ? "Disputado" : "Disputed"}</strong></div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="screen">
-      <div className="header">
-        <button className="back-btn" onClick={() => onNav("screen", "suite")}>←</button>
-        <div style={{ fontSize: 17, fontWeight: 700, color: "white" }}>{t.mySubmissions}</div>
+        <button className="back-btn" onClick={()=>onNav("screen","suite")}>←</button>
+        <DBMLogo/>
+        <div><div style={{fontSize:17,fontWeight:700,color:"white"}}>Manage Users</div><div className="header-sub">{users.length} users</div></div>
       </div>
       <div className="content">
-        <div className="card" style={{ padding: 12 }}>
-          <div className="field-row">
-            <div className="field" style={{ marginBottom: 0 }}>
-              <select className="field-select" style={{ fontSize: 12, padding: 8 }} value={filterCrew} onChange={e => setFilterCrew(e.target.value)}>
-                <option value="">{t.all} — {t.crew}</option>
-                {crewOpts.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </div>
-            <div className="field" style={{ marginBottom: 0 }}>
-              <select className="field-select" style={{ fontSize: 12, padding: 8 }} value={filterWeek} onChange={e => setFilterWeek(e.target.value)}>
-                <option value="">{t.all} — {t.weekEnding}</option>
-                {weekOpts.map(w => <option key={w} value={w}>{fmtDate(w)}</option>)}
-              </select>
-            </div>
-          </div>
-        </div>
-        {loading ? <div className="loading"><div className="spinner" /><p>{t.loading}</p></div>
-        : subs.length === 0 ? <div className="empty"><div className="empty-icon">📭</div><p>{allSubs.length === 0 ? t.noSubs : (lang === "es" ? "Sin resultados" : "No matches")}</p></div>
-        : subs.map((s, i) => (
-          <div key={i} className="sub-card" onClick={() => setViewStub(s)}>
-            <div className="sub-card-stripe" style={{ background: statusColor(s.status || s.stubStatus) }} />
-            <div className="sub-card-body">
-              <div className="sub-card-top">
-                <div className="sub-card-project">{s.project || s.projectDisplay}</div>
-                <div className="sub-card-amount">{fmt(parseFloat(s.totalPay) || 0)}</div>
-              </div>
-              <div className="sub-card-meta">{s.crew || s.crewDisplay} • {fmtDate(s.weekEnding)} • {s.payType || ""}</div>
-              <span className={badgeCls(s.status || s.stubStatus)}>{(s.status || s.stubStatus || "pending").toUpperCase()}</span>
-              {s.ownerNote && (
-                <div style={{ marginTop: 8, fontSize: 12, color: "var(--text-dim)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>📝 {s.ownerNote}</div>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ═════════════════════════════════════════════════════════════════════════════
-// OWNER DASHBOARD
-// ═════════════════════════════════════════════════════════════════════════════
-function OwnerScreen({ onNav, lang }) {
-  const t = T[lang];
-  const [subs, setSubs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [toast, setToast] = useState(null);
-  const [tab, setTab] = useState("pending");
-  const [disputeFor, setDisputeFor] = useState(null);
-  const [disputeNote, setDisputeNote] = useState("");
-
-  async function load() { setLoading(true); try { setSubs(await apiSubs("")); } catch { setSubs([]); } finally { setLoading(false); } }
-  useEffect(() => { load(); }, []);
-
-  async function doTransition(s, newStatus, note) {
-    try {
-      await apiTransition({ crewDisplay: s.crew || s.crewDisplay, weekEnding: s.weekEnding, project: s.project || s.projectDisplay, newStatus, ownerNote: note || "", rowIndex: s.rowIndex });
-      setToast({ msg: `Status → ${newStatus.toUpperCase()}`, type: "success" }); load();
-    } catch (err) { setToast({ msg: "Error: " + err.message, type: "error" }); }
-  }
-
-  const tabs = ["pending", "sent", "opened", "approved", "disputed", "paid"];
-  const filtered = subs.filter(s => (s.status || s.stubStatus || "pending").toLowerCase() === tab);
-
-  if (disputeFor) return (
-    <div className="screen">
-      <div className="header"><button className="back-btn" onClick={() => { setDisputeFor(null); setDisputeNote(""); }}>←</button><div style={{ fontSize: 17, fontWeight: 700, color: "white" }}>{t.dispute}</div></div>
-      <div className="content"><div className="card">
-        <div style={{ marginBottom: 12, fontWeight: 600 }}>{disputeFor.crew || disputeFor.crewDisplay} — {disputeFor.project || disputeFor.projectDisplay}</div>
-        <div className="field"><label className="field-label">{lang === "es" ? "Razón de la disputa" : "Dispute Reason"}</label>
-          <textarea className="field-input" rows={4} value={disputeNote} onChange={e => setDisputeNote(e.target.value)} placeholder={lang === "es" ? "Explica el problema..." : "Explain the issue..."} /></div>
-        <button className="btn btn-red" onClick={() => { doTransition(disputeFor, "disputed", disputeNote); setDisputeFor(null); setDisputeNote(""); }} disabled={!disputeNote.trim()}>
-          {lang === "es" ? "Confirmar Disputa" : "Confirm Dispute"}
-        </button>
-      </div></div>
-    </div>
-  );
-
-  return (
-    <div className="screen">
-      <div className="header">
-        <button className="back-btn" onClick={() => onNav("screen", "suite")}>←</button>
-        <div style={{ fontSize: 17, fontWeight: 700, color: "white" }}>{t.ownerDash}</div>
-        <div className="header-right"><button className="btn btn-outline btn-xs" style={{ color: "white", borderColor: "#555" }} onClick={load}>↻</button></div>
-      </div>
-      <div className="content">
-        <div style={{ display: "flex", marginBottom: 16, borderRadius: "var(--radius-sm)", overflow: "hidden", border: "1.5px solid var(--gray-light)", overflowX: "auto" }}>
-          {tabs.map(tb => (
-            <button key={tb} style={{ flex: "0 0 auto", padding: "8px 12px", border: "none", fontSize: 11, fontWeight: 600, cursor: "pointer", background: tab === tb ? "var(--dark)" : "white", color: tab === tb ? "white" : "var(--text-dim)", whiteSpace: "nowrap" }} onClick={() => setTab(tb)}>
-              {tb.toUpperCase()}
-              {subs.filter(s => (s.status || s.stubStatus || "pending").toLowerCase() === tb).length > 0 &&
-                <span style={{ marginLeft: 4, fontSize: 10, opacity: 0.7 }}>({subs.filter(s => (s.status || s.stubStatus || "pending").toLowerCase() === tb).length})</span>}
-            </button>
-          ))}
-        </div>
-        {loading ? <div className="loading"><div className="spinner" /></div>
-        : filtered.length === 0 ? <div className="empty"><div className="empty-icon">✅</div><p>{lang === "es" ? "Nada aquí" : "Nothing here"}</p></div>
-        : filtered.map((s, i) => (
-          <div key={i} className="sub-card" style={{ cursor: "default" }}>
-            <div className="sub-card-stripe" style={{ background: statusColor(s.status || s.stubStatus) }} />
-            <div className="sub-card-body">
-              <div className="sub-card-top"><div className="sub-card-project">{s.project || s.projectDisplay}</div><div className="sub-card-amount">{fmt(parseFloat(s.totalPay) || 0)}</div></div>
-              <div className="sub-card-meta">{s.crew || s.crewDisplay} • {fmtDate(s.weekEnding)} • {s.payType || ""}</div>
-              {s.ownerNote && <div style={{ marginTop: 4, marginBottom: 8, fontSize: 12, color: "var(--text-dim)", background: "#F9FAFB", padding: "8px 12px", borderRadius: "var(--radius-sm)", borderLeft: "3px solid var(--gray-light)" }}>📝 {s.ownerNote}</div>}
-              <div className="sub-card-actions">
-                {tab === "pending" && <button className="btn btn-blue btn-sm" style={{ width: "auto" }} onClick={() => doTransition(s, "sent")}>{t.sendStub}</button>}
-                {tab === "sent" && <button className="btn btn-outline btn-sm" style={{ width: "auto" }} onClick={() => doTransition(s, "opened")}>Mark Opened</button>}
-                {tab === "opened" && (<>
-                  <button className="btn btn-green btn-sm" style={{ width: "auto" }} onClick={() => doTransition(s, "approved")}>{t.approve}</button>
-                  <button className="btn btn-red btn-sm" style={{ width: "auto" }} onClick={() => setDisputeFor(s)}>{t.dispute}</button>
-                </>)}
-                {tab === "approved" && <button className="btn btn-green btn-sm" style={{ width: "auto" }} onClick={() => doTransition(s, "paid")}>{t.markPaid}</button>}
-                {tab === "disputed" && <button className="btn btn-outline btn-sm" style={{ width: "auto" }} onClick={() => doTransition(s, "pending")}>Reset to Pending</button>}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-      {toast && <Toast msg={toast.msg} type={toast.type} onDone={() => setToast(null)} />}
-    </div>
-  );
-}
-
-// ═════════════════════════════════════════════════════════════════════════════
-// MATERIAL TRACKER
-// ═════════════════════════════════════════════════════════════════════════════
-function MaterialsScreen({ onNav, lang }) {
-  const t = T[lang];
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(null);
-  const [toast, setToast] = useState(null);
-  const [tempCubes, setTempCubes] = useState("");
-  const [tempBags, setTempBags] = useState("");
-
-  useEffect(() => { apiProjects().then(p => setProjects(p.filter(x => x.active))).catch(() => {}).finally(() => setLoading(false)); }, []);
-
-  function startEdit(proj) { setEditing(proj.name); setTempCubes(String(proj.remainingCubes || 0)); setTempBags(String(proj.remainingBags || 0)); }
-
-  async function saveCount(name) {
-    const cubes = parseFloat(tempCubes) || 0, bags = parseFloat(tempBags) || 0;
-    try {
-      await apiMatUpdate(name, cubes, bags);
-      setProjects(p => p.map(x => x.name === name ? { ...x, remainingCubes: cubes, remainingBags: bags } : x));
-      setToast({ msg: lang === "es" ? "¡Guardado!" : "Saved!", type: "success" });
-    } catch (err) { setToast({ msg: "Error: " + err.message, type: "error" }); }
-    setEditing(null);
-  }
-
-  function mortarStatus(proj) {
-    const c = proj.remainingCubes || 0, b = proj.remainingBags || 0, bpc = proj.bpc || DEFAULT_BPC;
-    const needed = Math.ceil((c * bpc) / 1500), surplus = b - needed;
-    if (c === 0 && b === 0) return { level: "ok", text: lang === "es" ? "Sin datos" : "No data", needed, surplus };
-    if (surplus >= 3) return { level: "ok", text: `✅ ${lang === "es" ? "Cubierto" : "Covered"} (+${surplus} ${lang === "es" ? "bolsas" : "bags"})`, needed, surplus };
-    if (surplus >= 0) return { level: "warn", text: `⚠️ ${lang === "es" ? "Justo" : "Tight"} (${b}/${needed})`, needed, surplus };
-    return { level: "danger", text: `🔴 ${lang === "es" ? "Faltan" : "Short"} ${Math.abs(surplus)} ${lang === "es" ? "bolsas" : "bags"}`, needed, surplus };
-  }
-
-  return (
-    <div className="screen">
-      <div className="header">
-        <button className="back-btn" onClick={() => onNav("screen", "suite")}>←</button>
-        <div style={{ fontSize: 17, fontWeight: 700, color: "white" }}>{t.materials}</div>
-        <div className="header-right">
-          <button className={`lang-btn${lang === "en" ? " active" : ""}`} onClick={() => onNav("lang", "en")}>EN</button>
-          <button className={`lang-btn${lang === "es" ? " active" : ""}`} onClick={() => onNav("lang", "es")}>ES</button>
-        </div>
-      </div>
-      <div className="content">
-        <div style={{ fontSize: 12, color: "var(--text-dim)", marginBottom: 16, lineHeight: 1.6 }}>
-          {lang === "es" ? "1 bolsa Spec Mix = 1,500 ladrillos." : "1 bulk bag Spec Mix = 1,500 brick."}
-        </div>
-        {loading ? <div className="loading"><div className="spinner" /></div>
-        : projects.length === 0 ? <div className="empty"><div className="empty-icon">📦</div><p>{lang === "es" ? "Sin proyectos activos" : "No active projects"}</p></div>
-        : projects.map(proj => {
-          const ms = mortarStatus(proj);
-          const isEd = editing === proj.name;
-          return (
-            <div key={proj.name} className="mat-project">
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+        {loading?<div className="loading"><div className="spinner"/><p>Loading...</p></div>:
+          users.map(u=>(
+            <div key={u.phone} className="card" style={{opacity:u.active?1:0.5}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
                 <div>
-                  <div className="mat-project-name">{proj.name}</div>
-                  <div style={{ fontSize: 11, color: "var(--text-dim)" }}>{proj.category} • BPC: {proj.bpc || DEFAULT_BPC}</div>
+                  <div style={{fontSize:15,fontWeight:700}}>{u.name}</div>
+                  <div style={{fontSize:12,color:"var(--gray)"}}>{fmtPhone(u.phone)} · {u.crew||"No crew"}</div>
+                  <div style={{marginTop:4}}><span className={`role-badge role-${u.role}`}>{u.role}</span></div>
                 </div>
-                {!isEd && <button className="btn btn-outline btn-sm" style={{ width: "auto", fontSize: 11 }} onClick={() => startEdit(proj)}>{t.updateCount}</button>}
+                <div style={{display:"flex",gap:6}}>
+                  <button className="btn btn-sm btn-outline" onClick={()=>{setEditUser(u);setEditRole(u.role);setEditCrew(u.crew);}}>Edit</button>
+                  <button className="btn btn-sm" style={{background:u.active?"var(--red)":"var(--green)",color:"white",border:"none",cursor:"pointer"}}
+                    onClick={()=>toggleActive(u)}>{u.active?"Disable":"Enable"}</button>
+                </div>
               </div>
-              {isEd ? (
-                <div style={{ background: "#F9FAFB", borderRadius: "var(--radius-sm)", padding: 14 }}>
-                  <div className="field-row" style={{ marginBottom: 10 }}>
-                    <div className="field" style={{ marginBottom: 0 }}><label className="field-label">{t.cubesSite}</label><input type="number" className="mat-input" style={{ width: "100%" }} value={tempCubes} onChange={e => setTempCubes(e.target.value)} inputMode="decimal" /></div>
-                    <div className="field" style={{ marginBottom: 0 }}><label className="field-label">{t.bagsSite}</label><input type="number" className="mat-input" style={{ width: "100%" }} value={tempBags} onChange={e => setTempBags(e.target.value)} inputMode="decimal" /></div>
-                  </div>
-                  <div className="field-row" style={{ gap: 8 }}>
-                    <button className="btn btn-green btn-sm" onClick={() => saveCount(proj.name)}>{lang === "es" ? "Guardar" : "Save"}</button>
-                    <button className="btn btn-outline btn-sm" onClick={() => setEditing(null)}>{lang === "es" ? "Cancelar" : "Cancel"}</button>
-                  </div>
-                </div>
-              ) : (<>
-                <div className="mat-row"><span className="mat-label">{t.brickRem}</span><span className="mat-value">{proj.remainingCubes || 0} {lang === "es" ? "cubos" : "cubes"}</span></div>
-                <div className="mat-row"><span className="mat-label">{t.mortarRem}</span><span className="mat-value">{proj.remainingBags || 0} {lang === "es" ? "bolsas" : "bags"}</span></div>
-                {ms.needed > 0 && <div className="mat-row"><span className="mat-label">{lang === "es" ? "Necesarias" : "Needed"}</span><span className="mat-value">{ms.needed}</span></div>}
-                <div className={`mat-alert ${ms.level}`}>{ms.text}</div>
-              </>)}
+              <div style={{fontSize:11,color:"var(--gray)",marginTop:6}}>
+                Created: {u.created||"—"} · Last login: {u.lastLogin||"Never"}
+              </div>
             </div>
-          );
-        })}
+          ))
+        }
+
+        {/* Edit modal */}
+        {editUser&&(
+          <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&setEditUser(null)}>
+            <div className="modal-sheet">
+              <div className="modal-handle"/>
+              <div className="modal-title">Edit: {editUser.name}</div>
+              <div className="field"><label>Role</label>
+                <div className="select-wrap"><select value={editRole} onChange={e=>setEditRole(e.target.value)}>
+                  <option value="owner">Owner</option>
+                  <option value="finance">Finance</option>
+                  <option value="foreman">Foreman</option>
+                  <option value="crew_lead">Crew Lead</option>
+                </select></div>
+              </div>
+              <div className="field"><label>Crew</label>
+                <div className="select-wrap"><select value={editCrew} onChange={e=>setEditCrew(e.target.value)}>
+                  <option value="">— None —</option>
+                  {CREWS.map(c=><option key={c} value={c}>{c}</option>)}
+                </select></div>
+              </div>
+              <button className="btn btn-green" onClick={saveRole} disabled={saving}>{saving?"Saving...":"Save Changes"}</button>
+            </div>
+          </div>
+        )}
       </div>
-      {toast && <Toast msg={toast.msg} type={toast.type} onDone={() => setToast(null)} />}
     </div>
   );
 }
 
-// ═════════════════════════════════════════════════════════════════════════════
-// APP ROOT
-// ═════════════════════════════════════════════════════════════════════════════
-function App() {
-  const [screen, setScreen] = useState("suite");
-  const [lang, setLang] = useState("en");
-  const [submissions, setSubmissions] = useState([]);
-  const [cfg, setCfg] = useState({ unitRates: [], detailRates: [], multipliers: [], cleanRates: [] });
-  const [cfgLoaded, setCfgLoaded] = useState(false);
+// ═══════════════════════════════════════════════════════════════════════════════
+// MY PAYCHECK (crew lead - placeholder for Segment 2)
+// ═══════════════════════════════════════════════════════════════════════════════
+function MyPaycheckScreen({onNav,user}){
+  const[subs,setSubs]=useState([]);
+  const[loading,setLoading]=useState(true);
+  useEffect(()=>{
+    apiGet("submissions",{crew:user.crew}).then(d=>setSubs(d.submissions||[])).catch(()=>{}).finally(()=>setLoading(false));
+  },[user.crew]);
 
-  useEffect(() => {
-    apiConfig()
-      .then(d => setCfg({ unitRates: d.unitRates || [], detailRates: d.detailRates || [], multipliers: d.multipliers || [], cleanRates: d.cleanRates || [] }))
-      .catch(err => console.error("Config load failed:", err))
-      .finally(() => setCfgLoaded(true));
-    apiSubs("").then(setSubmissions).catch(() => {});
-  }, []);
+  return(
+    <div className="screen">
+      <div className="header">
+        <button className="back-btn" onClick={()=>onNav("screen","suite")}>←</button>
+        <DBMLogo/>
+        <div><div style={{fontSize:17,fontWeight:700,color:"white"}}>My Paycheck</div><div className="header-sub">{user.crew||user.name}</div></div>
+      </div>
+      <div className="content">
+        {loading?<div className="loading"><div className="spinner"/><p>Loading...</p></div>:
+        subs.length===0?<div className="empty"><div className="empty-icon">💰</div><p>No paychecks yet</p></div>:
+        subs.map(s=>(
+          <div key={s.id} className="card">
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <div>
+                <div style={{fontSize:14,fontWeight:700}}>{s.projectDisplay}</div>
+                <div style={{fontSize:12,color:"var(--gray)"}}>{fmtDate(s.weekEnding)}</div>
+              </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:18,fontWeight:700,color:"var(--green)"}}>{fmt(s.totalPay)}</div>
+                <span className={statusBadgeClass(s.stubStatus)}>{(s.stubStatus||"pending").toUpperCase()}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-  function onSubmitDone() { apiSubs("").then(setSubmissions).catch(() => {}); }
-  function onNav(type, val) {
-    if (type === "screen") { setScreen(val); if (val === "suite") apiSubs("").then(setSubmissions).catch(() => {}); }
-    if (type === "lang") setLang(val);
+// ═══════════════════════════════════════════════════════════════════════════════
+// FIELD REPORT (preserved from previous version - abbreviated for space)
+// Uses the same form structure with project creation, material tracking, etc.
+// ═══════════════════════════════════════════════════════════════════════════════
+function FieldReportScreen({onNav,onSubmitDone,lang,user}){
+  const t={en:{submit:"Submit Report",submitting:"Submitting...",project:"Project",crew:"Crew",weekEnding:"Week Ending",payType:"Pay Type",unit:"Unit Pay",hourly:"Hourly Pay",scopeA:"Scope A",scopeB:"Scope B",addScope:"+ Add Scope",multiplier:"Multiplier",details:"Details",detailCat:"Category",detailType:"Type",count:"Count",cleanType:"Clean Type",addDetail:"+ Add Detail",hoursWorked:"Hours",numLead:"# Lead",numMason:"# Mason",numLabor:"# Labor",none:"None",newProject:"+ New Project",foremanNotes:"Foreman Notes",remainingCubes:"Remaining Cubes",deliveredThisWeek:"Delivered",mortarBags:"Mortar Bags Left",mortarDelivered:"Mortar Delivered",estPay:"Estimated Pay",successMsg:"Submitted!",errorMsg:"Failed",required:"Required",bpc:"BPC",type1:"Type 1",type2:"Type 2"},es:{submit:"Enviar",submitting:"Enviando...",project:"Proyecto",crew:"Cuadrilla",weekEnding:"Semana",payType:"Pago",unit:"Unidad",hourly:"Hora",scopeA:"Alcance A",scopeB:"Alcance B",addScope:"+ Alcance",multiplier:"Multiplicador",details:"Detalles",detailCat:"Categoría",detailType:"Tipo",count:"Cant",cleanType:"Limpieza",addDetail:"+ Detalle",hoursWorked:"Horas",numLead:"# Líder",numMason:"# Albañil",numLabor:"# Obrero",none:"Ninguno",newProject:"+ Proyecto",foremanNotes:"Notas",remainingCubes:"Cubos Rest.",deliveredThisWeek:"Entregados",mortarBags:"Bolsas Mortero",mortarDelivered:"Mortero Entregado",estPay:"Pago Est.",successMsg:"Enviado!",errorMsg:"Error",required:"Requerido",bpc:"L/C",type1:"Tipo 1",type2:"Tipo 2"}}[lang]||{};
+  Object.keys(t).length===0&&Object.assign(t,{submit:"Submit Report",submitting:"Submitting...",project:"Project",crew:"Crew",weekEnding:"Week Ending",payType:"Pay Type",unit:"Unit Pay",hourly:"Hourly Pay",scopeA:"Scope A",scopeB:"Scope B",addScope:"+ Add Scope",multiplier:"Multiplier",details:"Details",detailCat:"Category",detailType:"Type",count:"Count",cleanType:"Clean Type",addDetail:"+ Add Detail",hoursWorked:"Hours",numLead:"# Lead",numMason:"# Mason",numLabor:"# Labor",none:"None",newProject:"+ New Project",foremanNotes:"Foreman Notes",remainingCubes:"Remaining Cubes",deliveredThisWeek:"Delivered",mortarBags:"Mortar Bags Left",mortarDelivered:"Mortar Delivered",estPay:"Estimated Pay",successMsg:"Submitted!",errorMsg:"Failed",required:"Required",bpc:"BPC",type1:"Type 1",type2:"Type 2"});
+
+  const[weekEnding,setWeekEnding]=useState(()=>lastFriday());
+  const[projects,setProjects]=useState([]);
+  const[project,setProject]=useState("");
+  const[category,setCategory]=useState("Commercial");
+  const[crew,setCrew]=useState("");
+  const[payType,setPayType]=useState("Unit");
+  const[scopeA,setScopeA]=useState("");const[qtyA,setQtyA]=useState("");const[bpcA,setBpcA]=useState("500");const[multA,setMultA]=useState("None");
+  const[showScopeB,setShowScopeB]=useState(false);
+  const[scopeB,setScopeB]=useState("");const[qtyB,setQtyB]=useState("");const[bpcB,setBpcB]=useState("500");const[multB,setMultB]=useState("None");
+  const[matRemT1,setMatRemT1]=useState("");const[matDelT1,setMatDelT1]=useState("");
+  const[matRemT2,setMatRemT2]=useState("");const[matDelT2,setMatDelT2]=useState("");
+  const[matRemMortar,setMatRemMortar]=useState("");const[matDelMortar,setMatDelMortar]=useState("");
+  const[selectedProject,setSelectedProject]=useState(null);
+  const[details,setDetails]=useState([]);const[cleanType,setCleanType]=useState("");
+  const[hours,setHours]=useState("");const[numLead,setNumLead]=useState("0");const[numMason,setNumMason]=useState("0");const[numLabor,setNumLabor]=useState("0");
+  const[foremanNotes,setForemanNotes]=useState("");
+  const[submitting,setSubmitting]=useState(false);const[submitMsg,setSubmitMsg]=useState(null);
+  const[showNewProject,setShowNewProject]=useState(false);
+
+  useEffect(()=>{apiGet("projects").then(d=>setProjects(d.projects||[])).catch(()=>{});},[]);
+  const scopes=category==="Commercial"?COMMERCIAL_SCOPES:RESIDENTIAL_SCOPES;
+
+  useEffect(()=>{
+    if(!project){setSelectedProject(null);return;}
+    const p=projects.find(pr=>pr.name===project);
+    setSelectedProject(p||null);
+    if(p){setCategory(p.category||"Commercial");setBpcA(String(p.bpc1||500));if(p.bpc2)setBpcB(String(p.bpc2));}
+  },[project,projects]);
+
+  const isBrickA=scopeA==="Brick";const hasType2=selectedProject&&selectedProject.bpc2>0;
+  const payA=useMemo(()=>isBrickA?0:calcScopePay(scopeA,qtyA,multA,category,bpcA),[scopeA,qtyA,multA,category,bpcA]);
+  const payB=useMemo(()=>showScopeB?calcScopePay(scopeB,qtyB,multB,category,bpcB):0,[scopeB,qtyB,multB,category,bpcB,showScopeB]);
+  const detailTotal=details.reduce((s,d)=>s+(calcDetailPay(d.cat,d.type,d.qty)||0),0);
+  const cleanPay=calcCleanPay(cleanType);
+  const totalPay=payType==="Unit"?payA+payB+detailTotal+cleanPay:0;
+
+  async function handleSubmit(){
+    if(!project||!crew){setSubmitMsg({ok:false,text:t.required});return;}
+    setSubmitting(true);setSubmitMsg(null);
+    const scopesArr=[];
+    if(scopeA)scopesArr.push({enScope:scopeA,qty:parseFloat(qtyA)||0,bpc:parseFloat(bpcA)||500,enMultiplier:multA});
+    if(showScopeB&&scopeB)scopesArr.push({enScope:scopeB,qty:parseFloat(qtyB)||0,bpc:parseFloat(bpcB)||500,enMultiplier:multB});
+    const record={weekEnding,projectDisplay:project,category,crewDisplay:crew,payType,
+      scopes:scopesArr,details:details.filter(d=>d.cat&&d.type).map(d=>({enCat:d.cat,enType:d.type,qty:parseInt(d.qty)||1})),
+      enCleanUp:cleanType.startsWith("Clean")?cleanType:"",enAcidWash:cleanType.startsWith("Acid")?cleanType:"",
+      hours:parseFloat(hours)||0,numLead:parseInt(numLead)||0,numMason:parseInt(numMason)||0,numLabor:parseInt(numLabor)||0,
+      totalPay,foremanNotes:foremanNotes.trim(),submitterPhone:user.phone};
+    if(isBrickA)record.material={remainingT1:parseFloat(matRemT1)||0,deliveredT1:parseFloat(matDelT1)||0,remainingT2:parseFloat(matRemT2)||0,deliveredT2:parseFloat(matDelT2)||0,remainingMortar:parseFloat(matRemMortar)||0,deliveredMortar:parseFloat(matDelMortar)||0};
+    try{await apiPost({action:"submit",record});setSubmitMsg({ok:true,text:t.successMsg});onSubmitDone();setScopeA("");setQtyA("");setScopeB("");setQtyB("");setDetails([]);setCleanType("");setShowScopeB(false);setForemanNotes("");setMatRemT1("");setMatDelT1("");setMatRemT2("");setMatDelT2("");setMatRemMortar("");setMatDelMortar("");}
+    catch(e){setSubmitMsg({ok:false,text:e.message||t.errorMsg});}
+    setSubmitting(false);
   }
 
-  if (!cfgLoaded) return (
+  return(
     <div className="screen">
-      <div className="header"><DBMLogo /><div><div style={{ fontSize: 17, fontWeight: 700, letterSpacing: 0.5, color: "white" }}>DBM Operations Suite</div><div className="header-sub">Design Build Masonry</div></div></div>
-      <div className="content"><div className="loading"><div className="spinner" /><p>Loading rates from spreadsheet...</p></div></div>
+      <div className="header"><button className="back-btn" onClick={()=>onNav("screen","suite")}>←</button><DBMLogo/><div><div style={{fontSize:17,fontWeight:700,color:"white"}}>Field Report</div><div className="header-sub">DBM Operations</div></div></div>
+      <div className="content">
+        {submitMsg&&<div className="card" style={{background:submitMsg.ok?"#D1FAE5":"#FEE2E2",border:`1px solid ${submitMsg.ok?"#6DD44E":"#E53E3E"}`}}><div style={{fontSize:14,fontWeight:600,color:submitMsg.ok?"#065F46":"#991B1B"}}>{submitMsg.text}</div></div>}
+        <div className="card"><div className="card-title">{t.weekEnding}</div><div className="field" style={{marginBottom:0}}><input type="date" value={weekEnding} onChange={e=>setWeekEnding(snapToFriday(e.target.value))}/></div></div>
+        <div className="card">
+          <div className="card-title">{t.project}</div>
+          <div className="field"><div className="select-wrap"><select value={project} onChange={e=>setProject(e.target.value)}><option value="">— {t.project} —</option>{projects.filter(p=>p.active).map(p=><option key={p.name} value={p.name}>{p.name} ({p.category})</option>)}</select></div></div>
+          <button className="add-btn" onClick={()=>setShowNewProject(true)}>{t.newProject}</button>
+          <div style={{marginTop:8,fontSize:13,color:"var(--gray)"}}>{category} {project?"(auto)":""}</div>
+        </div>
+        <div className="card"><div className="card-title">{t.crew}</div><div className="field" style={{marginBottom:0}}><div className="select-wrap"><select value={crew} onChange={e=>setCrew(e.target.value)}><option value="">— {t.crew} —</option>{CREWS.map(c=><option key={c} value={c}>{c}</option>)}</select></div></div></div>
+        <div className="card">
+          <div className="card-title">{t.payType}</div>
+          <div className="pay-toggle"><button className={payType==="Unit"?"active":""} onClick={()=>setPayType("Unit")}>📐 {t.unit}</button><button className={payType==="Hourly"?"active":""} onClick={()=>setPayType("Hourly")}>⏱ {t.hourly}</button></div>
+          {payType==="Unit"&&<>
+            <div className="scope-row">
+              <div className="scope-row-header"><span className="scope-label">{t.scopeA}</span>{payA>0&&<span className="scope-pay">{fmt(payA)}</span>}</div>
+              <div className="field" style={{marginBottom:8}}><div className="select-wrap"><select value={scopeA} onChange={e=>setScopeA(e.target.value)}><option value="">— Scope —</option>{scopes.map(s=><option key={s} value={s}>{s}</option>)}</select></div></div>
+              {isBrickA&&<div style={{marginTop:8}}>
+                <div style={{fontSize:12,fontWeight:700,color:"var(--amber)",marginBottom:8}}>🧱 {t.type1} {selectedProject?.brickDesc1?`— ${selectedProject.brickDesc1}`:""}</div>
+                <div className="field-row"><div className="field" style={{marginBottom:8}}><label>{t.remainingCubes}</label><input type="number" inputMode="numeric" min="0" placeholder="0" value={matRemT1} onChange={e=>setMatRemT1(e.target.value)}/></div><div className="field" style={{marginBottom:8}}><label>{t.deliveredThisWeek}</label><input type="number" inputMode="numeric" min="0" placeholder="0" value={matDelT1} onChange={e=>setMatDelT1(e.target.value)}/></div></div>
+                {hasType2&&<><div className="section-divider"/><div style={{fontSize:12,fontWeight:700,color:"var(--blue)",marginBottom:8}}>🧱 {t.type2} {selectedProject?.brickDesc2?`— ${selectedProject.brickDesc2}`:""}</div>
+                <div className="field-row"><div className="field" style={{marginBottom:8}}><label>{t.remainingCubes}</label><input type="number" inputMode="numeric" min="0" placeholder="0" value={matRemT2} onChange={e=>setMatRemT2(e.target.value)}/></div><div className="field" style={{marginBottom:8}}><label>{t.deliveredThisWeek}</label><input type="number" inputMode="numeric" min="0" placeholder="0" value={matDelT2} onChange={e=>setMatDelT2(e.target.value)}/></div></div></>}
+                <div className="section-divider"/><div style={{fontSize:12,fontWeight:700,marginBottom:8}}>🪣 Mortar (Spec Mix)</div>
+                <div className="field-row"><div className="field" style={{marginBottom:8}}><label>{t.mortarBags}</label><input type="number" inputMode="numeric" min="0" placeholder="0" value={matRemMortar} onChange={e=>setMatRemMortar(e.target.value)}/></div><div className="field" style={{marginBottom:8}}><label>{t.mortarDelivered}</label><input type="number" inputMode="numeric" min="0" placeholder="0" value={matDelMortar} onChange={e=>setMatDelMortar(e.target.value)}/></div></div>
+              </div>}
+              {scopeA&&!isBrickA&&<div className="field-row" style={{marginTop:4}}><div className="field" style={{marginBottom:0}}><label>{getUnitLabel(scopeA)}</label><input type="number" inputMode="decimal" min="0" placeholder="0" value={qtyA} onChange={e=>setQtyA(e.target.value)}/></div></div>}
+              {scopeA&&<div className="field" style={{marginTop:8,marginBottom:0}}><label>{t.multiplier}</label><div className="select-wrap"><select value={multA} onChange={e=>setMultA(e.target.value)}>{Object.keys(MULTIPLIER_RATES).map(m=><option key={m} value={m}>{m}</option>)}</select></div></div>}
+            </div>
+            {!showScopeB?<button className="add-btn" onClick={()=>setShowScopeB(true)}>{t.addScope}</button>:
+            <div className="scope-row"><div className="scope-row-header"><span className="scope-label">{t.scopeB}</span><div style={{display:"flex",gap:8}}>{payB>0&&<span className="scope-pay">{fmt(payB)}</span>}<button className="remove-btn" onClick={()=>{setShowScopeB(false);setScopeB("");setQtyB("");}}>✕</button></div></div>
+              <div className="field" style={{marginBottom:8}}><div className="select-wrap"><select value={scopeB} onChange={e=>setScopeB(e.target.value)}><option value="">— Scope —</option>{scopes.map(s=><option key={s} value={s}>{s}</option>)}</select></div></div>
+              {scopeB&&scopeB!=="Brick"&&<div className="field-row"><div className="field" style={{marginBottom:0}}><label>{getUnitLabel(scopeB)}</label><input type="number" inputMode="decimal" min="0" placeholder="0" value={qtyB} onChange={e=>setQtyB(e.target.value)}/></div></div>}
+              {scopeB&&<div className="field" style={{marginTop:8,marginBottom:0}}><label>{t.multiplier}</label><div className="select-wrap"><select value={multB} onChange={e=>setMultB(e.target.value)}>{Object.keys(MULTIPLIER_RATES).map(m=><option key={m} value={m}>{m}</option>)}</select></div></div>}
+            </div>}
+            <div className="section-divider"/><div className="card-title">{t.details}</div>
+            {details.map((d,i)=><div key={i} className="scope-row"><div className="scope-row-header"><span className="scope-label">Detail {i+1}</span><div style={{display:"flex",gap:8}}>{d.cat&&d.type&&<span className="scope-pay">{fmtDetailPay(d.cat,d.type,d.qty)}</span>}<button className="remove-btn" onClick={()=>setDetails(details.filter((_,j)=>j!==i))}>✕</button></div></div>
+              <div className="field" style={{marginBottom:8}}><div className="select-wrap"><select value={d.cat} onChange={e=>{const nd=[...details];nd[i]={...nd[i],cat:e.target.value,type:""};setDetails(nd);}}><option value="">— {t.detailCat} —</option>{Object.keys(DETAIL_TREE).map(c=><option key={c} value={c}>{c}</option>)}</select></div></div>
+              {d.cat&&<div className="field-row"><div className="field" style={{marginBottom:0}}><div className="select-wrap"><select value={d.type} onChange={e=>{const nd=[...details];nd[i]={...nd[i],type:e.target.value};setDetails(nd);}}><option value="">— {t.detailType} —</option>{(DETAIL_TREE[d.cat]||[]).map(it=><option key={it.type} value={it.type}>{it.type}</option>)}</select></div></div><div className="field" style={{marginBottom:0}}><label>{t.count}</label><input type="number" inputMode="numeric" min="1" placeholder="1" value={d.qty} onChange={e=>{const nd=[...details];nd[i]={...nd[i],qty:e.target.value};setDetails(nd);}}/></div></div>}
+            </div>)}
+            <button className="add-btn" onClick={()=>setDetails([...details,{cat:"",type:"",qty:"1"}])}>{t.addDetail}</button>
+            <div className="section-divider"/>
+            <div className="field"><label>{t.cleanType}</label><div className="select-wrap"><select value={cleanType} onChange={e=>setCleanType(e.target.value)}><option value="">{t.none}</option>{CLEAN_TYPES.map(c=><option key={c} value={c}>{c}</option>)}</select></div></div>
+          </>}
+          {payType==="Hourly"&&<><div className="field"><label>{t.hoursWorked}</label><input type="number" inputMode="decimal" min="0" placeholder="0" value={hours} onChange={e=>setHours(e.target.value)}/></div><div className="field-row3"><div className="field"><label>{t.numLead}</label><input type="number" inputMode="numeric" min="0" value={numLead} onChange={e=>setNumLead(e.target.value)}/></div><div className="field"><label>{t.numMason}</label><input type="number" inputMode="numeric" min="0" value={numMason} onChange={e=>setNumMason(e.target.value)}/></div><div className="field"><label>{t.numLabor}</label><input type="number" inputMode="numeric" min="0" value={numLabor} onChange={e=>setNumLabor(e.target.value)}/></div></div></>}
+        </div>
+        <div className="card"><div className="card-title">{t.foremanNotes}</div><div className="field" style={{marginBottom:0}}><textarea style={{width:"100%",padding:"11px 14px",border:"1.5px solid var(--border)",borderRadius:9,fontSize:14,fontFamily:"inherit",resize:"vertical",minHeight:60}} value={foremanNotes} onChange={e=>setForemanNotes(e.target.value)} placeholder="Any notes..."/></div></div>
+        <button className="btn btn-green" onClick={handleSubmit} disabled={submitting} style={{marginBottom:16}}>{submitting?t.submitting:t.submit}</button>
+      </div>
+      {payType==="Unit"&&<div className="pay-bar"><div style={{fontSize:13,color:"var(--gray)"}}>{t.estPay}</div><div style={{fontSize:22,fontWeight:800,color:"var(--green)"}}>{fmt(totalPay)}</div></div>}
+      {showNewProject&&<NewProjectModal lang={lang} onClose={()=>setShowNewProject(false)} onCreated={(n,c)=>{setShowNewProject(false);apiGet("projects").then(d=>{setProjects(d.projects||[]);setProject(n);setCategory(c);}).catch(()=>{});}}/>}
     </div>
   );
-
-  const props = { onNav, lang, submissions, cfg };
-  if (screen === "suite") return <SuiteLauncher {...props} />;
-  if (screen === "field") return <FieldReportScreen {...props} onSubmitDone={onSubmitDone} />;
-  if (screen === "subs") return <SubmissionsScreen {...props} />;
-  if (screen === "owner") return <OwnerScreen {...props} />;
-  if (screen === "materials") return <MaterialsScreen {...props} />;
-  return <SuiteLauncher {...props} />;
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+function NewProjectModal({onClose,onCreated,lang}){
+  const[name,setName]=useState("");const[category,setCategory]=useState("Commercial");const[contractor,setContractor]=useState("");
+  const[bpc1,setBpc1]=useState("500");const[initCubes1,setInitCubes1]=useState("");const[brickDesc1,setBrickDesc1]=useState("");
+  const[showType2,setShowType2]=useState(false);const[bpc2,setBpc2]=useState("500");const[initCubes2,setInitCubes2]=useState("");const[brickDesc2,setBrickDesc2]=useState("");
+  const[saving,setSaving]=useState(false);const[error,setError]=useState("");
+  async function save(){if(!name.trim()){setError("Name required");return;}setSaving(true);setError("");
+    try{await apiPost({action:"addProject",name:name.trim(),category,contractor:contractor.trim(),bpc1:parseInt(bpc1)||500,initialCubes1:parseInt(initCubes1)||0,brickDesc1:brickDesc1.trim(),bpc2:showType2?(parseInt(bpc2)||0):0,initialCubes2:showType2?(parseInt(initCubes2)||0):0,brickDesc2:showType2?brickDesc2.trim():""});onCreated(name.trim(),category);}catch(e){setError(e.message);}setSaving(false);}
+  return(<div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}><div className="modal-sheet"><div className="modal-handle"/><div className="modal-title">Create Project</div>
+    {error&&<div style={{color:"var(--red)",fontSize:13,marginBottom:12}}>{error}</div>}
+    <div className="field"><label>Project Name *</label><input value={name} onChange={e=>setName(e.target.value)} placeholder="e.g. 6800 Cove Creek"/></div>
+    <div className="field-row"><div className="field"><label>Category</label><div className="select-wrap"><select value={category} onChange={e=>setCategory(e.target.value)}><option value="Commercial">Commercial</option><option value="Residential">Residential</option></select></div></div><div className="field"><label>Contractor</label><input value={contractor} onChange={e=>setContractor(e.target.value)} placeholder="Builder"/></div></div>
+    <div className="card" style={{background:"#FAFAFA",marginTop:8}}><div className="card-title">Type 1 (Primary)</div><div className="field"><label>Brick Description</label><input value={brickDesc1} onChange={e=>setBrickDesc1(e.target.value)} placeholder="e.g. Golden Sunset"/></div><div className="field-row"><div className="field" style={{marginBottom:0}}><label>BPC</label><input type="number" value={bpc1} onChange={e=>setBpc1(e.target.value)}/></div><div className="field" style={{marginBottom:0}}><label>Initial Cubes</label><input type="number" value={initCubes1} onChange={e=>setInitCubes1(e.target.value)}/></div></div></div>
+    {!showType2?<button className="add-btn" style={{marginTop:10}} onClick={()=>setShowType2(true)}>+ Add Type 2</button>:
+    <div className="card" style={{background:"#FAFAFA",marginTop:10}}><div style={{display:"flex",justifyContent:"space-between"}}><div className="card-title" style={{marginBottom:0}}>Type 2</div><button className="remove-btn" onClick={()=>setShowType2(false)}>✕</button></div><div className="field" style={{marginTop:10}}><label>Brick Description</label><input value={brickDesc2} onChange={e=>setBrickDesc2(e.target.value)}/></div><div className="field-row"><div className="field" style={{marginBottom:0}}><label>BPC</label><input type="number" value={bpc2} onChange={e=>setBpc2(e.target.value)}/></div><div className="field" style={{marginBottom:0}}><label>Initial Cubes</label><input type="number" value={initCubes2} onChange={e=>setInitCubes2(e.target.value)}/></div></div></div>}
+    <button className="btn btn-green" style={{marginTop:16}} onClick={save} disabled={saving}>{saving?"Creating...":"Create Project"}</button>
+  </div></div>);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SUBMISSIONS SCREEN (role-filtered)
+// ═══════════════════════════════════════════════════════════════════════════════
+function SubmissionsScreen({onNav,lang,user}){
+  const[subs,setSubs]=useState([]);const[loading,setLoading]=useState(true);const[viewStub,setViewStub]=useState(null);
+  const[filterCrew,setFilterCrew]=useState(user.role==="foreman"?user.crew:"");const[filterWeek,setFilterWeek]=useState("");
+  useEffect(()=>{
+    const params=user.role==="foreman"?{crew:user.crew}:{};
+    apiGet("submissions",params).then(d=>setSubs(d.submissions||[])).catch(()=>setSubs([])).finally(()=>setLoading(false));
+  },[user]);
+  const weekOpts=[...new Set(subs.map(s=>s.weekEnding).filter(Boolean))].sort().reverse();
+  const filtered=subs.filter(s=>{if(filterCrew&&s.crewDisplay!==filterCrew)return false;if(filterWeek&&s.weekEnding!==filterWeek)return false;return true;});
+  if(viewStub){const s=viewStub;return(<div className="screen"><div className="header"><button className="back-btn" onClick={()=>setViewStub(null)}>←</button><div style={{fontSize:17,fontWeight:700,color:"white"}}>Pay Breakdown</div></div><div className="content">
+    <div className="card"><div className="info-row"><span className="info-label">Project</span><span className="info-value">{s.projectDisplay}</span></div><div className="info-row"><span className="info-label">Crew</span><span className="info-value">{s.crewDisplay}</span></div><div className="info-row"><span className="info-label">Week</span><span className="info-value">{fmtDate(s.weekEnding)}</span></div><div className="info-row"><span className="info-label">Status</span><span className={statusBadgeClass(s.stubStatus)}>{(s.stubStatus||"pending").toUpperCase()}</span></div></div>
+    {s.ownerNote&&<div className="dispute-note">⚠️ {s.ownerNote}</div>}
+    <div className="card"><div className="card-title">Pay Breakdown</div>{s.scopeA&&<div className="stub-line"><span>Scope A: {s.scopeA}</span><span>{fmt(s.payA||0)}</span></div>}{s.scopeB&&<div className="stub-line"><span>Scope B: {s.scopeB}</span><span>{fmt(s.payB||0)}</span></div>}{s.cleanType&&<div className="stub-line"><span>{s.cleanType}</span><span>{fmt(s.cleanPay||0)}</span></div>}<div className="section-divider"/><div className="stub-total"><span>Total</span><span style={{color:"var(--green)"}}>{fmt(s.totalPay||0)}</span></div></div>
+  </div></div>);}
+  return(<div className="screen"><div className="header"><button className="back-btn" onClick={()=>onNav("screen","suite")}>←</button><DBMLogo/><div><div style={{fontSize:17,fontWeight:700,color:"white"}}>Submissions</div><div className="header-sub">DBM Operations</div></div></div><div className="content">
+    <div className="card" style={{marginBottom:12}}><div className="card-title">Filter</div>
+      {user.role!=="foreman"&&<div className="field" style={{marginBottom:10}}><label>Crew</label><div className="select-wrap"><select value={filterCrew} onChange={e=>setFilterCrew(e.target.value)}><option value="">— All —</option>{CREWS.map(c=><option key={c} value={c}>{c}</option>)}</select></div></div>}
+      <div className="field" style={{marginBottom:0}}><label>Week</label><div className="select-wrap"><select value={filterWeek} onChange={e=>setFilterWeek(e.target.value)}><option value="">— All —</option>{weekOpts.map(w=><option key={w} value={w}>{fmtDate(w)}</option>)}</select></div></div>
+    </div>
+    {loading?<div className="loading"><div className="spinner"/></div>:filtered.length===0?<div className="empty"><div className="empty-icon">📭</div><p>No submissions</p></div>:
+    filtered.map(s=><div key={s.id} className="card" onClick={()=>setViewStub(s)} style={{cursor:"pointer"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><div><div style={{fontSize:14,fontWeight:700}}>{s.projectDisplay}</div><div style={{fontSize:12,color:"var(--gray)"}}>{s.crewDisplay} · {fmtDate(s.weekEnding)}</div></div><div style={{textAlign:"right"}}><div style={{fontSize:16,fontWeight:700,color:"var(--green)"}}>{fmt(s.totalPay)}</div><span className={statusBadgeClass(s.stubStatus)}>{(s.stubStatus||"pending").toUpperCase()}</span></div></div></div>)}
+  </div></div>);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// OWNER DASHBOARD
+// ═══════════════════════════════════════════════════════════════════════════════
+function OwnerScreen({onNav,user}){
+  const[subs,setSubs]=useState([]);const[loading,setLoading]=useState(true);const[filterStatus,setFilterStatus]=useState("");
+  const[activeAction,setActiveAction]=useState(null);const[ownerNote,setOwnerNote]=useState("");const[actionLoading,setActionLoading]=useState(false);
+  useEffect(()=>{apiGet("submissions").then(d=>setSubs(d.submissions||[])).catch(()=>setSubs([])).finally(()=>setLoading(false));},[]);
+  const filtered=filterStatus?subs.filter(s=>(s.stubStatus||"pending").toLowerCase()===filterStatus):subs;
+  const counts={pending:subs.filter(s=>(s.stubStatus||"pending").toLowerCase()==="pending").length,approved:subs.filter(s=>(s.stubStatus||"").toLowerCase()==="approved").length,disputed:subs.filter(s=>(s.stubStatus||"").toLowerCase()==="disputed").length};
+  async function handleTransition(sub,newStatus){setActionLoading(true);try{await apiPost({action:"transition",crewDisplay:sub.crewDisplay,weekEnding:sub.weekEnding,newStatus,ownerNote:ownerNote.trim(),actorPhone:user.phone,actorName:user.name});const d=await apiGet("submissions");setSubs(d.submissions||[]);setActiveAction(null);setOwnerNote("");}catch(e){alert(e.message);}setActionLoading(false);}
+  return(<div className="screen"><div className="header"><button className="back-btn" onClick={()=>onNav("screen","suite")}>←</button><DBMLogo/><div><div style={{fontSize:17,fontWeight:700,color:"white"}}>Owner Dashboard</div><div className="header-sub">Approve & Pay</div></div></div><div className="content">
+    <div style={{display:"flex",gap:8,marginBottom:14,flexWrap:"wrap"}}>{[{l:"All",v:"",c:subs.length},{l:"Pending",v:"pending",c:counts.pending},{l:"Approved",v:"approved",c:counts.approved},{l:"Disputed",v:"disputed",c:counts.disputed}].map(f=><button key={f.v} style={{borderRadius:20,padding:"6px 14px",fontSize:12,fontWeight:600,border:filterStatus===f.v?"none":"1.5px solid var(--border)",background:filterStatus===f.v?"var(--green)":"white",color:filterStatus===f.v?"white":"var(--dark)",cursor:"pointer"}} onClick={()=>setFilterStatus(f.v)}>{f.l} ({f.c})</button>)}</div>
+    {loading?<div className="loading"><div className="spinner"/></div>:filtered.length===0?<div className="empty"><div className="empty-icon">📋</div><p>None found</p></div>:
+    filtered.map(s=><div key={s.id} className="card"><div style={{display:"flex",justifyContent:"space-between"}}><div><div style={{fontSize:14,fontWeight:700}}>{s.crewDisplay}</div><div style={{fontSize:12,color:"var(--gray)"}}>{s.projectDisplay} · {fmtDate(s.weekEnding)}</div></div><div style={{textAlign:"right"}}><div style={{fontSize:16,fontWeight:700,color:"var(--green)"}}>{fmt(s.totalPay)}</div><span className={statusBadgeClass(s.stubStatus)}>{(s.stubStatus||"pending").toUpperCase()}</span></div></div>
+      {s.ownerNote&&<div className="dispute-note" style={{marginTop:8}}>⚠️ {s.ownerNote}</div>}
+      {activeAction===s.id?<div style={{marginTop:10}}><div className="field" style={{marginBottom:8}}><label>Note</label><input value={ownerNote} onChange={e=>setOwnerNote(e.target.value)} placeholder="Reason..."/></div><div style={{display:"flex",gap:8}}><button className="btn btn-sm btn-green" disabled={actionLoading} onClick={()=>handleTransition(s,"APPROVED")}>✓ Approve</button><button className="btn btn-sm btn-red" disabled={actionLoading} onClick={()=>handleTransition(s,"DISPUTED")}>✕ Dispute</button><button className="btn btn-sm btn-outline" onClick={()=>{setActiveAction(null);setOwnerNote("");}}>Cancel</button></div></div>:
+      <div style={{marginTop:10,display:"flex",gap:8}}><button className="btn btn-sm btn-outline" onClick={()=>setActiveAction(s.id)}>Review</button>{(s.stubStatus||"").toLowerCase()==="approved"&&<button className="btn btn-sm btn-blue" onClick={()=>handleTransition(s,"PAID")}>💰 Paid</button>}</div>}
+    </div>)}
+  </div></div>);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// APP ROOT (with auth gate)
+// ═══════════════════════════════════════════════════════════════════════════════
+function App(){
+  const[user,setUser]=useState(()=>{try{return JSON.parse(localStorage.getItem("dbm_user"));}catch(e){return null;}});
+  const[authView,setAuthView]=useState("login");
+  const[screen,setScreen]=useState("suite");
+  const[lang,setLang]=useState("en");
+  const[submissions,setSubmissions]=useState([]);
+
+  // Validate stored user on mount
+  useEffect(()=>{
+    if(user&&user.phone){
+      apiGet("getUser",{phone:user.phone}).then(d=>{
+        if(d.user&&d.user.active){setUser(d.user);localStorage.setItem("dbm_user",JSON.stringify(d.user));}
+        else{setUser(null);localStorage.removeItem("dbm_user");}
+      }).catch(()=>{});
+    }
+  },[]);
+
+  useEffect(()=>{if(user)apiGet("submissions").then(d=>setSubmissions(d.submissions||[])).catch(()=>{});},[user]);
+
+  function handleLogin(u){setUser(u);localStorage.setItem("dbm_user",JSON.stringify(u));setScreen("suite");}
+  function handleLogout(){setUser(null);localStorage.removeItem("dbm_user");setScreen("suite");setAuthView("login");}
+  function onSubmitDone(){apiGet("submissions").then(d=>setSubmissions(d.submissions||[])).catch(()=>{});}
+
+  function onNav(type,val){
+    if(type==="screen"){setScreen(val);if(val==="suite")apiGet("submissions").then(d=>setSubmissions(d.submissions||[])).catch(()=>{});}
+    if(type==="lang")setLang(val);
+    if(type==="logout")handleLogout();
+  }
+
+  // AUTH GATE
+  if(!user){
+    if(authView==="register")return<RegisterScreen onRegister={handleLogin} onShowLogin={()=>setAuthView("login")}/>;
+    return<LoginScreen onLogin={handleLogin} onShowRegister={()=>setAuthView("register")}/>;
+  }
+
+  const props={onNav,lang,user,submissions};
+  if(screen==="suite")  return<SuiteLauncher{...props}/>;
+  if(screen==="field")  return<FieldReportScreen{...props}onSubmitDone={onSubmitDone}/>;
+  if(screen==="subs")   return<SubmissionsScreen{...props}/>;
+  if(screen==="owner")  return<OwnerScreen{...props}/>;
+  if(screen==="users")  return<UserManagementScreen{...props}/>;
+  if(screen==="myPay")  return<MyPaycheckScreen{...props}/>;
+  return<SuiteLauncher{...props}/>;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
 </body>
-</html> 
+</html>
